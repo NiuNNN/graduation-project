@@ -1,0 +1,111 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3948399 */
+  src: url('iconfont.woff2?t=1681116055593') format('woff2'),
+       url('iconfont.woff?t=1681116055593') format('woff'),
+       url('iconfont.ttf?t=1681116055593') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-zhifubaozhifu:before {
+  content: "\e634";
+}
+
+.icon-Cash-Pay:before {
+  content: "\ea5b";
+}
+
+.icon-hetong:before {
+  content: "\e60f";
+}
+
+.icon-weixiugongguanli:before {
+  content: "\e80d";
+}
+
+.icon-gonggaoguanli:before {
+  content: "\e61c";
+}
+
+.icon-ziyuan:before {
+  content: "\e60d";
+}
+
+.icon-new1:before {
+  content: "\e680";
+}
+
+.icon-5:before {
+  content: "\e604";
+}
+
+.icon-yongdianjilu:before {
+  content: "\e683";
+}
+
+.icon-si-glyph-money-coin:before {
+  content: "\e658";
+}
+
+.icon-si-glyph-square-four:before {
+  content: "\e679";
+}
+
+.icon-si-glyph-chart-decrease:before {
+  content: "\e6b8";
+}
+
+.icon-home-4-fill:before {
+  content: "\e6e4";
+}
+
+.icon-community-fill:before {
+  content: "\e6e5";
+}
+
+.icon-home-gear-fill:before {
+  content: "\e6e6";
+}
+
+.icon-bar-chart-fill:before {
+  content: "\e6ec";
+}
+
+.icon-message-2-fill:before {
+  content: "\e701";
+}
+
+.icon-tools-fill:before {
+  content: "\e70e";
+}
+
+.icon-file-fill:before {
+  content: "\e74e";
+}
+
+.icon-settings-3-fill:before {
+  content: "\e8e2";
+}
+
+.icon-team-fill:before {
+  content: "\e91b";
+}
+
+.icon-user-fill:before {
+  content: "\e91c";
+}
+
+.icon-user-settings-fill:before {
+  content: "\e921";
+}
+
+.icon-money-finance-buyer-fill:before {
+  content: "\e830";
+}
+

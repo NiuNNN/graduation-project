@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.FloorMapper">
+    <update id="updateAvailable">
+        update floor
+        set available = #{available}
+        where floor_id = #{floorId}
+    </update>
+    <select id="getFloor" resultType="niuniu.javaweb.pojo.Floor">
+        select floor_name
+        from floor
+        where floor_id !=1
+    </select>
+</mapper>

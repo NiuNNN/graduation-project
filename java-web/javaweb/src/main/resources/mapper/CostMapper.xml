@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.CostMapper">
+    <select id="getMonthElectric" resultType="niuniu.javaweb.vo.ElectricInExcelVO">
+        select a.rent_id, a.num_electric as num, a.date as time,c.house_name,a.state
+        from cost as a, rent as b, house as c
+        where DATE_FORMAT(a.date
+            , '%Y%m') = DATE_FORMAT(CURDATE()
+            , '%Y%m')
+          and a.num_electric != ''
+          and b.rent_id = a.rent_id
+          and b.house_id = c.house_id
+    </select>
+    <select id="getMonthWater" resultType="niuniu.javaweb.vo.WaterInExcelVO">
+        select a.rent_id, a.num_water as num, a.date as time,c.house_name,a.state
+        from cost as a, rent as b, house as c
+        where DATE_FORMAT(a.date
+            , '%Y%m') = DATE_FORMAT(CURDATE()
+            , '%Y%m')
+          and a.num_water != ''
+          and b.rent_id = a.rent_id
+          and b.house_id = c.house_id
+    </select>
+    <insert id="insertNewCost">
+        insert into cost (rent_id, date, state)
+        values (#{rentId}, current_time, 0)
+    </insert>
+    <select id="noCostMonth" resultType="niuniu.javaweb.vo.CostVo">
+        select a.rent_id
+        from rent as a
+        where a.state = 1
+          and a.rent_id not in
+              (select b.rent_id from cost as b where DATE_FORMAT(b.date, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m'))
+    </select>
+    <update id="updateElectric">
+        update cost
+        set num_electric    = #{num},
+            upload_electric = current_timestamp
+        where rent_id = #{rentId}
+    </update>
+    <update id="updateWater">
+        update cost
+        set num_water    = #{num},
+            upload_water = current_timestamp
+        where rent_id = #{rentId}
+    </update>
+    <select id="getAllCost" resultType="niuniu.javaweb.vo.CostVo">
+        select a.house_name,
+        IFNULL(c.num_electric,"待处理")as num_electric,
+        IFNULL(c.cost_electric,"待处理") as cost_electric ,
+        IFNULL(c.upload_electric ,"待处理") as upload_electric,
+        IFNULL(c.num_water,"待处理")as num_water,
+        IFNULL(c.cost_water,"待处理") as cost_water ,
+        IFNULL(c.upload_water ,"待处理") as upload_water,
+        c.cost_id,
+        c.date ,
+        c.state,
+        c.rent_id
+        from house as a,
+        rent as b,
+        cost as c
+        where a.house_id = b.house_id
+        and b.rent_id = c.rent_id
+        <if test="date !=null and date !=''">
+            and DATE_FORMAT(c.date
+            , '%Y-%m') = #{date}
+        </if>
+        <if test="houseName != null and houseName!=''">
+            and a.house_name = #{houseName}
+        </if>
+        ${ew.customSqlSegment}
+    </select>
+    <update id="updateElectricByCostId">
+        update cost
+        set num_electric    = #{numElectric},
+            upload_electric = current_timestamp
+        where cost_id = #{costId}
+    </update>
+    <update id="updateWaterByCostId">
+        update cost
+        set num_water    = #{numWater},
+            upload_water = current_timestamp
+        where cost_id = #{costId}
+    </update>
+    <update id="updateByCostVO">
+        update cost
+        set cost_water    = #{costWater},
+            cost_electric = #{costElectric},
+            mis           = #{mis},
+            total         = #{total},
+            state         = #{state}
+        where cost_id = #{costId}
+    </update>
+    <select id="judgeHasNum" resultType="int">
+        select count(*)
+        from cost
+        where DATE_FORMAT(date, '%Y-%m') = '2023-04'
+          and (ISNULL(num_water) or ISNULL(num_electric))
+
+    </select>
+    <select id="judgeHasCost" resultType="int">
+        select count(*)
+        from cost
+        where DATE_FORMAT(date, '%Y-%m') = #{time}
+    </select>
+    <select id="getCostVOByTime" resultType="niuniu.javaweb.vo.CostVo">
+        select a.cost_id,
+               a.rent_id,
+               a.date,
+               a.num_water,
+               a.cost_water,
+               a.num_electric,
+               a.cost_electric,
+               a.mis,
+               a.total,
+               a.upload_electric,
+               a.upload_water,
+               a.state,
+               c.house_name
+        from cost as a,
+             rent as b,
+             house as c
+        where a.rent_id = b.rent_id
+          and b.house_id = c.house_id
+          and DATE_FORMAT(date, '%Y-%m') = #{time}
+    </select>
+    <select id="getCostByRentId" resultType="niuniu.javaweb.pojo.Cost">
+        select *
+        from cost
+        <where>rent_id = #{rentId}
+            <if test="date!=null and date!=''">
+                and DATE_FORMAT(date, '%Y-%m') = #{date}
+            </if>
+        </where>
+    </select>
+</mapper>

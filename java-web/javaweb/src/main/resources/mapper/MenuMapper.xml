@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.MenuMapper">
+    <select id="selectPermsByUserName" parameterType="java.lang.String" resultType="niuniu.javaweb.vo.MenuVO">
+        select b.*, a.query
+        from menu_role a,
+             menu b,
+             user c
+        where c.username = #{username}
+          and a.role_id = c.role_id
+          and b.menu_id = a.menu_id
+    </select>
+
+    <select id="selectPermsByRoleId" parameterType="java.lang.Integer" resultType="niuniu.javaweb.vo.TransferVO">
+        select a.menu_id as id, a.title as label, a.parent_id as pid, a.menu_id as mid, b.query
+        from menu as a,
+             menu_role as b
+        where a.menu_id = b.menu_id
+          and role_id = #{roleId}
+    </select>
+
+    <select id="selectElsePermsByRoleId" parameterType="java.lang.Integer" resultType="niuniu.javaweb.vo.TransferVO">
+        select a.menu_id as id, a.title as label, a.parent_id as pid, a.menu_id as mid
+        from menu as a
+        where a.menu_id not in (select menu_id from menu_role where role_id = #{roleId})
+    </select>
+
+    <select id="selectElseOperationByRoleId" parameterType="java.lang.Integer"
+            resultType="niuniu.javaweb.vo.TransferVO">
+        select a.menu_id as id, a.title as label, a.parent_id as pid, a.menu_id as mid, b.query
+        from menu as a,
+             menu_role as b
+        where a.menu_id = b.menu_id
+          and role_id = #{roleId}
+    </select>
+
+    <select id="selectAllOperation" resultType="niuniu.javaweb.vo.TransferVO">
+        select operation_id as oid, operation_name as label
+        from operation
+    </select>
+
+    <select id="selectOperationByStr" resultType="niuniu.javaweb.vo.TransferVO">
+        select operation_id as oid, operation_name as label
+        from operation
+        where operation_id in
+        <foreach collection="str" item="operation_id" index="index" open="(" close=")" separator=",">
+            #{operation_id}
+        </foreach>
+    </select>
+
+    <select id="selectByMenuId" resultType="niuniu.javaweb.vo.TransferVO">
+        select a.menu_id as id, a.title as label, a.parent_id as pid, a.menu_id as mid
+        from menu as a
+        where a.menu_id = #{menuId}
+    </select>
+
+    <select id="selectNode" resultType="Integer">
+        select count(*)
+        from menu_role
+        where menu_id = #{menuId}
+          and role_id = #{roleId}
+    </select>
+
+    <insert id="insertParent">
+        insert into menu_role(menu_id, role_id)
+        values (#{menuId}, #{roleId})
+    </insert>
+
+    <select id="selectQuery" resultType="String">
+        select query
+        from menu_role
+        where menu_id = #{menuId}
+          and role_id = #{roleId}
+    </select>
+
+    <update id="updateQuery">
+        update menu_role
+        set query = #{query}
+        where menu_id = #{menuId}
+          and role_id = #{roleId}
+    </update>
+
+    <insert id="insertQuery">
+        insert into menu_role(menu_id, role_id, query)
+        values (#{menuId}, #{roleId}, #{query})
+    </insert>
+
+    <delete id="deleteNode">
+        delete
+        from menu_role
+        where menu_id = #{menuId}
+          and role_id = #{roleId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.ReportMapper">
+    <insert id="insertReport" parameterType="niuniu.javaweb.pojo.Report">
+        insert into report(user_id, stem, content, time, views, state)
+        values (#{userId}, #{stem}, #{content}, current_timestamp, 0, #{state})
+    </insert>
+    <select id="getAllReport" resultType="niuniu.javaweb.vo.ReportVo">
+        select report.report_id, report.stem, report.content, report.time, report.views, user.name
+        from report,
+             user
+        where report.user_id = user.user_id
+          and report.state = #{state}
+    </select>
+    <select id="getNewAllReport" resultType="niuniu.javaweb.vo.ReportVo">
+        select report.report_id, report.stem, report.content, report.time, report.views, user.name
+        from report,
+             user
+        where report.user_id = user.user_id
+          and report.state = 1
+        order by report.time desc limit 8
+    </select>
+    <update id="changeReport">
+        update report
+        set state = #{state}
+        where report_id = #{reportId}
+    </update>
+    <update id="updateReport" parameterType="niuniu.javaweb.pojo.Report">
+        update report
+        set content = #{content},
+            stem    = #{stem},
+            time    = current_timestamp,
+            user_id = #{userId},
+            state=#{state}
+        where report_id = #{reportId}
+    </update>
+    <update id="updatePreview">
+        update report
+        set views = views + 1
+        where report_id = #{reportId}
+    </update>
+    <select id="getReportPage" resultType="niuniu.javaweb.vo.ReportVo">
+        select a.*, b.name, b.avatar
+        from report as a,
+        user as b
+        where a.user_id = b.user_id
+        and a.state = 1
+        <if test="reportId!=null and reportId!= ''">
+            and a.report_id = #{reportId}
+        </if>
+        order by time DESC ${ew.customSqlSegment}
+    </select>
+</mapper>

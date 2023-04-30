@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.StyleMapper">
+    <select id="selectSameStyle" resultType="int">
+        select count(*)
+        from style
+        where area = #{area}
+          and price = #{price}
+          and style_name = #{styleName}
+          and balcony = #{balcony}
+          and floor = #{floor}
+          and num = #{num}
+    </select>
+
+    <update id="resetStyle">
+        update style
+        set state = #{state}
+        where style_id = #{styleId}
+    </update>
+
+    <select id="getStyleName" resultType="String">
+        select DISTINCT(style_name)
+        from style
+        <if test="floor != null">
+            where floor = #{floor};
+        </if>
+    </select>
+
+    <select id="getStyleArea" resultType="String">
+        select area
+        from style
+        where floor = #{floor}
+          and style_name = #{styleName}
+        order by area
+    </select>
+
+    <select id="getStyleBalcony" resultType="String">
+        select DISTINCT(balcony)
+        from style
+        where floor = #{floor}
+          and style_name = #{styleName}
+          and area = #{area}
+    </select>
+
+    <select id="leftStyle" resultType="niuniu.javaweb.pojo.Style">
+        select style_id, available
+        from style
+        where floor = #{floor}
+          and style_name = #{styleName}
+          and area = #{area}
+          and balcony = #{balcony}
+    </select>
+
+    <update id="updateAvailable">
+        update style
+        set available = available - 1
+        where style_id = #{styleId}
+    </update>
+    <select id="getAllStyleName" resultType="niuniu.javaweb.pojo.Style">
+        select distinct(style_name)
+        from style
+    </select>
+    <update id="increaseAvailable">
+        update style
+        set available = available - 1
+        where style_id = #{styleId}
+    </update>
+</mapper>

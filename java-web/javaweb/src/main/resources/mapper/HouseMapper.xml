@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.HouseMapper">
+    <insert id="insertNewHouse" parameterType="niuniu.javaweb.vo.HouseVO">
+        insert into house(house_name, style_id, floor_id, state, insert_time)
+        values (#{houseName}, #{styleId}, #{floorId}, "空闲", current_timestamp)
+    </insert>
+    <select id="getHouseDetail" resultType="niuniu.javaweb.vo.HouseVO">
+        select house.*, FORMAT(style.num * style.area, 2) as price, style.area, style.balcony, style.style_name
+        from house,
+             style
+        where house.style_id = style.style_id
+          and house.floor_id = #{floorId}
+          and house.state != '删除'
+        ORDER BY house_name
+    </select>
+    <select id="getHouseNumber" resultType="String">
+        select house_name
+        from house
+        where floor_id = #{floorId}
+          and state != '删除'
+    </select>
+    <select id="getHouse" resultType="niuniu.javaweb.vo.HouseVO">
+        select house_id,house_name,style_name,balcony,area,FORMAT(price*area,2)as price,price as price_area from
+        house,style where
+        house.style_id = style.style_id and house.state = "空闲"
+        <if test="floor != null and floor != ''">
+            and floor_id = #{floor}
+        </if>
+        <if test="styleName != null and styleName !=''">
+            and style_name = #{styleName}
+        </if>
+        <if test="balcony != null and balcony != ''">
+            and balcony = #{balcony}
+        </if>
+        ORDER BY house.floor_id
+    </select>
+    <update id="changeState">
+
+        update house
+        set state=#{state}
+        where house_id = #{houseId}
+    </update>
+    <select id="getAllHouseNameForCost" resultType="niuniu.javaweb.vo.CostVo">
+        select a.rent_id, b.house_name
+        from rent as a,
+             house as b
+        where a.house_id = b.house_id
+          and a.state = 1
+    </select>
+    <select id="getHousePriceByCostId" resultType="String">
+        select FORMAT(b.price * b.area, 2) as price
+        from house as a,
+             style as b,
+             rent as c,
+             cost as d
+        where d.rent_id = c.rent_id
+          and c.house_id = a.house_id
+          and a.style_id = b.style_id
+          and d.cost_id = #{costId}
+    </select>
+    <select id="addDepositByRentId" resultType="String">
+        select (SUM(d.price) + (e.area * e.price)) as deposit
+        from house as a,
+             rent as b,
+             miscellaneous as c,
+             basic as d,
+             style as e
+        where b.rent_id = #{rentId}
+          and b.rent_id = c.rent_id
+          and c.base_id = d.base_id
+          and c.state != 0
+					and a.house_id = b.house_id
+					and a.style_id = e.style_id
+    </select>
+    <select id="getHouseDetailByUserId" resultType="niuniu.javaweb.vo.HouseVO">
+        select a.house_name, b.style_name, b.area, FORMAT(b.price * b.area, 2) as price, b.balcony, c.login as loginTime
+        from house as a,
+             style as b,
+             rent as c
+        where c.user_id = #{userId}
+          and a.style_id = b.style_id
+          and a.house_id = c.house_id
+    </select>
+</mapper>

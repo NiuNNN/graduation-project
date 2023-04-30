@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.RentMapper">
+    <insert id="insertRent">
+        insert into rent (house_id, user_id, login, deposit,state)
+        values (#{houseId}, #{userId}, current_timestamp, #{deposit},1)
+        <selectKey keyProperty="rentId" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="changeRent">
+        update rent
+        set house_id = #{houseId},
+            deposit  = #{deposit}
+        where rent_id = #{rentId}
+    </update>
+    <update id="updateDeposit"
+    >
+        update rent
+        set deposit = #{deposit}
+        where rent_id = #{rentId}
+    </update>
+    <update id="rent">
+        update rent
+        set logout = current_timestamp,
+            state  = 0
+        where rent_id = #{rentId}
+    </update>
+</mapper>

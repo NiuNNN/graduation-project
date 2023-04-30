@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.FinancialMapper">
+    <select id="judgeFinancialByDate" resultType="int">
+        select count(*)
+        from financial
+        <where>
+            DATE_FORMAT(date, '%Y-%m') = #{date}
+            <if test="state !='' and state !=null">
+                and state = 1
+            </if>
+        </where>
+    </select>
+    <insert id="insertFinancial">
+        insert into financial (date, upload_time, state)
+        values (current_time, current_timestamp, 0)
+    </insert>
+    <update id="updateFinancial">
+        update financial
+        set upload_time = current_timestamp
+        <if test="outWater!=null and outWater != ''">
+            ,out_water = #{outWater}
+        </if>
+        <if test="outElectric!=null and outElectric != ''">
+            ,out_electric = #{outElectric}
+        </if>
+        <if test="inWater!=null and inWater != ''">
+            ,in_water = #{inWater}
+        </if>
+        <if test="inElectric!=null and inElectric != ''">
+            ,in_electric = #{inElectric}
+        </if>
+        <if test="proWater!=null and proWater != ''">
+            ,pro_water= #{proWater}
+        </if>
+        <if test="proElectric!=null and proElectric != ''">
+            ,pro_electric = #{proElectric}
+        </if>
+        <if test="outSalary!=null and outSalary != ''">
+            ,out_salary = #{outSalary}
+        </if>
+        <if test="outMis!=null and outMis != ''">
+            ,out_mis = #{outMis}
+        </if>
+        <if test="inMis!=null and inMis != ''">
+            ,in_mis = #{inMis}
+        </if>
+        <if test="inRent!=null and inRent != ''">
+            ,in_rent = #{inRent}
+        </if>
+        <if test="advanceTotal!=null and advanceTotal != ''">
+            ,advance_total = #{advanceTotal}
+        </if>
+        <if test="realTotal!=null and realTotal != ''">
+            ,real_total = #{realTotal}
+        </if>
+        <if test="finalTotal!=null and finalTotal != ''">
+            ,final_total = #{finalTotal}
+        </if>
+        where DATE_FORMAT(date, '%Y-%m') = #{date}
+    </update>
+</mapper>

@@ -1,0 +1,4 @@
+client:
+  clientId: QFsv0b5RnYeopr8xao6YynXz
+  clientSecret: rxS8gGDWWX4PuQGhKGZ3kUthKhw7SMHM
+  clientPath: https://aip.baidubce.com/oauth/2.0/token?

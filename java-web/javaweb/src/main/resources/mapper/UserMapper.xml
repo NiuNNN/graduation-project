@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.UserMapper">
+    <insert id="createUser" parameterType="niuniu.javaweb.pojo.User">
+        insert into user(role_id, username, password, name, phone, sex, nation, birthday, address, idcard, sign, lose,
+        authority, addtime, remark, state,avatar)
+        values (#{roleId}, #{username}, #{password}, #{name}, #{phone}, #{sex}, #{nation}, #{birthday}, #{address},
+        #{idcard}, #{sign}, #{lose}, #{authority}, current_timestamp, current_timestamp, 1,"avatar_default.jpeg")
+        <selectKey keyProperty="userId" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateAvatar" parameterType="niuniu.javaweb.pojo.User">
+        update user
+        set avatar = #{avatar},
+            remark = current_timestamp
+        where username = #{username}
+    </update>
+    <select id="getUserId" resultType="Integer">
+        select user_id
+        from user
+        where username = #{username}
+    </select>
+    <select id="getUserPage" resultType="niuniu.javaweb.vo.UserVO">
+        select a.*,
+        b.rent_id,b.login as login_rent,b.logout as logout_rent,b.deposit,
+        c.house_id,c.house_name,
+        d.style_id,d.style_name,d.area,d.balcony,FORMAT(d.price*d.area,2)as price
+
+        from user as a,rent as b,house as c,style as d,order_pay as e
+        <where>
+            a.role_id = 1
+            and a.user_id = b.user_id
+            and b.house_id = c.house_id
+            and c.style_id = d.style_id
+            and a.user_id = b.user_id
+            and b.house_id = c.house_id
+            and c.style_id = d.style_id
+            and e.type = "押金"
+            and b.rent_id = e.rent_id
+            and b.state = 1
+            <if test="orderState !=null and orderState !=''">
+                and e.state = ${orderState}
+            </if>
+            <if test="state !=null and state !=''">
+                and a.state = #{state}
+            </if>
+            <if test="username !=null and username !=''">
+                and a.username like concat('%',#{username},'%')
+            </if>
+            <if test="name !=null and name !=''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="houseName !=null and houseName !=''">
+                and c.house_name like concat('%',#{houseName},'%')
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+    <select id="getNoHouseUserPage" resultType="niuniu.javaweb.vo.UserVO">
+        select a.*
+        from user as a
+        <where>
+            a.role_id = 1
+            and a.state = 1
+            and a.user_id not in (select b.user_id from rent as b)
+            <if test="username !=null and username !=''">
+                and a.username like concat('%',#{username},'%')
+            </if>
+            <if test="name !=null and name !=''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+    <update id="updateUserByIDCard">
+        update user
+        set name      = #{name},
+            sex       = #{sex},
+            nation=#{nation},
+            birthday=#{birthday},
+            address   = #{address},
+            idcard    = #{idcard},
+            sign      = #{sign},
+            lose      = #{lose},
+            authority = #{authority},
+            remark    = current_timestamp
+        where username = #{username}
+    </update>
+    <update id="updateUser">
+        update user
+        set
+        <if test="phone !=null and phone != ''">
+            phone = #{phone},
+        </if>
+        <if test="password!=null and password!=''">
+            password = #{password},
+        </if>
+        remark = current_timestamp
+        where username = #{username}
+    </update>
+    <update id="changeUserState">
+        update user
+        set state = #{state}
+        where user_id = #{userId}
+    </update>
+    <select id="validatePassword" resultType="String">
+        select password
+        from user
+        where username = #{username}
+    </select>
+    <update id="deleteUser">
+        update user
+        set state = 0
+        where user_id = #{userId}
+    </update>
+</mapper>

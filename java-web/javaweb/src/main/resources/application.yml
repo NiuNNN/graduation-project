@@ -1,0 +1,93 @@
+server:
+  port: 80
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB       # 单个文件上传的最大上限
+      max-request-size: 10MB    # 一次请求总大小上限
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.245.132:3306/rental_house?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: NiuNiu666
+    #    url: jdbc:mysql://localhost:3306/rental_house?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone =Asia/Shanghai
+    #    username: root
+    #    password: 123456
+    druid: # 数据库配置
+      # 初始化大小，最小，最大
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+    #redis配置
+    redis:
+      #服务器地址
+      host: 192.168.245.132
+      #密码
+      password: 123456
+      #端口
+      port: 6379
+      #密码
+      #数据库，默认是0
+      database: 0
+      #超时时间
+      timeout: 1209600000ms
+      lettuce:
+        pool:
+          #最大链接数，默认8
+          max-active: 8
+          #最大连接阻塞等待时间，默认-1
+          max-wait: 10000ms
+          #最大空闲连接，默认8
+          max-idle: 200
+          #最小空闲连接，默认0
+          min-idle: 5
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+jwt:
+  # JWT存储的请求头
+  tokenHeader: Authorization
+  # JWT 私钥
+  priKeyPath: "E:\\graduation-project\\file\\local\\Rsa\\rsa.pri"
+  # JWT 公钥
+  pubKeyPath: "E:\\graduation-project\\file\\local\\Rsa\\rsa.pub"
+  # JWT的超期限时间（1000*60*60）1小时
+  expiration: 86400000
+  # JWT 负载中拿到开头
+  tokenHead: Bearer
+# 文件上传路径
+file:
+  uploadPath: E:/graduation-project/file/upload
+  downloadPath: E:/graduation-project/file/download
+#合同pdf上传路径
+pdf:
+  #生成文件路径
+  DEST_PATH: "E:\\graduation-project\\file\\upload\\Contract"
+  #字体路径
+  FONT_PATH: "C:\\Windows\\Fonts\\simfang.ttf"
+
+alipay:
+  appId: 2021000121698755
+  privateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCSUNpOCm/ouMFeW1xYfT0WFDRXLpxhKp+dMMZZ+YtxSQ0q9lRIkG+fczn61J2jhU6ODsNRfegtdZqe6rVQgS4g0XKqwLoAJ/n9W1lPtcuLV3Cn7FTlBIenhUtGL48yQNFPcfNybloEvsZ+sLGPjovr0YYBoJKGL6X5qpjSP+MG0Efk9r6/8hG5k5BciS1Z3WPBY6XsKabe2blUzcba4qb+KG3vLP5E2V4Y1i5tnnsxkGCkdC8pRWG4/QpCdwezGiZ0I2gn8BrbST5Toa/JfrxtpPlEGCTsF+uEXL6UGFv4eMwIQhQU/GgwyTNBDP0RdBhzWfyyVDp9s+jdgqd8FS5VAgMBAAECggEACrmqhvX05hZE9mm0BziG9ctdWtar1+OL97XPlGDae99i+7c6zmboB8Qmh+B1/bqT243xe1PDZTGtt+B0kgYmH3m68hFWkRRdGtlLXrBwzzIFrAmC35bJato2flqWIJTnwu8TbVvxdU+WtUq2eVN1pj+hlxTyKKvterOqqB7OwXz+oPERbTP1t+tlrF4y9Hgzc1nC++BtP/8VSep3xL3M3blCTStVviOxEU2JmUKtn7BG3drNjLHeDjXamldNOzkaUNGkEwOvzR6P1E2ciEDsRl3tKID5aV2qN+K9qqad29iK9XvSUXhhBb8kBtr+tuw8alhOHROygpTOsnMo8LxAgQKBgQDKh/HLaz+F+cfM9lkqvdwjmdONtktwjLaNoUWsBonawob+EelM83oEHNmg+TnPPe5K/imiXBN+g+FdvfNvvXk5MOQ46k9IourB/yawPOyQaghQ6U5Utid2FnQN3948j2qKv2anEw2pPGxk9IQzUMnqIqPrWmBAhvyzHRLpkzcu+QKBgQC48Zriy/2iWaKKEqMmfZGPr33aGEVRy55OZHa/2qhurtWopcG5w/lKzBnQPIgdcAPJcHysYBcYtJR9ZluLCR1T5r1TOqghry8dUrLM7ouJM3RlgeU1Vb+rD9stwJMx0t24HhPsMVKVRqHGF7lNzpNolRiFcJUk5lbLo8ZQx40lPQKBgQCQQ0luVlSHQCabzpYxJdAa48WXWdRetTyLoeaY5IdpdcrmSyfdkkjFiS9TxHLzNe/5JxXM+r1ADvyG43j1jQc+P58xE2WqHbIOwYpzWtI/A+gsiiMroBx3twKvp1kL1jRT5IZgV+gRNmMXfjx0uQU6a7ZLPLL3A7AYfYstKZnTMQKBgQC1ZMssfTWEwfOpBwScYPae/loqyjlbM6JOcz0BiZ5ACR0ob4NmB3AAS9VZp7U9YjtknP67NvgQVDV8FSPeZ48rVpoFAvgbKa7FTPJwC9wyMpSMZu3/9N2sEz4/Tq1QZejviBi0ReAg54kOOQCX7vAn2GyXnMe7zGv/CeAeJMssZQKBgBU/ljvcCPTn+gYvQ6GBo88eXWPaiqm01EOcRrSxMxwJ6enrh7cdL1zItgHu6zNF4ZcoHYxwnLalaouAr0C1Kr99uYtIZ+ysbtPs1TRD+DMAUrJhQDjIGWzXkCN7Pyo6i+ZyFeklrh+j4uHFLC2jijz2eZDwV2hEN7kZCqr0Fn0y
+  publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj5Ml0UbxxwWbbsda1rk0QS/kLfnhRZgKC2fRwoTHmZoPy4HPoN/8qKIREbrCCHWUyNMNy2cF1+6j0saZ+gibANWYkUSOIRfk/tPOgJv7ahydl9Nyki3E8O8B+LVoOUkX7DvoDA+78ERu0LLrYCXXK4dnzpXBwK50jCMSEBLvjQ2T4lSSncxCtyEw1gS8TWrac3H6xjakLEmTXgn+Jp4wGE0F/lYXzcUSxy1ZRwqHGkYuw/yRPjBVvNCq5zXUJvNhbQFp4idkuNr/2DrMrTXtJNPe2iCKuvIMmSp2hJjpl56jXCwcK205gIorQbU1L/Zwj/YoMndPrn23eN48ENYHTwIDAQAB
+  #支付网关配置，这一项是写死的，正式环境是openapi.alipay.com
+  gateway: openapi.alipaydev.com
+  #支付成功之后的回调页面，只是一个友好页面。主要换成你自己映射的临时域名
+  returnUrl: http://niuniu666.natapp1.cc/PRHMS/200
+  #支付成功的接口回调
+  notifyUrl: http://niuniu6.natapp1.cc/callback
+  #支付页面
+  quitUrl: http://niuniu66.natapp1.cc/PRHMS/order/

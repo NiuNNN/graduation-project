@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.ContractMapper">
+    <select id="getBaseContractUrl" resultType="String">
+        select url
+        from kind
+        where kind_id = #{kindId}
+    </select>
+
+    <select id="selectBaseContract" resultType="niuniu.javaweb.vo.ContractVO">
+        select kind_id, kind_name as contractName, url
+        from kind
+    </select>
+
+    <insert id="insertContract" parameterType="niuniu.javaweb.pojo.Contract">
+        insert into contract (kind_id, user_id, state, sign, url)
+        values (#{kindId}, #{userId}, 1, current_timestamp, #{url})
+    </insert>
+    <update id="changeStateByUserId">
+        update contract
+        set state = 0
+        where user_id = #{userId}
+          and state = 1
+    </update>
+</mapper>

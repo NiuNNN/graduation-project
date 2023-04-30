@@ -1,0 +1,30 @@
+
+//Brand Color
+$--color-primary: #4458FE !default;
+
+
+//Functional Color
+$--color-success: #00D0B5 !default;
+$--color-warning: #FFB243 !default;
+$--color-danger: #FF2855 !default;
+$--color-info: #858EBD !default;
+
+//Font Color
+$--color-text-primary: #3A3F63 !default;
+$--color-text-secondary: #6A74A5 !default;
+$--color-text-placeholder: #858EBD !default;
+
+//Border Color
+$--border-color-base:#DAE0F2 !default;
+
+//Border
+$--border-radius:4px !default;
+
+$--checked-font-color:#3A3F63 !default;
+$--checked-background-color:#4458FE !default;
+$--disabled-border-color:#B3C0E7 !default;
+$--button-checked-border-color: #4458FE !default;
+
+
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import "~element-ui/packages/theme-chalk/src/index";

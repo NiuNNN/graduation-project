@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.OrderMapper">
+    <insert id="generateOrder">
+        insert into order_pay (rent_id, total, out_trade_no, time, state,type,mis_price)
+        values (#{rentId}, #{total}, #{outTradeNo}, current_timestamp, 0,#{type},#{misPrice})
+        <selectKey keyProperty="orderId" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateOrder">
+        update order_pay
+        set user_id = #{userId}
+        where order_id = #{orderId}
+          and out_trade_no = #{outTradeNo}
+    </update>
+    <update id="updateOrderByCash">
+        update order_pay
+        set operation = "现金支付",
+            state     = 1,
+            user_id   = #{userId},
+            pay_time  = current_timestamp
+        where order_id = #{orderId}
+          and out_trade_no = #{outTradeNo}
+    </update>
+    <update id="insertTradeNo">
+        update order_pay
+        set operation = "支付宝支付",
+            trade_no  = #{tradeNo},
+            state     = 1,
+            pay_time  = current_timestamp
+        where out_trade_no = #{outTradeNo}
+    </update>
+    <select id="judgeOrder" resultType="int">
+        select count(*)
+        from order_pay
+        where order_id = #{orderId}
+          and out_trade_no = #{outTradeNo}
+          and (DATE_FORMAT(time, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m'))
+          and state = 1
+    </select>
+    <select id="getOrderByRentId" resultType="niuniu.javaweb.pojo.Order">
+        select a.*
+        from order_pay as a
+        where a.rent_id = #{rentId}
+    </select>
+    <select id="getOrderPage" resultType="niuniu.javaweb.vo.OrderVO">
+        select a.order_id,a.rent_id,a.total,a.operation,a.out_trade_no,DATE_FORMAT(a.time,'%Y-%m') as
+        date,a.time,a.state,a.type,a.pay_time,a.user_id,
+        b.house_name,
+        FORMAT(d.price * d.area, 2) as house_price
+        from order_pay as a,house as b,rent as c,style as d
+        where a.rent_id = c.rent_id
+        and b.house_id = c.house_id
+        and b.style_id = d.style_id
+        <if test="houseName !='' and houseName != null">
+            and b.house_name = #{houseName}
+        </if>
+        <if test="time !='' and time !=null">
+            and DATE_FORMAT(a.time
+            , '%Y-%m') = #{time}
+        </if>
+        ORDER BY a.order_id DESC
+    </select>
+    <select id="getMisPrice" resultType="String">
+        select mis_price
+        from order_pay
+        where order_id = #{orderId}
+    </select>
+    <select id="selectNoOrder" resultType="int">
+        select count(*)
+        from order_pay
+        where state = 0
+          and rent_id = #{rentId}
+    </select>
+    <select id="selectTotal" resultType="String">
+        select total
+        from order_pay
+        where type = "押金"
+          and rent_id = #{rentId}
+    </select>
+    <select id="getUserOrder" resultType="niuniu.javaweb.pojo.Order">
+        select a.order_id,
+               a.rent_id,
+               a.total,
+               a.operation,
+               a.out_trade_no,
+               a.trade_no,
+               a.state,
+               a.pay_time,
+               a.type,
+               DATE_FORMAT(a.time, '%Y-%m') as time
+        from order_pay as a, rent as b
+        where b.rent_id = a.rent_id
+          and b.user_id = #{userId}
+    </select>
+    <select id="getUserOrderDetail" resultType="niuniu.javaweb.vo.OrderVO">
+        select a.order_id,
+               a.rent_id,
+               a.total,
+               a.operation,
+               a.out_trade_no,
+               DATE_FORMAT(a.time, '%Y-%m') as
+        date,a.time,a.state,a.type,a.pay_time,a.user_id,a.mis_price,
+        b.house_name,
+        FORMAT(d.price * d.area, 2) as house_price
+        from order_pay as a, house as b, rent as c, style as d
+        where a.rent_id = c.rent_id
+          and b.house_id = c.house_id
+          and b.style_id = d.style_id
+          and a.order_id = #{orderId}
+    </select>
+</mapper>

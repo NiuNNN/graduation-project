@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.RepairMapper">
+    <insert id="insertRepair">
+        insert into repair (rent_id, message, report, state)
+        values (#{rentId}, #{message}, current_timestamp, 0)
+    </insert>
+    <update id="changeRepair">
+        update repair
+        set message = #{message},
+            report  = current_timestamp
+        where repair_id = #{repairId}
+    </update>
+    <select id="getAllRepair" resultType="niuniu.javaweb.vo.RepairVO">
+        select a.repair_id,
+        a.rent_id,
+        a.user_id,
+        a.message,
+        a.report,
+        a.fix,
+        a.price,
+        a.remark,
+        a.state,
+        b.name,
+        c.house_name
+        from repair as a,
+        user as b,
+        house as c,
+        rent as d
+        <where>d.house_id = #{houseId}
+            and d.rent_id = a.rent_id
+            and c.house_id = #{houseId}
+            and a.user_id = b.user_id
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+    <select id="getRepairByUserId" resultType="niuniu.javaweb.pojo.Repair">
+        select a.repair_id, a.rent_id, a.message, a.report, a.state, a.fix
+        from repair as a,
+             rent as b
+        where a.rent_id = b.rent_id
+          and b.user_id = #{userId}
+    </select>
+</mapper>

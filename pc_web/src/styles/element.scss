@@ -1,0 +1,19 @@
+$rootSize: 1.5 !default;
+
+.el-form-item__label{
+  font-size: 16px/$rootSize;
+  padding: 0 !important;
+
+}
+.el-input__inner:focus{
+  border: 1px solid #4458FE;
+}
+.el-form-item{
+  margin-bottom: 5px/$rootSize;
+}
+.el-drawer__header {
+  font-size: 24px;
+  line-height: 40px;
+  color: #3a3f63;
+  font-weight: 400;
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.CheckOutMapper">
+    <insert id="insertCheckOut">
+        insert into checkout (rent_id, start, state, message)
+        values (#{rentId}, current_timestamp, 0, #{message})
+    </insert>
+    <update id="updateCheckOut">
+        update checkout
+        set user_id = #{userId},
+            end     = current_timestamp,
+            remark  = #{remark},
+            state   = 1
+        where checkout_id = #{checkoutId}
+    </update>
+    <select id="getCheckOutState" resultType="niuniu.javaweb.pojo.CheckOut">
+        select a.checkout_id,
+               a.rent_id,
+               a.user_id,
+               a.start,
+               a.end,
+               a.remark,
+               a.state,
+               a.message
+        from checkout as a,
+             rent as b
+        where a.rent_id = b.rent_id
+          and b.user_id = #{userId}
+          and a.state!=3
+        ORDER BY
+        start DESC LIMIT 1
+    </select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.BasicMapper">
+    <insert id="insert" parameterType="niuniu.javaweb.pojo.Basic">
+        insert into basic (base_name, price, remark, state, time, operation, old_price)
+        values (#{baseName}, #{price}, #{remark}, 1, current_timestamp, #{operation}, #{price})
+    </insert>
+    <select id="getBasic" resultType="niuniu.javaweb.pojo.Basic">
+        select *
+        from basic
+        where base_id > 2
+          and state = 1
+    </select>
+    <insert id="insertMiscellaneous">
+        insert into miscellaneous (rent_id, base_id, state, time)
+        values (#{rentId}, #{baseId}, 1, current_timestamp)
+    </insert>
+    <select id="getBasicByUserId" resultType="niuniu.javaweb.vo.BasicVO">
+        select c.base_name, c.base_id, c.price, c.remark, a.time, a.miscellaneous_id
+        from miscellaneous as a,
+             rent as b,
+             basic as c
+        where b.rent_id = a.rent_id
+          and a.base_id = c.base_id
+          and user_id = #{userId}
+          and a.state = 1
+    </select>
+    <update id="changeMiscellaneousState">
+        update miscellaneous
+        set state = #{state}
+        where miscellaneous_id = #{miscellaneousId}
+    </update>
+    <select id="getNoBasicByRentId" resultType="niuniu.javaweb.pojo.Basic">
+        select a.*
+        from basic as a
+        where a.base_id not in (select b.base_id from miscellaneous as b where b.rent_id = #{rentId} and b.state = 1)
+          and base_id not in (1, 2)
+    </select>
+    <update id="deleteBasic">
+        update basic
+        set state = 0
+        where base_id = #{baseId}
+    </update>
+    <update id="deleteMiscellaneous">
+        update miscellaneous
+        set state = 2
+        where base_id = #{baseId}
+    </update>
+    <update id="updateBasic">
+        update basic
+        set base_name =#{baseName},
+        remark = #{remark},
+        operation = #{operation}
+        <if test="oldPrice !=null and oldPrice !=''">
+            ,old_price = #{oldPrice},
+            price = #{price},
+            time = current_timestamp
+        </if>
+        where base_id = #{baseId}
+    </update>
+    <update id="changeMiscellaneousStateByRentId">
+        update miscellaneous
+        set state = 0,
+            time  = current_timestamp
+        where state = 2
+          and rent_id = #{rentId}
+    </update>
+    <update id="changeBasicState">
+        update basic
+        set state = 0
+        where state = 2
+    </update>
+    <select id="getBasicByRentId" resultType="niuniu.javaweb.pojo.Basic">
+        select a.*
+        from basic as a,
+             miscellaneous as b
+        where a.base_id = b.base_id
+          and b.state != 0
+          and b.rent_id = #{rentId}
+    </select>
+</mapper>
