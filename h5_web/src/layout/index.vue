@@ -13,13 +13,13 @@
 </template>
 
 <script>
-import HeaderVue from "@/layout/component/HeaderVue.vue";
-import NavBar from "./component/NavBar.vue";
+import HeaderVue from '@/layout/component/HeaderVue.vue';
+import NavBar from './component/NavBar.vue';
 export default {
   components: {
     HeaderVue,
-    NavBar,
-  },
+    NavBar
+  }
 };
 </script>
 

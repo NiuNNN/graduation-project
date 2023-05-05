@@ -1,9 +1,9 @@
-import { getIsCurrent, removeIsCurrent, setIsCurrent } from "@/utils/setting";
+import { getIsCurrent, removeIsCurrent, setIsCurrent } from '@/utils/setting';
 
 export default {
   namespaced: true,
   state: {
-    isCurrent: getIsCurrent() || "home", //保存当前的路由样式
+    isCurrent: getIsCurrent() //获取当前的路由样式
   },
   mutations: {
     setIsCurrent(state, isCurrent) {
@@ -11,13 +11,13 @@ export default {
       setIsCurrent(isCurrent);
     },
     removeIsCurrent(state) {
-      state.isCurrent = "";
+      state.isCurrent = '';
       removeIsCurrent();
-    },
+    }
   },
   actions: {
     changeCurrent(context, val) {
-      context.commit("setIsCurrent", val);
-    },
-  },
+      context.commit('setIsCurrent', val);
+    }
+  }
 };

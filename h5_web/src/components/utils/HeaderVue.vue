@@ -1,11 +1,6 @@
 <template>
   <div class="container">
-    <van-nav-bar
-      :title="title"
-      left-text="返回"
-      left-arrow
-      @click-left="goBack()"
-    >
+    <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="goBack()">
       <template #right>
         <slot></slot>
       </template>
@@ -18,14 +13,14 @@ export default {
   props: {
     title: {
       type: String,
-      default: "标题",
-    },
+      default: '标题'
+    }
   },
   methods: {
     goBack() {
       this.$router.go(-1);
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -19,7 +19,7 @@ public class LoginController {
     private LoginService loginService;
 
     /**
-     * 员工
+     * 员工登录
      *
      * @param user
      * @return
@@ -30,6 +30,11 @@ public class LoginController {
         return loginService.StaffLogin(user);
     }
 
+    /**
+     * 员工退出
+     *
+     * @return
+     */
     @GetMapping("/staff/logout")
     public CommonResult loginStaffOut() {
         return loginService.loginOut();
@@ -44,6 +49,7 @@ public class LoginController {
      */
     @PostMapping("/user/login")
     public CommonResult loginUser(User user) {
+        System.out.println(user);
         return loginService.UserLogin(user);
     }
 

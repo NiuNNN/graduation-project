@@ -216,4 +216,15 @@ public class CostController {
     public CommonResult getCostByRentId(Integer rentId, String time) {
         return costService.getCostByRentId(rentId, time);
     }
+
+    /**
+     * 获取用户图表
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("getUserChart")
+    public CommonResult getUserChart(Integer userId) {
+        return costService.getUserChart(userId);
+    }
 }

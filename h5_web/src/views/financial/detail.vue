@@ -52,26 +52,19 @@
         </van-collapse>
       </div>
       <div style="margin: 16px" v-if="house.state == 0">
-        <van-button
-          round
-          block
-          type="info"
-          native-type="submit"
-          @click="onSubmit"
-          >确 认 支 付</van-button
-        >
+        <van-button round block type="info" native-type="submit" @click="onSubmit">确 认 支 付</van-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Header from "@/components/utils/HeaderVue.vue";
-import { getUserOrderDetail, pay } from "@/api/financial";
-import { valueAllEmpty } from "@/utils/validate";
+import Header from '@/components/utils/HeaderVue.vue';
+import { getUserOrderDetail, pay } from '@/api/financial';
+import { valueAllEmpty } from '@/utils/validate';
 export default {
   components: {
-    Header,
+    Header
   },
   created() {
     this.getUserOrderDetail();
@@ -83,7 +76,7 @@ export default {
       message: {},
       activeNames: [],
       activeMessage: [],
-      show: false,
+      show: false
     };
   },
   methods: {
@@ -91,11 +84,11 @@ export default {
       try {
         this.$toast.loading({
           duration: 0,
-          message: "加载中...",
-          forbidClick: true,
+          message: '加载中...',
+          forbidClick: true
         });
         const { data } = await getUserOrderDetail({
-          orderId: this.$route.params.id,
+          orderId: this.$route.params.id
         });
         this.house = data.house;
         if (data.mis) {
@@ -117,15 +110,15 @@ export default {
         const { data } = await pay({
           ...this.house,
           subject: this.house.type,
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         console.log(data);
-        const newWindow = window.open("", "_target");
+        const newWindow = window.open('', '_target');
         newWindow.document.write(data);
         newWindow.focus();
         this.$dialog
           .alert({
-            message: "是否支付成功",
+            message: '是否支付成功'
           })
           .then(() => {
             this.getUserOrderDetail();
@@ -133,8 +126,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

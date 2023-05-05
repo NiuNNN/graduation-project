@@ -267,4 +267,9 @@ public class testService {
 //            System.out.println("【arr[i]】" + arr[i]);
         }
     }
+
+    @Test
+    void getUserChart() {
+        System.out.println(costService.getUserChart(95));
+    }
 }

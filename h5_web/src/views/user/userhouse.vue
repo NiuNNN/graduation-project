@@ -19,15 +19,15 @@
 </template>
 
 <script>
-import { getHouseDetailByUserId } from "@/api/house";
-import Header from "@/components/utils/HeaderVue.vue";
+import { getHouseDetailByUserId } from '@/api/house';
+import Header from '@/components/utils/HeaderVue.vue';
 export default {
   components: {
-    Header,
+    Header
   },
   data() {
     return {
-      house: {},
+      house: {}
     };
   },
   created() {
@@ -38,19 +38,19 @@ export default {
       try {
         this.$toast.loading({
           duration: 0,
-          message: "加载中...",
-          forbidClick: true,
+          message: '加载中...',
+          forbidClick: true
         });
         const { data } = await getHouseDetailByUserId({
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         this.house = data;
         this.$toast.clear();
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

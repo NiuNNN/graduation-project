@@ -1,4 +1,4 @@
-const CurrentKey = "PRHMS-iscurrent-key-user";
+const CurrentKey = 'PRHMS-iscurrent-key-user';
 
 /**
  * 获取当前样式

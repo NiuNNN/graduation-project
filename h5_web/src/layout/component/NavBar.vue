@@ -1,19 +1,13 @@
 <template>
   <div class="container">
     <router-link to="/">
-      <div
-        :class="['link', { current: isCurrent == `home` }]"
-        @click="change(`home`)"
-      >
+      <div :class="['link', { current: isCurrent == `home` }]" @click="change(`home`)">
         <van-icon name="apps-o" />
         <p>工 作 台</p>
       </div>
     </router-link>
     <router-link to="/user">
-      <div
-        :class="['link', { current: isCurrent == `user` }]"
-        @click="change(`user`)"
-      >
+      <div :class="['link', { current: isCurrent == `user` }]" @click="change(`user`)">
         <van-icon name="user-o" />
         <p>我 的</p>
       </div>
@@ -28,21 +22,21 @@ export default {
   },
   methods: {
     change(val) {
-      this.$store.dispatch("setting/changeCurrent", val);
+      this.$store.dispatch('setting/changeCurrent', val);
     },
     goRoute() {
       if (this.isCurrent == `user`) {
-        this.$router.push("/user");
+        this.$router.push('/user');
       } else {
-        this.$router.push("/");
+        this.$router.push('/');
       }
-    },
+    }
   },
   computed: {
     isCurrent() {
-      return this.$store.getters.isCurrent;
-    },
-  },
+      return this.$store.getters.isCurrent || 'home';
+    }
+  }
 };
 </script>
 

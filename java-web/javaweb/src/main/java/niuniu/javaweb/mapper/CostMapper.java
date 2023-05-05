@@ -135,4 +135,11 @@ public interface CostMapper extends BaseMapper<Cost> {
      */
     Cost getCostByRentId(Integer rentId, String date);
 
+    /**
+     * 获取用户图表
+     *
+     * @param userId
+     * @return
+     */
+    List<Cost> getUserChart(Integer userId);
 }

@@ -133,4 +133,11 @@
             </if>
         </where>
     </select>
+    <select id="getUserChart" resultType="niuniu.javaweb.pojo.Cost">
+        select a.num_water, a.num_electric, DATE_FORMAT(a.date, "%m") as date
+        from cost as a, rent as b
+        where a.rent_id = b.rent_id
+          and b.user_id = #{userId}
+          and YEAR (a.date) = YEAR (NOW())
+    </select>
 </mapper>

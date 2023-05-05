@@ -33,10 +33,10 @@
 </template>
 
 <script>
-import Header from "@/components/utils/HeaderVue.vue";
+import Header from '@/components/utils/HeaderVue.vue';
 export default {
   components: {
-    Header,
+    Header
   },
   created() {
     console.log(this.$route);
@@ -47,8 +47,8 @@ export default {
     },
     user() {
       return this.$store.getters.user;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -1,65 +1,67 @@
-import axios from "axios";
-import store from "@/store";
-import { Toast } from "vant";
-import router from "@/router";
-import { getTimeStamp, logout } from "@/utils/auth";
-import FileSaver from "file-saver";
+import axios from 'axios';
+import store from '@/store';
+import { Toast, Loading } from 'vant';
+import router from '@/router';
+import { getTimeStamp, logout } from '@/utils/auth';
+import FileSaver from 'file-saver';
 
 const TimeOut = 86400; // 定义超时时间
 
 axios.defaults.baseURL = process.env.VUE_APP_BASE_API;
 axios.defaults.timeout = 60000;
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded;charset=UTF-8";
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 // 请求拦截器
 axios.interceptors.request.use(
-  async (config) => {
+  async config => {
+    Toast.loading({
+      duration: 0, // 持续展示 toast
+      forbidClick: true,
+      message: '加载中...'
+    });
     // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
     if (store.getters.Authorization) {
       // 只要有token 就要检查token时效性
       if (CheckIsTimeOut()) {
         //  继续？
-        await store.dispatch("user/logout");
-        Toast.fail(
-          "Not logged in yet or login has expired.Please log in again"
-        );
-        router.push("/login");
-        return Promise.reject(new Error("token Timeout"));
+        await store.dispatch('user/logout');
+        Toast.fail('Not logged in yet or login has expired.Please log in again');
+        router.push('/login');
+        return Promise.reject(new Error('token Timeout'));
       }
     }
     config.headers.token = store.getters.Authorization;
     return config;
   },
-  async (error) => {
-    router.push("/login");
+  async error => {
+    Toast.clear();
+    router.push('/login');
     return Promise.error(error);
   }
 );
 
 // 响应拦截器
 axios.interceptors.response.use(
-  (response) => {
+  response => {
     // console.log(response);
     if (response.data instanceof Blob) {
       //直接拦截blob文件进行下载
-      let patt = new RegExp("filename=([^;]+\\.[^\\.;]+);*");
-      let contentDisposition = decodeURI(
-        response.headers["content-disposition"]
-      );
+      let patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*');
+      let contentDisposition = decodeURI(response.headers['content-disposition']);
       let result = patt.exec(contentDisposition);
       FileSaver.saveAs(response.data, result[1]);
-      Toast.fail("正在为你下载...");
+      Toast.fail('正在为你下载...');
       return Promise.resolve(response);
     }
     if (response.data.code === 200) {
+      Toast.clear();
       return Promise.resolve(response);
     } else {
       console.log(response);
       switch (response.data.code) {
         case 401:
-          Toast.fail("请重新登陆");
+          Toast.fail('请重新登陆');
           break;
         case 402:
           Toast.fail(`无权访问`);
@@ -71,16 +73,17 @@ axios.interceptors.response.use(
           Toast.fail(`${response.data.message}`);
           return Promise.reject(new Error(response));
         default:
-          Toast.fail("服务器正在维修");
+          Toast.fail('服务器正在维修');
       }
       logout();
-      router.push("/login"); // 跳到登录
+      router.push('/login'); // 跳到登录
       return Promise.reject(new Error(response));
     }
   },
   // 服务器状态码不是200的情况
-  async (error) => {
-    router.push("/404");
+  async error => {
+    Toast.clear();
+    router.push('/404');
     return Promise.reject(error);
   }
 );
@@ -100,12 +103,12 @@ export function get(url, params) {
   return new Promise((resolve, reject) => {
     axios
       .get(url, {
-        params: params,
+        params: params
       })
-      .then((res) => {
+      .then(res => {
         resolve(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });
@@ -119,10 +122,10 @@ export function post(url, params) {
   return new Promise((resolve, reject) => {
     axios
       .post(url, params)
-      .then((res) => {
+      .then(res => {
         resolve(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });
@@ -131,31 +134,31 @@ export function post(url, params) {
 export function postFile(url, param) {
   const config = {
     header: {
-      "Content-Type": "multipart/form-data",
-    },
+      'Content-Type': 'multipart/form-data'
+    }
   };
   return new Promise((resolve, reject) => {
     axios
       .post(url, param, config)
-      .then((res) => {
+      .then(res => {
         resolve(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });
 }
 export function getExcel(url, param) {
   const config = {
-    responseType: "blob",
+    responseType: 'blob'
   };
   return new Promise((resolve, reject) => {
     axios
       .post(url, param, config)
-      .then((res) => {
+      .then(res => {
         resolve(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });

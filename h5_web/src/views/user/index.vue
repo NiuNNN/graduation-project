@@ -1,51 +1,28 @@
 <template>
   <div class="container">
     <div class="avatar">
-      <input
-        type="file"
-        accept="image/jpeg"
-        style="display: none"
-        ref="iptRef"
-        @change="onFileChange"
-      />
-      <img
-        v-imageerror="defaultImg"
-        :src="avatar"
-        alt=""
-        @click="uploadAvatar"
-      />
+      <input type="file" accept="image/jpeg" style="display: none" ref="iptRef" @change="onFileChange" />
+      <img v-imageerror="defaultImg" :src="avatar" alt="" @click="uploadAvatar" />
       <div class="camera"><van-icon name="edit" @click="uploadAvatar" /></div>
     </div>
     <div class="mian">
-      <van-cell
-        title="个 人 资 料"
-        is-link
-        icon="contact"
-        :to="`userprofile/${this.$store.getters.username}`"
-      />
-      <van-cell
-        title="住 房 信 息"
-        is-link
-        icon="hotel-o"
-        :to="`userhouse/${this.$store.getters.username}`"
-      />
+      <van-cell title="个 人 资 料" is-link icon="contact" :to="`userprofile/${this.$store.getters.username}`" />
+      <van-cell title="住 房 信 息" is-link icon="hotel-o" :to="`userhouse/${this.$store.getters.username}`" />
       <van-cell title="密 码 设 置" is-link icon="shield-o" to="password" />
     </div>
     <div class="footer">
-      <van-button round type="info" style="width: 80%" @click="logout"
-        >退 出 登 录</van-button
-      >
+      <van-button round type="info" style="width: 80%" @click="logout">退 出 登 录</van-button>
     </div>
   </div>
 </template>
 
 <script>
-import { uploadAvatarAPI } from "@/api/user";
+import { uploadAvatarAPI } from '@/api/user';
 export default {
   data() {
     return {
-      defaultImg: require("@/assets/image/avatar_default.png"),
-      avatar: "",
+      defaultImg: require('@/assets/image/avatar_default.png'),
+      avatar: ''
     };
   },
   created() {
@@ -69,7 +46,7 @@ export default {
           //校检上传的文件
           const fr = new FileReader();
           fr.readAsDataURL(files[0]); // 传入文件对象开始阅读
-          fr.onload = async (e) => {
+          fr.onload = async e => {
             // onload等待把文件读成base64字符串后会触发onload事件函数
             // e.target.result的值就是读完的结果
             this.avatar = e.target.result; // 赋予给变量，让他显示在img的src里
@@ -77,29 +54,29 @@ export default {
             form.append(`file`, files[0]);
             form.append(`username`, this.$store.getters.username);
             await uploadAvatarAPI(form);
-            this.$store.dispatch("user/getUser");
-            this.$toast.success("头像修改成功");
+            this.$store.dispatch('user/getUser');
+            this.$toast.success('头像修改成功');
           };
         }
       }
     },
     //校检函数
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error('上传头像图片只能是 JPG 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     },
     logout() {
-      this.$store.dispatch("user/logout");
-    },
-  },
+      this.$store.dispatch('user/logout');
+    }
+  }
 };
 </script>
 

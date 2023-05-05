@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import Header from "@/components/utils/HeaderVue.vue";
+import Header from '@/components/utils/HeaderVue.vue';
 export default {
   components: {
-    Header,
-  },
+    Header
+  }
 };
 </script>
 

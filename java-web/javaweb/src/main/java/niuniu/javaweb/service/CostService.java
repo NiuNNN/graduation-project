@@ -150,4 +150,12 @@ public interface CostService {
      * @return
      */
     CommonResult getCostByRentId(Integer rentId, String time);
+
+    /**
+     * 获取用户图表
+     *
+     * @param userId
+     * @return
+     */
+    CommonResult getUserChart(Integer userId);
 }

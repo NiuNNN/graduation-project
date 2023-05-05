@@ -13,14 +13,7 @@
                 <p>维修时间: {{ item.fix }}</p>
               </template>
             </van-cell>
-            <template #right>
-              <van-button
-                square
-                type="info"
-                text="取消"
-                :disabled="item.state !== `待处理`"
-                @click="cancel(item)"
-              /> </template
+            <template #right> <van-button square type="info" text="取消" :disabled="item.state !== `待处理`" @click="cancel(item)" /> </template
           ></van-swipe-cell>
         </van-cell-group>
         <van-empty description="暂无更多报修记录" />
@@ -30,15 +23,15 @@
 </template>
 
 <script>
-import { getRepair, deleteRepair } from "@/api/repair";
-import Header from "@/components/utils/HeaderVue.vue";
+import { getRepair, deleteRepair } from '@/api/repair';
+import Header from '@/components/utils/HeaderVue.vue';
 export default {
   components: {
-    Header,
+    Header
   },
   data() {
     return {
-      repair: {},
+      repair: {}
     };
   },
   created() {
@@ -48,13 +41,13 @@ export default {
     cancel(val) {
       this.$dialog
         .confirm({
-          title: "取消报修",
-          message: "你确定要取消吗？",
+          title: '取消报修',
+          message: '你确定要取消吗？'
         })
         .then(async () => {
           try {
             await deleteRepair(val);
-            this.$toast.success("取消成功");
+            this.$toast.success('取消成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -65,14 +58,14 @@ export default {
     async getRepair() {
       try {
         const { data } = await getRepair({
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         this.repair = data;
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

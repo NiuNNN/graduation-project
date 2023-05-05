@@ -9,21 +9,10 @@
         <van-cell title="录入时间" :value="house.loginTime" />
       </div>
       <div class="bg">
-        <van-field
-          v-model="message"
-          rows="2"
-          autosize
-          label="留言"
-          type="textarea"
-          maxlength="50"
-          placeholder="请输入留言"
-          show-word-limit
-        />
+        <van-field v-model="message" rows="2" autosize label="留言" type="textarea" maxlength="50" placeholder="请输入留言" show-word-limit />
       </div>
       <div class="footer">
-        <van-button round type="info" style="width: 80%" @click="checkout"
-          >申 请 退 房</van-button
-        >
+        <van-button round type="info" style="width: 80%" @click="checkout">申 请 退 房</van-button>
       </div>
     </div>
     <div class="main" v-if="state === 0">
@@ -36,11 +25,7 @@
           <div>留言：{{ checkoutData.message }}</div>
         </template>
       </van-cell>
-      <van-action-sheet
-        v-model="showCancel"
-        :actions="actions"
-        @select="onSelect"
-      />
+      <van-action-sheet v-model="showCancel" :actions="actions" @select="onSelect" />
     </div>
     <div class="main" v-if="state === 1">
       <van-cell>
@@ -73,36 +58,28 @@
           </template>
         </van-cell>
       </van-cell-group>
-      <van-action-sheet
-        v-model="showCancel"
-        :actions="actions"
-        @select="onSelect"
-      />
+      <van-action-sheet v-model="showCancel" :actions="actions" @select="onSelect" />
     </div>
   </div>
 </template>
 
 <script>
-import {
-  insertCheckOut,
-  getCheckOutState,
-  cancelCheckOut,
-} from "@/api/checkout";
-import Header from "@/components/utils/HeaderVue.vue";
-import { valueAllEmpty } from "@/utils/validate";
-import { getHouseDetailByUserId } from "@/api/house";
+import { insertCheckOut, getCheckOutState, cancelCheckOut } from '@/api/checkout';
+import Header from '@/components/utils/HeaderVue.vue';
+import { valueAllEmpty } from '@/utils/validate';
+import { getHouseDetailByUserId } from '@/api/house';
 export default {
   components: {
-    Header,
+    Header
   },
   data() {
     return {
-      message: "",
-      state: "",
+      message: '',
+      state: '',
       showCancel: false,
-      actions: [{ name: "重新提交" }],
+      actions: [{ name: '重新提交' }],
       checkoutData: {},
-      house: {},
+      house: {}
     };
   },
   async created() {
@@ -112,8 +89,8 @@ export default {
     async reset() {
       this.$toast.loading({
         duration: 0,
-        message: "加载中...",
-        forbidClick: true,
+        message: '加载中...',
+        forbidClick: true
       });
       await this.getHouseDetail();
       await this.getCheckOutState();
@@ -123,7 +100,7 @@ export default {
     async getHouseDetail() {
       try {
         const { data } = await getHouseDetailByUserId({
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         this.house = data;
       } catch (error) {
@@ -134,19 +111,19 @@ export default {
     checkout() {
       this.$dialog
         .confirm({
-          title: "申请报修",
-          message: "你确定要申请吗？",
+          title: '申请报修',
+          message: '你确定要申请吗？'
         })
         .then(async () => {
           try {
             this.$toast.loading();
             const { data } = await insertCheckOut({
               userId: this.$store.getters.userId,
-              message: this.message,
+              message: this.message
             });
             this.checkoutData = data;
             this.state++;
-            this.$toast.success("申请成功,待审核...");
+            this.$toast.success('申请成功,待审核...');
           } catch (error) {
             console.log(error);
           }
@@ -155,7 +132,7 @@ export default {
     async getCheckOutState() {
       try {
         const { data } = await getCheckOutState({
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         if (!valueAllEmpty(data)) {
           this.checkoutData = data;
@@ -174,8 +151,8 @@ export default {
         try {
           this.$toast.loading({
             duration: 0,
-            message: "加载中...",
-            forbidClick: true,
+            message: '加载中...',
+            forbidClick: true
           });
           this.checkoutData.state = 3;
           await cancelCheckOut(this.checkoutData);
@@ -187,8 +164,8 @@ export default {
         }
         this.showCancel = false;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

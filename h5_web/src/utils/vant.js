@@ -1,32 +1,11 @@
 // 导入vue
-import Vue from "vue";
+import Vue from 'vue';
 
 // 引入组件
-import {
-  Button,
-  Icon,
-  Form,
-  Field,
-  Toast,
-  NoticeBar,
-  Grid,
-  GridItem,
-  Cell,
-  CellGroup,
-  Image as VanImage,
-  Lazyload,
-  NavBar,
-  ActionSheet,
-  List,
-  Divider,
-  Collapse,
-  CollapseItem,
-  Dialog,
-  SwipeCell,
-  Empty,
-} from "vant";
+import { Button, Icon, Form, Field, Toast, NoticeBar, Grid, GridItem, Cell, CellGroup, Image as VanImage, Lazyload, NavBar, ActionSheet, List, Divider, Collapse, CollapseItem, Dialog, SwipeCell, Empty, Loading } from 'vant';
 
 // 使用组件
+Vue.use(Loading);
 Vue.use(Empty);
 Vue.use(SwipeCell);
 Vue.use(Dialog);

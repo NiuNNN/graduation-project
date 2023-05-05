@@ -5,12 +5,7 @@
     </div>
     <div class="main">
       <div v-for="(item, index) in order" :key="index" class="cell">
-        <van-cell
-          :title="item.time"
-          is-link
-          :value="item.state"
-          :to="`order/${item.orderId}`"
-        >
+        <van-cell :title="item.time" is-link :value="item.state" :to="`order/${item.orderId}`">
           <template #label>
             <p>订单编号: {{ item.outTradeNo }}</p>
             <p>类型: {{ item.type }}</p>
@@ -24,15 +19,15 @@
 </template>
 
 <script>
-import Header from "@/components/utils/HeaderVue.vue";
-import { getOrder } from "@/api/financial";
+import Header from '@/components/utils/HeaderVue.vue';
+import { getOrder } from '@/api/financial';
 export default {
   components: {
-    Header,
+    Header
   },
   data() {
     return {
-      order: [],
+      order: []
     };
   },
   created() {
@@ -47,8 +42,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

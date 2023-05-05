@@ -26,9 +26,9 @@
 export default {
   methods: {
     go() {
-      this.$router.push("/layout");
-    },
-  },
+      this.$router.push('/layout');
+    }
+  }
 };
 </script>
 

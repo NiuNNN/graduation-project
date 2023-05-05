@@ -1,11 +1,11 @@
-import store from "@/store";
-import { targetUrl } from "@/targetUrl.js";
+import store from '@/store';
+import { targetUrl } from '@/targetUrl.js';
 
-const TokenKey = "PRHMS-token-user";
+const TokenKey = 'PRHMS-token-user';
 
-const TimeKey = "PRHMS-time-key-user"; // 用来作为时间戳存储的key
+const TimeKey = 'PRHMS-time-key-user'; // 用来作为时间戳存储的key
 
-const UserKey = "PRHMS-username-key-user";
+const UserKey = 'PRHMS-username-key-user';
 
 /**
  * 获取token
@@ -47,9 +47,9 @@ export function getTimeStamp() {
  * 退出
  */
 export function logout() {
-  store.commit("setting/removeIsCurrent");
-  store.commit("user/removeToken");
-  store.commit("user/removeUser");
+  store.commit('setting/removeIsCurrent');
+  store.commit('user/removeToken');
+  store.commit('user/removeUser');
 }
 /**
  * 拼接头像url

@@ -1,13 +1,11 @@
 <template>
   <div class="container">
     <div class="notice">
-      <van-notice-bar
-        scrollable
-        left-icon="volume-o"
-        text="提前祝贺我答辩成功!!!"
-      />
+      <van-notice-bar scrollable left-icon="volume-o" text="提前祝贺我答辩成功!!!" />
     </div>
-    <div class="chart">123</div>
+    <div class="chart">
+      <chart></chart>
+    </div>
     <div class="grad">
       <van-grid :column-num="2">
         <van-grid-item icon="balance-list-o" text="账单" to="financial" />
@@ -25,7 +23,12 @@
 </template>
 
 <script>
-export default {};
+import chart from '@/components/utils/chart.vue';
+export default {
+  components: {
+    chart
+  }
+};
 </script>
 
 <style lang="less" scoped>

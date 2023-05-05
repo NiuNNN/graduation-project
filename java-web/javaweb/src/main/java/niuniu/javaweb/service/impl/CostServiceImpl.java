@@ -18,11 +18,9 @@ import niuniu.javaweb.utils.*;
 import niuniu.javaweb.utils.excel.ExcelUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.utils.tools.OrderUtil;
-import niuniu.javaweb.vo.CostVo;
-import niuniu.javaweb.vo.ElectricInExcelVO;
-import niuniu.javaweb.vo.OrderVO;
-import niuniu.javaweb.vo.WaterInExcelVO;
+import niuniu.javaweb.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -142,6 +140,7 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "getUserChart", allEntries = true)
     public CommonResult getElectricExcel(MultipartFile excel) {
         CommonResult checkExcelParam = checkExcelParam(excel);
         if (checkExcelParam.getCode() != 200) return checkExcelParam;
@@ -185,6 +184,7 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "getUserChart", allEntries = true)
     public CommonResult getWaterExcel(MultipartFile excel) {
         CommonResult checkExcelParam = checkExcelParam(excel);
         if (checkExcelParam.getCode() != 200) return checkExcelParam;
@@ -294,6 +294,7 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "getUserChart", allEntries = true)
     public CommonResult toggleElectric(List<ElectricInExcelVO> electricInExcelVOS) {
         for (ElectricInExcelVO electricInExcelVO : electricInExcelVOS) {
             electricInExcelVO.setNum(electricInExcelVO.getNum().replaceAll(",", ""));
@@ -311,6 +312,7 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "getUserChart", allEntries = true)
     public CommonResult toggleWater(List<WaterInExcelVO> waterInExcelVOS) {
         for (WaterInExcelVO waterInExcelVO : waterInExcelVOS) {
             waterInExcelVO.setNum(waterInExcelVO.getNum().replaceAll(",", ""));
@@ -689,5 +691,39 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
             orderVO.setMis(cost.getMis());
             return CommonResult.success(orderVO);
         }
+    }
+
+    /**
+     * 获取用户图表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+//    @Cacheable(cacheNames = "getUserChart", key = "#userId")
+    public CommonResult getUserChart(Integer userId) {
+        List<Cost> costList = costMapper.getUserChart(userId);
+        List<ChartVO> list = new ArrayList<>();
+        ArrayList eleList = new ArrayList<>();
+        ArrayList waterList = new ArrayList<>();
+        if (costList.size() > 0) {
+            for (int i = 0; i < 12; i++) {
+                String ele = "";
+                String water = "";
+                for (Cost cost : costList) {
+                    if (Integer.valueOf(cost.getDate()) - 1 == i) {
+                        ele = cost.getNumElectric();
+                        water = cost.getNumWater();
+                    }
+                }
+                eleList.add(ele);
+                waterList.add(water);
+            }
+        }
+//        System.out.println(waterList);
+//        System.out.println(eleList);
+        list.add(new ChartVO("用水量(方)", "line", "", true, waterList));
+        list.add(new ChartVO("用电量(度)", "line", "", true, eleList));
+        return CommonResult.success(list);
     }
 }

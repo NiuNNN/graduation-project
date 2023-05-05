@@ -26,6 +26,8 @@ public class DateUtil {
 
     static String DEFAULT_FORMAT_DAY = "yyyy-MM-dd";
 
+    static String MONTH[] = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
+
     /**
      * 转换当前日期 转换为 yyyy-MM-dd-HH-mm-ss
      *
@@ -110,6 +112,13 @@ public class DateUtil {
 
     }
 
+    /**
+     * 校验是否是前三天
+     *
+     * @param time
+     * @return
+     * @throws ParseException
+     */
     public static boolean checkOrderTime(String time) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat(DEFAULT_FORMAT_DAY);
         // 获取当月第三天
@@ -128,4 +137,5 @@ public class DateUtil {
         }
         return false;
     }
+    
 }

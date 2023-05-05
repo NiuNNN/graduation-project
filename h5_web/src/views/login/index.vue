@@ -15,7 +15,7 @@
             autocomplete="off"
             :rules="[
               { required: true, message: '请填写用户名' },
-              { pattern: /^\d{5,12}$/, message: '用户名有误' },
+              { pattern: /^\d{5,12}$/, message: '用户名有误' }
             ]"
           />
           <van-field
@@ -27,19 +27,11 @@
             autocomplete="off"
             :rules="[
               { required: true, message: '请填写密码' },
-              { pattern: /^\w{5,12}$/, message: '密码有误' },
+              { pattern: /^\w{5,12}$/, message: '密码有误' }
             ]"
           />
           <div style="margin: 16px">
-            <van-button
-              round
-              block
-              type="info"
-              native-type="submit"
-              :loading="loading"
-              loading-text="登陆中..."
-              >登录</van-button
-            >
+            <van-button round block type="info" native-type="submit">登录</van-button>
           </div>
         </van-form>
       </div>
@@ -49,31 +41,29 @@
 </template>
 
 <script>
-import HeaderVue from "@/layout/component/HeaderVue.vue";
+import HeaderVue from '@/layout/component/HeaderVue.vue';
 export default {
   components: {
-    HeaderVue,
+    HeaderVue
   },
   data() {
     return {
-      username: "",
-      password: "",
-      loading: false,
+      username: '',
+      password: ''
     };
   },
   methods: {
     async onSubmit(values) {
       try {
-        console.log("submit", values);
+        console.log('submit', values);
         this.loading = true;
-        await this.$store.dispatch("user/login", values);
-        this.loading = false;
-        this.$router.push("/");
+        await this.$store.dispatch('user/login', values);
+        this.$router.push('/');
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

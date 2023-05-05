@@ -14,13 +14,7 @@
             </template>
           </van-cell>
           <template #right>
-            <van-button
-              square
-              text="删除"
-              type="danger"
-              class="delete-button"
-              @click="remove(item.miscellaneousId)"
-            />
+            <van-button square text="删除" type="danger" class="delete-button" @click="remove(item.miscellaneousId)" />
           </template>
         </van-swipe-cell>
       </div>
@@ -34,13 +28,7 @@
             </template>
           </van-cell>
           <template #right>
-            <van-button
-              square
-              text="添加"
-              type="primary"
-              class="primary-button"
-              @click="add(item.baseId)"
-            />
+            <van-button square text="添加" type="primary" class="primary-button" @click="add(item.baseId)" />
           </template>
         </van-swipe-cell>
       </div>
@@ -49,23 +37,18 @@
 </template>
 
 <script>
-import Header from "@/components/utils/HeaderVue.vue";
-import {
-  getBasicByUserId,
-  getNoBasic,
-  insertMiscellaneous,
-  changeMiscellaneousState,
-} from "@/api/basic";
-import { getRentIdByUserId } from "@/api/rent";
+import Header from '@/components/utils/HeaderVue.vue';
+import { getBasicByUserId, getNoBasic, insertMiscellaneous, changeMiscellaneousState } from '@/api/basic';
+import { getRentIdByUserId } from '@/api/rent';
 export default {
   components: {
-    Header,
+    Header
   },
   data() {
     return {
       hasMis: {},
       rent: {},
-      noMis: {},
+      noMis: {}
     };
   },
   created() {
@@ -76,7 +59,7 @@ export default {
     async getBasicByUserId() {
       try {
         const { data } = await getBasicByUserId({
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         this.hasMis = data;
         // console.log(data);
@@ -88,7 +71,7 @@ export default {
     async getNoBasic() {
       try {
         const res = await getRentIdByUserId({
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         this.rent = res.data;
         // console.log(this.rent);
@@ -104,16 +87,16 @@ export default {
       // console.log(val);
       this.$dialog
         .confirm({
-          title: "添加杂费",
-          message: "添加后立即生效，并参与本月结算",
+          title: '添加杂费',
+          message: '添加后立即生效，并参与本月结算'
         })
         .then(async () => {
           try {
             await insertMiscellaneous({
               rentId: this.rent.rentId,
-              baseId: val,
+              baseId: val
             });
-            this.$toast.success("添加成功");
+            this.$toast.success('添加成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -126,16 +109,16 @@ export default {
       // console.log(val);
       this.$dialog
         .confirm({
-          title: "删除杂费",
-          message: "删除后该月可使用，下月将使用将重新计算",
+          title: '删除杂费',
+          message: '删除后该月可使用，下月将使用将重新计算'
         })
         .then(async () => {
           try {
             await changeMiscellaneousState({
               state: 2,
-              miscellaneousId: val,
+              miscellaneousId: val
             });
-            this.$toast.success("删除成功");
+            this.$toast.success('删除成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -146,14 +129,14 @@ export default {
     async reset() {
       this.$toast.loading({
         duration: 0,
-        message: "加载中...",
-        forbidClick: true,
+        message: '加载中...',
+        forbidClick: true
       });
       await this.getBasicByUserId();
       await this.getNoBasic();
       this.$toast.clear();
-    },
-  },
+    }
+  }
 };
 </script>
 
