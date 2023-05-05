@@ -1,25 +1,15 @@
-import { loginAPI, getUserAPI, logoutAPI } from "@/api/user";
-import router from "@/router";
-import {
-  setToken,
-  getToken,
-  removeToken,
-  setTimeStamp,
-  setUser,
-  getUser,
-  removeUser,
-  computedAvatar,
-  logout,
-} from "@/utils/auth";
-import { setMenu } from "@/utils/menu";
+import { loginAPI, getUserAPI, logoutAPI } from '@/api/user';
+import router from '@/router';
+import { setToken, getToken, removeToken, setTimeStamp, setUser, getUser, removeUser, computedAvatar, logout } from '@/utils/auth';
+import { setMenu } from '@/utils/menu';
 
-import store from "..";
+import store from '..';
 
 export default {
   namespaced: true,
   state: {
-    Authorization: getToken() || "", //token请求头
-    user: getUser() || {}, //用户信息
+    Authorization: getToken() || '', //token请求头
+    user: getUser() || {} //用户信息
   },
   mutations: {
     // 设置token的mutations
@@ -40,30 +30,30 @@ export default {
     removeUser(state) {
       state.user = {}; // 重置为空对象
       removeUser();
-    },
+    }
   },
   actions: {
     async login(context, val) {
       const { data } = await loginAPI(val);
       setTimeStamp(); //设置时间戳
-      context.commit("setToken", data.token);
-      context.commit("setUser", data.menu.user);
+      context.commit('setToken', data.token);
+      context.commit('setUser', data.menu.user);
       //存储菜单信息并且加载路由信息
       setMenu(data.menu.routeList);
     },
     // 获取用户资料
     async getUser(context) {
       const { data: user } = await getUserAPI({
-        username: store.getters.username,
+        username: store.getters.username
       });
-      context.commit("setUser", user);
+      context.commit('setUser', user);
       return user;
     },
     // 登出action
     async logout(context) {
-      await logoutAPI();
+      // await logoutAPI();
       logout();
-      router.push("/login"); // 跳到登录
-    },
-  },
+      router.push('/login'); // 跳到登录
+    }
+  }
 };

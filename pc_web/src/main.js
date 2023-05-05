@@ -9,10 +9,9 @@ import '@/styles/index.scss'; // global css
 
 import * as directives from '@/directives';
 import '@/permission';
-import echarts from 'echarts' //引入echart
+import * as echarts from 'echarts'; //引入echart
 
-
-Vue.prototype.$echarts = echarts
+Vue.prototype.$echarts = echarts;
 Vue.config.productionTip = false;
 
 /**
