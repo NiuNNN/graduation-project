@@ -37,40 +37,22 @@
                 <el-row justify="space-around">
                   <el-col :span="12">
                     <span class="area">总 面 积 : {{ area }} (㎡)</span>
-                    <span class="area" style="color: #00d0b5">
-                      可 用 面 积 : {{ available }} (㎡)</span
-                    ></el-col
+                    <span class="area" style="color: #00d0b5"> 可 用 面 积 : {{ available }} (㎡)</span></el-col
                   >
-                  <el-col :span="12" style="text-align: right">
-                    <el-button class="add" @click="add()" :disabled="isAdd"
-                      >添 加 +</el-button
-                    ></el-col
-                  >
+                  <el-col :span="12" style="text-align: right"> <el-button class="add" @click="add()" :disabled="isAdd">添 加 +</el-button></el-col>
                 </el-row>
               </div>
               <div class="table">
                 <el-table :data="tableData" style="width: 100%" height="472">
-                  <el-table-column prop="houseName" label="房号" width="80">
-                  </el-table-column>
-                  <el-table-column prop="styleName" label="房型名称">
-                  </el-table-column>
-                  <el-table-column prop="area" label="面积(㎡)">
-                  </el-table-column>
-                  <el-table-column prop="balcony" label="阳台" width="80">
-                  </el-table-column>
-                  <el-table-column prop="price" label="价格(元/月)">
-                  </el-table-column>
-                  <el-table-column prop="state" label="状态" width="80">
-                  </el-table-column>
+                  <el-table-column prop="houseName" label="房号" width="80"> </el-table-column>
+                  <el-table-column prop="styleName" label="房型名称"> </el-table-column>
+                  <el-table-column prop="area" label="面积(㎡)"> </el-table-column>
+                  <el-table-column prop="balcony" label="阳台" width="80"> </el-table-column>
+                  <el-table-column prop="price" label="价格(元/月)"> </el-table-column>
+                  <el-table-column prop="state" label="状态" width="80"> </el-table-column>
                   <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
-                      <el-button
-                        type="danger"
-                        size="mini"
-                        @click="handleDel(scope.row)"
-                        :disabled="isDel || scope.row.state == `已租`"
-                        >删 除</el-button
-                      >
+                      <el-button type="danger" size="mini" @click="handleDel(scope.row)" :disabled="isDel || scope.row.state == `已租`">删 除</el-button>
                     </template>
                   </el-table-column>
                   <template #empty>
@@ -83,78 +65,30 @@
         </template>
       </div>
       <div class="drawer">
-        <el-drawer
-          :title="addTitle"
-          :visible.sync="drawer"
-          size="28%"
-          :direction="direction"
-          :before-close="handleClose"
-        >
-          <el-form
-            ref="houseForm"
-            :model="houseForm"
-            label-width="100px"
-            :rules="rules"
-          >
+        <el-drawer :title="addTitle" :visible.sync="drawer" size="28%" :direction="direction" :before-close="handleClose">
+          <el-form ref="houseForm" :model="houseForm" label-width="100px" :rules="rules">
             <el-form-item label="房 间 号">
-              <el-input
-                v-model="houseForm.houseName"
-                :disabled="true"
-              ></el-input>
+              <el-input v-model="houseForm.houseName" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="房 型" prop="styleName">
-              <el-select
-                v-model="houseForm.styleName"
-                placeholder="请选择房型"
-                @change="getStyleArea"
-              >
-                <el-option
-                  :label="item"
-                  :value="item"
-                  v-for="(item, index) in styleNameSelect"
-                  :key="index"
-                >
-                </el-option>
+              <el-select v-model="houseForm.styleName" placeholder="请选择房型" @change="getStyleArea">
+                <el-option :label="item" :value="item" v-for="(item, index) in styleNameSelect" :key="index"> </el-option>
               </el-select> </el-form-item
             ><el-form-item label="面 积 (㎡)" prop="area">
-              <el-select
-                v-model="houseForm.area"
-                placeholder="请选择面积"
-                @change="getStyleBalcony"
-              >
-                <el-option
-                  :label="item"
-                  :value="item"
-                  v-for="(item, index) in styleAreaSelect"
-                  :key="index"
-                >
-                </el-option>
+              <el-select v-model="houseForm.area" placeholder="请选择面积" @change="getStyleBalcony">
+                <el-option :label="item" :value="item" v-for="(item, index) in styleAreaSelect" :key="index"> </el-option>
               </el-select> </el-form-item
             ><el-form-item label="阳 台" prop="balcony" style="margin: 0">
               <el-select v-model="houseForm.balcony" placeholder="请选择阳台">
-                <el-option
-                  :label="item"
-                  :value="item"
-                  v-for="(item, index) in styleBalconySelect"
-                  :key="index"
-                >
-                </el-option>
+                <el-option :label="item" :value="item" v-for="(item, index) in styleBalconySelect" :key="index"> </el-option>
               </el-select>
-              <p class="ps" style="width: 100%; margin: 0">
-                *请依次选择房型、面积、阳台 进行添加房间
-              </p>
+              <p class="ps" style="width: 100%; margin: 0">*请依次选择房型、面积、阳台 进行添加房间</p>
             </el-form-item>
             <el-form-item>
-              <span style="font-size: 12px"
-                >剩 余 房 型 : {{ styleAvailable }} (间)</span
-              >
-              <span style="margin-left: 15px; color: #00d0b5; font-size: 12px"
-                >可 用 面 积 : {{ available }} (㎡)</span
-              >
+              <span style="font-size: 12px">剩 余 房 型 : {{ styleAvailable }} (间)</span>
+              <span style="margin-left: 15px; color: #00d0b5; font-size: 12px">可 用 面 积 : {{ available }} (㎡)</span>
               <div>
-                <el-button type="primary" @click="submit" :disabled="isDisabled"
-                  >确 认</el-button
-                >
+                <el-button type="primary" @click="submit" :disabled="isDisabled">确 认</el-button>
                 <el-button @click="reset()">取 消</el-button>
               </div>
             </el-form-item>
@@ -166,21 +100,11 @@
 </template>
 
 <script>
-import { getArea } from "@/api/floor";
-import {
-  getHouseDetail,
-  getHouseNumber,
-  insertHouse,
-  deleteHouse,
-} from "@/api/house";
-import {
-  getStyleArea,
-  getStyleBalcony,
-  getStyleName,
-  leftStyle,
-} from "@/api/house_type";
-import { validEmpty } from "@/utils/validate";
-import * as permission from "@/utils/permission";
+import { getArea } from '@/api/floor';
+import { getHouseDetail, getHouseNumber, insertHouse, deleteHouse } from '@/api/house';
+import { getStyleArea, getStyleBalcony, getStyleName, leftStyle } from '@/api/house_type';
+import { validEmpty } from '@/utils/validate';
+import * as permission from '@/utils/permission';
 export default {
   data() {
     return {
@@ -188,42 +112,38 @@ export default {
       isCurrent: 1,
       tableData: [],
       drawer: false,
-      direction: "rtl",
-      available: "",
-      area: "",
+      direction: 'rtl',
+      available: '',
+      area: '',
       houseForm: {
-        houseName: "",
-        styleName: "",
-        area: "",
-        balcony: "",
-        styleId: "",
+        houseName: '',
+        styleName: '',
+        area: '',
+        balcony: '',
+        styleId: ''
       },
-      styleAvailable: "",
+      styleAvailable: '',
       isDisabled: true,
       //下拉框
       styleNameSelect: [],
       styleAreaSelect: [],
       styleBalconySelect: [],
       rules: {
-        styleName: [
-          { required: true, message: "请选择房型信息", trigger: "blur" },
-        ],
-        area: [{ required: true, message: "请选择面积信息", trigger: "blur" }],
-        balcony: [
-          { required: true, message: "请选择阳台信息", trigger: "blur" },
-        ],
-      },
+        styleName: [{ required: true, message: '请选择房型信息', trigger: 'blur' }],
+        area: [{ required: true, message: '请选择面积信息', trigger: 'blur' }],
+        balcony: [{ required: true, message: '请选择阳台信息', trigger: 'blur' }]
+      }
     };
   },
   methods: {
     //点击取消
     reset() {
       this.houseForm = {
-        houseName: "",
-        styleName: "",
-        area: "",
-        balcony: "",
-        styleId: "",
+        houseName: '',
+        styleName: '',
+        area: '',
+        balcony: '',
+        styleId: ''
       };
       this.drawer = false;
     },
@@ -248,15 +168,15 @@ export default {
       this.getArea(floor);
     },
     async handleDel(row) {
-      this.$confirm("此操作将永久删除该房间, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将永久删除该房间, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(async () => {
           try {
             await deleteHouse(row);
-            this.$message.success("删除成功");
+            this.$message.success('删除成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -265,19 +185,19 @@ export default {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消删除",
+            type: 'info',
+            message: '已取消删除'
           });
         });
     },
     //关闭抽屉
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
+      this.$confirm('确认关闭？')
+        .then(_ => {
           this.reset();
           done();
         })
-        .catch((_) => {});
+        .catch(_ => {});
     },
     //获取房间号码
     async getHouseNumber() {
@@ -304,7 +224,7 @@ export default {
     async submit() {
       try {
         await insertHouse({ floorId: this.isCurrent, ...this.houseForm });
-        this.$message.success("创建成功");
+        this.$message.success('创建成功');
       } catch (error) {
         console.log(error);
       } finally {
@@ -315,27 +235,27 @@ export default {
     },
     //获取房型
     async getStyleName() {
-      this.houseForm.balcony = "";
-      this.houseForm.area = "";
+      this.houseForm.balcony = '';
+      this.houseForm.area = '';
       const { data } = await getStyleName(this.isCurrent);
       // console.log(data);
       this.styleNameSelect = data;
     },
     //获取面积大小
     async getStyleArea() {
-      this.houseForm.balcony = "";
-      this.houseForm.area = "";
+      this.houseForm.balcony = '';
+      this.houseForm.area = '';
       const { data } = await getStyleArea(this.isCurrent, {
-        styleName: this.houseForm.styleName,
+        styleName: this.houseForm.styleName
       });
       this.styleAreaSelect = data;
     },
     //获取阳台
     async getStyleBalcony() {
-      this.houseForm.balcony = "";
+      this.houseForm.balcony = '';
       const { data } = await getStyleBalcony(this.isCurrent, {
         styleName: this.houseForm.styleName,
-        area: this.houseForm.area,
+        area: this.houseForm.area
       });
       this.styleBalconySelect = data;
     },
@@ -350,7 +270,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
+    }
   },
   computed: {
     title() {
@@ -376,24 +296,20 @@ export default {
     },
     isGet() {
       return permission.isGet(this.$route.params.type);
-    },
+    }
   },
   watch: {
     houseForm: {
       async handler(newVal, oldVal) {
-        if (
-          validEmpty(newVal.styleName) ||
-          validEmpty(newVal.balcony) ||
-          validEmpty(newVal.area)
-        ) {
-          this.styleAvailable = "";
+        if (validEmpty(newVal.styleName) || validEmpty(newVal.balcony) || validEmpty(newVal.area)) {
+          this.styleAvailable = '';
           this.isDisabled = true;
         } else {
           // 获取房型的剩余数量
           const { data } = await leftStyle(this.isCurrent, {
             styleName: this.houseForm.styleName,
             area: this.houseForm.area,
-            balcony: this.houseForm.balcony,
+            balcony: this.houseForm.balcony
           });
           this.houseForm.styleId = data.styleId;
           this.styleAvailable = data.available;
@@ -408,9 +324,9 @@ export default {
           }
         }
       },
-      deep: true,
-    },
-  },
+      deep: true
+    }
+  }
 };
 </script>
 
@@ -446,7 +362,7 @@ export default {
       margin: auto;
       width: 80%;
       height: 40px;
-      background: url("@/assets/image/house.png");
+      background: url('@/assets/image/house.png');
       background-repeat: no-repeat;
       span {
         display: inline-block;
@@ -471,7 +387,7 @@ export default {
       margin: auto;
       width: 80%;
       height: 45px;
-      background: url("@/assets/image/door.png");
+      background: url('@/assets/image/door.png');
       background-repeat: no-repeat;
     }
   }

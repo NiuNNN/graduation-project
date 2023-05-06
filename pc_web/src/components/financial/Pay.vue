@@ -5,35 +5,15 @@
       <div class="pay">{{ payTitle }}</div>
       <p class="header">请选择支付方式：</p>
       <div style="margin-top: 30px; padding-left: 15px">
-        <el-button @click="alipay"
-          ><i
-            style="margin-right: 5px; color: #1296db; font-size: 20px"
-            class="iconfont"
-            >&#xe634;</i
-          >支付宝支付</el-button
-        >
-        <el-button @click="cashpay"
-          ><i
-            style="margin-right: 5px; color: #1296db; font-size: 20px"
-            class="iconfont"
-            >&#xea5b;</i
-          >现金支付</el-button
-        >
+        <el-button @click="alipay"><i style="margin-right: 5px; color: #1296db; font-size: 20px" class="iconfont">&#xe634;</i>支付宝支付</el-button>
+        <el-button @click="cashpay"><i style="margin-right: 5px; color: #1296db; font-size: 20px" class="iconfont">&#xea5b;</i>现金支付</el-button>
       </div>
-      <p style="color: #303133; font-size: 14px; padding: 25px 15px 0">
-        *支付后请点击此<el-button type="text" @click="judgePay">刷新</el-button>
-      </p>
+      <p style="color: #303133; font-size: 14px; padding: 25px 15px 0">*支付后请点击此<el-button type="text" @click="judgePay">刷新</el-button></p>
     </div>
     <div v-if="active == 1">
-      <el-result
-        icon="success"
-        title="支付成功"
-        :subTitle="`缴费成功，${count}秒后关闭页面`"
-      >
+      <el-result icon="success" title="支付成功" :subTitle="`缴费成功，${count}秒后关闭页面`">
         <template slot="extra">
-          <el-button type="primary" size="medium" @click="close"
-            >确定</el-button
-          >
+          <el-button type="primary" size="medium" @click="close">确定</el-button>
         </template>
       </el-result>
     </div>
@@ -41,14 +21,14 @@
 </template>
 
 <script>
-import { payByCash, payByAlipay, judgePay } from "@/api/order";
+import { payByCash, payByAlipay, judgePay } from '@/api/order';
 export default {
   data() {
     return {
       active: 0,
-      count: "", //倒计时时间
-      timer: "",
-      loading: false,
+      count: '', //倒计时时间
+      timer: '',
+      loading: false
     };
   },
   props: {
@@ -56,14 +36,14 @@ export default {
       type: Object,
       default: () => {
         return {};
-      },
-    },
+      }
+    }
   },
   computed: {
     payTitle() {
       console.log(this.order);
       return `待支付：￥${this.order.total}`;
-    },
+    }
   },
   methods: {
     //支付宝支付
@@ -73,11 +53,11 @@ export default {
         // 首先先跳转到新的页面 然后等待支付结果
         const { data } = await payByAlipay({
           ...this.order,
-          subject: "押金",
-          userId: this.$store.getters.userId,
+          subject: '押金',
+          userId: this.$store.getters.userId
         });
         // console.log(data);
-        const newWindow = window.open("", "_target");
+        const newWindow = window.open('', '_target');
         newWindow.document.write(data);
         newWindow.focus();
       } catch (error) {
@@ -87,14 +67,14 @@ export default {
     //现金支付
     cashpay() {
       this.judgePay();
-      this.$confirm("确定收款成功, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定收款成功, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(async () => {
         await payByCash({
           ...this.order,
-          userId: this.$store.getters.userId,
+          userId: this.$store.getters.userId
         });
         this.active++;
       });
@@ -105,7 +85,7 @@ export default {
       try {
         const { data } = await judgePay(this.order);
         if (data > 0) {
-          this.$message.success("支付成功");
+          this.$message.success('支付成功');
           this.payTitle = `已支付：￥${this.order.total}`;
           this.active++;
         }
@@ -135,15 +115,15 @@ export default {
     //关闭
     close() {
       this.$emit(`closePayDrawer`);
-    },
+    }
   },
   watch: {
     active(newVal, oldVal) {
       if (newVal == 1) {
         this.countDown();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

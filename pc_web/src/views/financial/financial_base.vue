@@ -2,36 +2,19 @@
   <div class="main-container">
     <div class="header-container">
       <h1>收 费 管 理</h1>
-      <el-button class="add" @click="openDrawer('add')" :disabled="isAdd"
-        >添 加 +</el-button
-      >
+      <el-button class="add" @click="openDrawer('add')" :disabled="isAdd">添 加 +</el-button>
     </div>
     <div class="table-container">
       <div class="table">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="baseId" label="编号" width="120">
-          </el-table-column>
-          <el-table-column prop="baseName" label="收费名称" width="120">
-          </el-table-column>
-          <el-table-column prop="price" label="价格(元)" width="120">
-          </el-table-column>
+          <el-table-column prop="baseId" label="编号" width="120"> </el-table-column>
+          <el-table-column prop="baseName" label="收费名称" width="120"> </el-table-column>
+          <el-table-column prop="price" label="价格(元)" width="120"> </el-table-column>
           <el-table-column prop="remark" label="详情"> </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                size="mini"
-                @click="openDrawer('edit', scope.row)"
-                :disabled="isEdit"
-                >编辑</el-button
-              >
-              <el-button
-                type="danger"
-                size="mini"
-                @click="deleteBasic(scope.row)"
-                :disabled="isDel || scope.row.baseId <= 2"
-                >删除</el-button
-              >
+              <el-button type="primary" size="mini" @click="openDrawer('edit', scope.row)" :disabled="isEdit">编辑</el-button>
+              <el-button type="danger" size="mini" @click="deleteBasic(scope.row)" :disabled="isDel || scope.row.baseId <= 2">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -40,40 +23,16 @@
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="pagination.currentPage"
-          :page-size="pagination.pageSize"
-          background
-          layout="prev, pager, next"
-          :total="pagination.total"
-        >
-        </el-pagination>
+        <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
       </div>
       <div class="drawer">
-        <el-drawer
-          :title="drawerTitle"
-          size="28%"
-          :visible.sync="isShowDrawer"
-          :before-close="handleClose"
-        >
-          <el-form
-            ref="baseForm"
-            :model="baseForm"
-            :rules="rules"
-            label-width="100px"
-          >
+        <el-drawer :title="drawerTitle" size="28%" :visible.sync="isShowDrawer" :before-close="handleClose">
+          <el-form ref="baseForm" :model="baseForm" :rules="rules" label-width="100px">
             <el-form-item label="收费名称" prop="baseName">
-              <el-input
-                v-model.trim="baseForm.baseName"
-                placeholder="请输入收费名称"
-              ></el-input>
+              <el-input v-model.trim="baseForm.baseName" placeholder="请输入收费名称"></el-input>
             </el-form-item>
             <el-form-item label="价格(元)" prop="price">
-              <el-input
-                v-model.trim="baseForm.price"
-                placeholder="请输入收费价格"
-              ></el-input>
+              <el-input v-model.trim="baseForm.price" placeholder="请输入收费价格"></el-input>
             </el-form-item>
             <el-form-item label="立即生效" prop="operation">
               <el-radio-group v-model="baseForm.operation">
@@ -82,21 +41,12 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="详情" prop="remark">
-              <el-input
-                v-model="baseForm.remark"
-                type="textarea"
-                :autosize="{ minRows: 10, maxRows: 20 }"
-                placeholder="请输入该收费详情"
-              ></el-input>
+              <el-input v-model="baseForm.remark" type="textarea" :autosize="{ minRows: 10, maxRows: 20 }" placeholder="请输入该收费详情"></el-input>
             </el-form-item>
             <el-form-item>
-              <span style="font-size: 10px; color: #ff2855"
-                >*默认不立即生效为下一个月生效</span
-              >
+              <span style="font-size: 10px; color: #ff2855">*默认不立即生效为下一个月生效</span>
               <div>
-                <el-button type="primary" :disabled="isAdd" @click="submit"
-                  >确 认</el-button
-                >
+                <el-button type="primary" :disabled="isAdd" @click="submit">确 认</el-button>
                 <el-button @click="reset">取 消</el-button>
               </div>
             </el-form-item>
@@ -108,55 +58,44 @@
 </template>
 
 <script>
-import {
-  insertBasic,
-  getAllBasic,
-  deleteBasic,
-  updateBasic,
-} from "@/api/basic";
-import * as permission from "@/utils/permission";
-import { validNumber } from "@/utils/validate";
-import { validatePassword } from "@/api/user";
+import { insertBasic, getAllBasic, deleteBasic, updateBasic } from '@/api/basic';
+import * as permission from '@/utils/permission';
+import { validNumber } from '@/utils/validate';
+import { validatePassword } from '@/api/user';
 export default {
   data() {
     const validateNumber = (rule, value, callback) => {
-      validNumber(value) ? callback() : callback(new Error("请输入数字"));
+      validNumber(value) ? callback() : callback(new Error('请输入数字'));
     };
     return {
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 8, //每页显示的记录数
-        total: 0,
+        total: 0
       },
       tableData: [],
       isShowDrawer: false,
-      drawerType: "",
+      drawerType: '',
       baseForm: {
-        baseName: "",
-        price: "",
-        remark: "",
-        operation: "0",
+        baseName: '',
+        price: '',
+        remark: '',
+        operation: '0'
       },
       loading: true,
       rules: {
-        baseName: [
-          { required: true, message: "请输入收费名称", trigger: "blur" },
-        ],
+        baseName: [{ required: true, message: '请输入收费名称', trigger: 'blur' }],
         price: [
-          { required: true, message: "请输入收费价格", trigger: "blur" },
+          { required: true, message: '请输入收费价格', trigger: 'blur' },
           {
             validator: validateNumber,
-            message: "价格必须为数字值",
-            trigger: "blur",
-          },
+            message: '价格必须为数字值',
+            trigger: 'blur'
+          }
         ],
-        operation: [
-          { required: true, message: "请选择是否立即生效", trigger: "blur" },
-        ],
-        remark: [
-          { required: true, message: "请输入该收费详情", trigger: "blur" },
-        ],
-      },
+        operation: [{ required: true, message: '请选择是否立即生效', trigger: 'blur' }],
+        remark: [{ required: true, message: '请输入该收费详情', trigger: 'blur' }]
+      }
     };
   },
   created() {
@@ -183,11 +122,11 @@ export default {
       this.getAllBasic();
     },
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
+      this.$confirm('确认关闭？')
+        .then(_ => {
           done();
         })
-        .catch((_) => {});
+        .catch(_ => {});
     },
     //打开文本
     openDrawer(type, row) {
@@ -202,7 +141,7 @@ export default {
           price: row.price,
           remark: row.remark,
           operation: row.operation,
-          baseId: row.baseId,
+          baseId: row.baseId
         };
       }
     },
@@ -212,11 +151,11 @@ export default {
         await this.$refs.baseForm.validate();
         if (this.drawerType === `add`) {
           await insertBasic(this.baseForm);
-          this.$message.success("添加成功");
+          this.$message.success('添加成功');
         }
         if (this.drawerType === `edit`) {
           await updateBasic(this.baseForm);
-          this.$message.success("修改成功");
+          this.$message.success('修改成功');
         }
       } catch (error) {
         console.log(error);
@@ -229,31 +168,31 @@ export default {
     //清空form
     reset() {
       this.baseForm = {
-        baseName: "",
-        price: "",
-        remark: "",
-        operation: "0",
+        baseName: '',
+        price: '',
+        remark: '',
+        operation: '0'
       };
     },
     deleteBasic(row) {
-      this.$prompt("请输入密码", "删除该收费", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputType: "password",
+      this.$prompt('请输入密码', '删除该收费', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password',
         inputPattern: /^\w{5,12}$/,
-        inputErrorMessage: "密码格式不正确",
+        inputErrorMessage: '密码格式不正确'
       })
         .then(async ({ value }) => {
           try {
             console.log(value);
             await validatePassword({
               password: value,
-              username: this.$store.getters.username,
+              username: this.$store.getters.username
             });
             // console.log(1);
             await deleteBasic({ baseId: row.baseId });
             // console.log(2);
-            this.$message.success("删除成功");
+            this.$message.success('删除成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -262,17 +201,17 @@ export default {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "取消输入",
+            type: 'info',
+            message: '取消输入'
           });
         });
-    },
+    }
   },
   computed: {
     drawerTitle() {
-      let title = "默认大标题";
-      if (this.drawerType === "add") title = "添 加 收 费";
-      if (this.drawerType === "edit") title = "修 改 收 费";
+      let title = '默认大标题';
+      if (this.drawerType === 'add') title = '添 加 收 费';
+      if (this.drawerType === 'edit') title = '修 改 收 费';
       return title;
     },
     isAdd() {
@@ -292,8 +231,8 @@ export default {
     },
     isGet() {
       return permission.isGet(this.$route.params.type);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -311,7 +250,7 @@ export default {
     }
     .add {
       width: 100px;
-      height: 40px;
+      height: 42px;
       border-radius: 27px;
       background: linear-gradient(45deg, #4f8aff 0%, #4b5eff 100%);
       background-blend-mode: normal;

@@ -61,4 +61,9 @@ public class Repair implements Serializable {
      * 状态
      */
     private String state;
+
+    /**
+     * 维修金额
+     */
+    private String price;
 }

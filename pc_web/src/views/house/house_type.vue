@@ -2,9 +2,7 @@
   <div class="main-container">
     <div class="header-container">
       <h1>房 型 管 理</h1>
-      <el-button class="add" @click="openDrawer('add')" :disabled="isAdd"
-        >添 加 +</el-button
-      >
+      <el-button class="add" @click="openDrawer('add')" :disabled="isAdd">添 加 +</el-button>
     </div>
     <div class="table-container">
       <div class="navbar">
@@ -12,28 +10,15 @@
           <el-row justify="space-around">
             <el-col :span="5">
               <el-form-item label="房型">
-                <el-select
-                  v-model="form.styleName"
-                  placeholder="请选择房型"
-                  @change="search"
-                >
+                <el-select v-model="form.styleName" placeholder="请选择房型" @change="search">
                   <el-option label="----请选择-----" value=""></el-option>
-                  <el-option
-                    :label="item"
-                    :value="item"
-                    v-for="(item, index) in styleNameList"
-                    :key="index"
-                  ></el-option>
+                  <el-option :label="item" :value="item" v-for="(item, index) in styleNameList" :key="index"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="5"
               ><el-form-item label="阳台">
-                <el-select
-                  v-model="form.balcony"
-                  placeholder="请选择阳台"
-                  @change="search"
-                >
+                <el-select v-model="form.balcony" placeholder="请选择阳台" @change="search">
                   <el-option label="----请选择-----" value=""></el-option>
                   <el-option label="有" value="有"></el-option>
                   <el-option label="无" value="无"></el-option>
@@ -41,11 +26,7 @@
             ></el-col>
             <el-col :span="5"
               ><el-form-item label="楼层">
-                <el-select
-                  v-model="form.floor"
-                  placeholder="请选择楼层"
-                  @change="search"
-                >
+                <el-select v-model="form.floor" placeholder="请选择楼层" @change="search">
                   <el-option label="----请选择-----" value=""></el-option>
                   <el-option label="高" value="高"></el-option>
                   <el-option label="低" value="低"></el-option>
@@ -53,19 +34,15 @@
             ></el-col>
             <el-col :span="9">
               <span class="area">总 面 积 : {{ area }} (㎡)</span>
-              <span class="area" style="color: #00d0b5"
-                >可 用 面 积 : {{ available }} (㎡)</span
-              >
+              <span class="area" style="color: #00d0b5">可 用 面 积 : {{ available }} (㎡)</span>
             </el-col>
           </el-row>
         </el-form>
       </div>
       <div class="table" v-loading="loading">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="styleId" label="编号" width="80">
-          </el-table-column>
-          <el-table-column prop="styleName" label="房型名称" width="200">
-          </el-table-column>
+          <el-table-column prop="styleId" label="编号" width="80"> </el-table-column>
+          <el-table-column prop="styleName" label="房型名称" width="200"> </el-table-column>
           <el-table-column prop="area" label="面积(㎡)"> </el-table-column>
           <el-table-column prop="balcony" label="阳台"></el-table-column>
           <el-table-column prop="floor" label="楼层"> </el-table-column>
@@ -75,30 +52,12 @@
           <el-table-column prop="state" label="状态"> </el-table-column>
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="primary"
-                @click="openDrawer('edit', scope.row)"
-                :disabled="isEdit"
-                >编 辑</el-button
-              >
+              <el-button size="mini" type="primary" @click="openDrawer('edit', scope.row)" :disabled="isEdit">编 辑</el-button>
               <template v-if="scope.row.state == '正常'">
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.row)"
-                  :disabled="isPull"
-                  >下 架</el-button
-                >
+                <el-button size="mini" type="danger" @click="handleDelete(scope.row)" :disabled="isPull">下 架</el-button>
               </template>
               <template v-else>
-                <el-button
-                  size="mini"
-                  type="info"
-                  @click="handleReset(scope.row)"
-                  :disabled="isUp"
-                  >上 架</el-button
-                >
+                <el-button size="mini" type="info" @click="handleReset(scope.row)" :disabled="isUp">上 架</el-button>
               </template>
             </template>
           </el-table-column>
@@ -109,41 +68,17 @@
       </div>
       <!-- 分页器 -->
       <div class="pagination">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="pagination.currentPage"
-          :page-size="pagination.pageSize"
-          background
-          layout="prev, pager, next"
-          :total="pagination.total"
-        >
-        </el-pagination>
+        <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
       </div>
     </div>
     <div class="drawer">
-      <el-drawer
-        :title="drawerTitle"
-        size="28%"
-        :visible.sync="isShowDrawer"
-        :before-close="handleClose"
-      >
-        <el-form
-          ref="styleForm"
-          :model="styleForm"
-          :rules="rules"
-          label-width="100px"
-        >
+      <el-drawer :title="drawerTitle" size="28%" :visible.sync="isShowDrawer" :before-close="handleClose">
+        <el-form ref="styleForm" :model="styleForm" :rules="rules" label-width="100px">
           <el-form-item label="房型名称" prop="styleName">
-            <el-input
-              v-model.trim="styleForm.styleName"
-              placeholder="请输入房型名称"
-            ></el-input>
+            <el-input v-model.trim="styleForm.styleName" placeholder="请输入房型名称"></el-input>
           </el-form-item>
           <el-form-item label="面积(㎡)" prop="area">
-            <el-input
-              v-model.number.trim="styleForm.area"
-              placeholder="请输入该房型面积"
-            ></el-input>
+            <el-input v-model.number.trim="styleForm.area" placeholder="请输入该房型面积"></el-input>
           </el-form-item>
           <el-form-item label="阳台" prop="balcony">
             <el-radio-group v-model="styleForm.balcony">
@@ -155,27 +90,17 @@
               <el-radio label="高"></el-radio>
               <el-radio label="低"></el-radio>
             </el-radio-group>
-            <span style="margin-left: 15px; color: #ff2855; font-size: 12px"
-              >*6楼以上为高楼层</span
-            >
+            <span style="margin-left: 15px; color: #ff2855; font-size: 12px">*6楼以上为高楼层</span>
           </el-form-item>
           <el-form-item label="数量(间)" prop="num">
-            <el-input
-              v-model.trim="styleForm.num"
-              placeholder="请输入该房型数量"
-            ></el-input>
+            <el-input v-model.trim="styleForm.num" placeholder="请输入该房型数量"></el-input>
           </el-form-item>
           <el-form-item label="租金(元/㎡)" prop="price">
-            <el-input
-              v-model.trim="styleForm.price"
-              placeholder="请输入该房型租金"
-            ></el-input>
+            <el-input v-model.trim="styleForm.price" placeholder="请输入该房型租金"></el-input>
           </el-form-item>
           <el-form-item>
             <div style="margin-top: 20px">
-              <el-button type="primary" @click="submit" :disabled="isAdd"
-                >确 认</el-button
-              >
+              <el-button type="primary" @click="submit" :disabled="isAdd">确 认</el-button>
               <el-button @click="cancel">取 消</el-button>
             </div>
           </el-form-item>
@@ -186,82 +111,71 @@
 </template>
 
 <script>
-import { getArea } from "@/api/floor";
-import {
-  delStyle,
-  getAllStyle,
-  getStyleName,
-  insertStyle,
-  resetStyle,
-  updateStyle,
-} from "@/api/house_type";
-import { validNumber, valueAllEmpty } from "@/utils/validate";
-import * as permission from "@/utils/permission";
+import { getArea } from '@/api/floor';
+import { delStyle, getAllStyle, getStyleName, insertStyle, resetStyle, updateStyle } from '@/api/house_type';
+import { validNumber, valueAllEmpty } from '@/utils/validate';
+import * as permission from '@/utils/permission';
 export default {
   data() {
     const validateNumber = (rule, value, callback) => {
-      validNumber(value) ? callback() : callback(new Error("请输入数字"));
+      validNumber(value) ? callback() : callback(new Error('请输入数字'));
     };
     return {
       loading: true,
       styleNameList: [],
-      available: "",
-      area: "",
+      available: '',
+      area: '',
       form: {
-        styleName: "",
-        balcony: "",
-        floor: "",
+        styleName: '',
+        balcony: '',
+        floor: ''
       },
       styleForm: {
-        styleName: "",
-        area: "",
-        price: "",
-        num: "",
-        balcony: "",
-        floor: "",
+        styleName: '',
+        area: '',
+        price: '',
+        num: '',
+        balcony: '',
+        floor: ''
       },
-      drawerTitle: "",
+      drawerTitle: '',
       isShowDrawer: false,
       tableData: [],
       rules: {
-        styleName: [
-          { required: true, message: "请输入房型名称", trigger: "blur" },
-        ],
+        styleName: [{ required: true, message: '请输入房型名称', trigger: 'blur' }],
         area: [
-          { required: true, message: "请输入该房型面积", trigger: "blur" },
+          { required: true, message: '请输入该房型面积', trigger: 'blur' },
           {
             validator: validateNumber,
-            message: "面积必须为数字值",
-            trigger: "blur",
-          },
+            message: '面积必须为数字值',
+            trigger: 'blur'
+          }
         ],
         price: [
-          { required: true, message: "请输入该房型面积", trigger: "blur" },
+          { required: true, message: '请输入该房型面积', trigger: 'blur' },
           {
             validator: validateNumber,
-            message: "价格必须为数字值",
-            trigger: "blur",
-          },
+            message: '价格必须为数字值',
+            trigger: 'blur'
+          }
         ],
         num: [
-          { required: true, message: "请输入该房型数量", trigger: "blur" },
+          { required: true, message: '请输入该房型数量', trigger: 'blur' },
           {
             validator: validateNumber,
-            message: "数量必须为数字值",
-            trigger: "blur",
-          },
+            message: '数量必须为数字值',
+            trigger: 'blur'
+          }
         ],
-        balcony: [
-          { required: true, message: "请选择阳台信息", trigger: "blur" },
-        ],
-        floor: [{ required: true, message: "请选择楼层信息", trigger: "blur" }],
+        balcony: [{ required: true, message: '请选择阳台信息', trigger: 'blur' }],
+        floor: [{ required: true, message: '请选择楼层信息', trigger: 'blur' }]
       },
-      isCurrent: "",
+      isCurrent: '',
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 8, //每页显示的记录数
-        total: 0,
-      },
+        total: 0
+      }
     };
   },
   created() {
@@ -280,12 +194,12 @@ export default {
     reset() {
       this.$refs.styleForm.resetFields();
       this.styleForm = {
-        styleName: "",
-        area: "",
-        price: "",
-        num: "",
-        balcony: "",
-        floor: "",
+        styleName: '',
+        area: '',
+        price: '',
+        num: '',
+        balcony: '',
+        floor: ''
       };
     },
     async getArea() {
@@ -317,14 +231,14 @@ export default {
     },
     //打开侧边栏
     openDrawer(type, row) {
-      if (type == "add") {
+      if (type == 'add') {
         // console.log(this);
-        this.drawerTitle = "添加房型";
-        this.isCurrent = "add";
+        this.drawerTitle = '添加房型';
+        this.isCurrent = 'add';
       }
-      if (type == "edit") {
-        this.drawerTitle = "修改房型";
-        this.isCurrent = "edit";
+      if (type == 'edit') {
+        this.drawerTitle = '修改房型';
+        this.isCurrent = 'edit';
         this.styleForm = { ...row };
       }
       this.isShowDrawer = true;
@@ -333,7 +247,7 @@ export default {
     async submit() {
       try {
         await this.$refs.styleForm.validate();
-        if (this.isCurrent == "add") {
+        if (this.isCurrent == 'add') {
           try {
             const result = await insertStyle(this.styleForm);
             this.$message.success(result.message);
@@ -341,7 +255,7 @@ export default {
             console.log(error);
           }
         }
-        if (this.isCurrent == "edit") {
+        if (this.isCurrent == 'edit') {
           try {
             // console.log(this.styleForm);
             const result = await updateStyle(this.styleForm);
@@ -395,12 +309,12 @@ export default {
       // console.log(done);
       if (valueAllEmpty(this.styleForm)) done();
       else {
-        this.$confirm("确认关闭？")
-          .then((_) => {
+        this.$confirm('确认关闭？')
+          .then(_ => {
             this.reset();
             done();
           })
-          .catch((_) => {});
+          .catch(_ => {});
       }
     },
     //换页
@@ -412,7 +326,7 @@ export default {
     },
     //获取下拉框
     async getStyleName() {
-      this.form = { styleName: "", balcony: "", floor: "" };
+      this.form = { styleName: '', balcony: '', floor: '' };
       const { data } = await getStyleName(1);
       this.styleNameList = data;
       // console.log(data);
@@ -429,7 +343,7 @@ export default {
         console.log(error);
       }
       // console.log(data);
-    },
+    }
   },
   computed: {
     isAdd() {
@@ -449,8 +363,8 @@ export default {
     },
     isGet() {
       return permission.isGet(this.$route.params.type);
-    },
-  },
+    }
+  }
 };
 </script>
 

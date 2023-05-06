@@ -4,12 +4,7 @@
       <span style="margin-right: 20px">请在一下区域签名</span>
     </div>
     <div class="autograph_container" ref="autographContainer">
-      <canvas
-        ref="canvasRef"
-        @mousedown="mousedown"
-        @mousemove="mousemove"
-        @mouseup="mouseup"
-      ></canvas>
+      <canvas ref="canvasRef" @mousedown="mousedown" @mousemove="mousemove" @mouseup="mouseup"></canvas>
     </div>
     <div class="autograph_btn">
       <div style="margin-right: 30px">
@@ -26,11 +21,11 @@ export default {
     return {
       ctx: null, // 存储canvas
       isPrint: false,
-      strokeStyle: "#000", // 线条颜色
+      strokeStyle: '#000', // 线条颜色
       lineWidth: 2, // 线条粗细
       startX: 0, // 记录起始x轴位置
       startY: 0, // 记录起始Y轴位置
-      points: [], // 记录坐标 用来判断是否有签名的
+      points: [] // 记录坐标 用来判断是否有签名的
     };
   },
   mounted() {
@@ -39,13 +34,12 @@ export default {
   methods: {
     initCanvas() {
       // 获取父元素的宽高
-      const { width, height } =
-        this.$refs.autographContainer.getBoundingClientRect();
+      const { width, height } = this.$refs.autographContainer.getBoundingClientRect();
       const canvas = this.$refs.canvasRef;
       canvas.width = width; // 设置canvas的宽
       canvas.height = height; // 设置canvas的高
       // 获取2d画布上的上下文，所有的图形绘制都可以通过ctx的属性和方法来完成
-      this.ctx = canvas.getContext("2d");
+      this.ctx = canvas.getContext('2d');
     },
     // 监听鼠标按下事件
     mousedown(event) {
@@ -62,7 +56,7 @@ export default {
       if (!this.isPrint) return;
       const obj = {
         x: event.offsetX,
-        y: event.offsetY,
+        y: event.offsetY
       };
       // 设置线条颜色
       this.ctx.strokeStyle = this.strokeStyle;
@@ -101,7 +95,7 @@ export default {
     handleCommit() {
       // 判断至少有20个坐标 才算有签名
       if (this.points.length < 20) {
-        this.$message.error("签名不能为空!");
+        this.$message.error('签名不能为空!');
         return;
       }
       // 转成base64
@@ -109,11 +103,11 @@ export default {
       const filename = Date.now(); // 用时间戳做文件名吧
       const file = this.dataURLToFile(baseFile, filename); // 图片文件形式 传给后端存储即可
       //   console.log("====>", file);
-      this.$emit("commitSign", file);
+      this.$emit('commitSign', file);
     },
     // 将base64转成File文件对象
     dataURLToFile(dataURL, filename) {
-      const arr = dataURL.split(",");
+      const arr = dataURL.split(',');
       // 获取图片格式
       const imgType = arr[0].match(/:(.*?);/)[1];
       // atob() 方法用于解码使用 base-64 编码的字符串
@@ -127,9 +121,9 @@ export default {
       return new File([u8arr], filename, { type: imgType });
     },
     back() {
-      this.$emit("back");
-    },
-  },
+      this.$emit('back');
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

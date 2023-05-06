@@ -21,16 +21,19 @@
         a.price,
         a.remark,
         a.state,
-        b.name,
         c.house_name
         from repair as a,
-        user as b,
         house as c,
         rent as d
-        <where>d.house_id = #{houseId}
-            and d.rent_id = a.rent_id
-            and c.house_id = #{houseId}
-            and a.user_id = b.user_id
+        <where>
+            d.rent_id = a.rent_id
+            and c.house_id = d.house_id
+            <if test="houseName !=null and houseName !=''">
+                and c.houseName = #{houseName}
+            </if>
+            <if test="report !=null and report != ''">
+                and DATE_FORMAT(a.report, '%Y-%m-%d') = #{report}
+            </if>
         </where>
         ${ew.customSqlSegment}
     </select>
@@ -41,4 +44,34 @@
         where a.rent_id = b.rent_id
           and b.user_id = #{userId}
     </select>
+    <select id="getRepairByRepairId" resultType="niuniu.javaweb.vo.RepairVO">
+        select a.repair_id,
+               a.rent_id,
+               a.user_id,
+               a.message,
+               a.report,
+               a.fix,
+               a.price,
+               a.remark,
+               a.state,
+               b.name,
+               c.house_name
+        from repair as a,
+             user as b,
+             house as c,
+             rent as d
+        where d.rent_id = a.rent_id
+          and c.house_id = d.house_id
+          and a.user_id = b.user_id
+          and a.repair_id = #{repairId}
+    </select>
+    <update id="completeRepair">
+        update repair
+        set remark  = #{remark},
+            price   = #{price},
+            user_id = #{userId},
+            fix     = current_timestamp,
+            state   = 1
+        where repair_id = #{repairId}
+    </update>
 </mapper>

@@ -1,13 +1,7 @@
 <template>
   <div class="bg">
     <div class="collapse-container">
-      <el-collapse
-        v-model="activeName"
-        accordion
-        style="border-top: none"
-        @change="createUserName"
-        v-loading="loading"
-      >
+      <el-collapse v-model="activeName" accordion style="border-top: none" @change="createUserName" v-loading="loading">
         <el-collapse-item name="1">
           <template #title>
             <div class="collapse-title">
@@ -31,140 +25,58 @@
               <div v-if="active === 0">
                 <div class="middle">
                   <h3>账号: {{ username }}</h3>
-                  <el-form
-                    :inline="true"
-                    :model="userForm"
-                    class="demo-form-inline"
-                    size="small"
-                    :rules="rules"
-                    ref="userForm"
-                  >
+                  <el-form :inline="true" :model="userForm" class="demo-form-inline" size="small" :rules="rules" ref="userForm">
                     <el-form-item label="住户电话:" prop="phone">
-                      <el-input
-                        v-model="userForm.phone"
-                        placeholder="请输入住户电话"
-                      ></el-input>
+                      <el-input v-model="userForm.phone" placeholder="请输入住户电话"></el-input>
                     </el-form-item>
                   </el-form>
                   <div class="idcard">
-                    <span class="idcard-header"
-                      ><i style="color: #ff2855; margin-right: 4px">*</i
-                      >身份证照片</span
-                    >
-                    <el-row
-                      :gutter="20"
-                      justify="space-between"
-                      style="padding: 0 25px"
-                    >
+                    <span class="idcard-header"><i style="color: #ff2855; margin-right: 4px">*</i>身份证照片</span>
+                    <el-row :gutter="20" justify="space-between" style="padding: 0 25px">
                       <el-col :span="9">
-                        <div
-                          @click="uploadAvatar(`font`)"
-                          :class="[
-                            { error: isErrorFont },
-                            { idcard_container: true },
-                          ]"
-                        >
-                          <input
-                            type="file"
-                            accept="image/jpeg"
-                            style="display: none"
-                            @change="onFileChange($event, `font`)"
-                            ref="fontRef"
-                          />
+                        <div @click="uploadAvatar(`font`)" :class="[{ error: isErrorFont }, { idcard_container: true }]">
+                          <input type="file" accept="image/jpeg" style="display: none" @change="onFileChange($event, `font`)" ref="fontRef" />
 
                           <img :src="fontUrl" alt="" v-if="fontUrl" />
-                          <i v-else class="el-icon-plus avatar-uploader-icon"
-                            >带国徽面</i
-                          >
+                          <i v-else class="el-icon-plus avatar-uploader-icon">带国徽面</i>
                         </div>
                       </el-col>
                       <el-col :span="9">
-                        <div
-                          @click="uploadAvatar(`back`)"
-                          :class="[
-                            { error: isErrorBack },
-                            { idcard_container: true },
-                          ]"
-                        >
-                          <input
-                            type="file"
-                            accept="image/jpeg"
-                            style="display: none"
-                            @change="onFileChange($event, `back`)"
-                            ref="backRef"
-                          />
+                        <div @click="uploadAvatar(`back`)" :class="[{ error: isErrorBack }, { idcard_container: true }]">
+                          <input type="file" accept="image/jpeg" style="display: none" @change="onFileChange($event, `back`)" ref="backRef" />
                           <img :src="backUrl" alt="" v-if="backUrl" />
-                          <i v-else class="el-icon-plus avatar-uploader-icon"
-                            >带头像面</i
-                          >
+                          <i v-else class="el-icon-plus avatar-uploader-icon">带头像面</i>
                         </div>
                       </el-col>
                     </el-row>
                   </div>
                 </div>
                 <div class="bottom" style="margin-top: 60px">
-                  <el-button
-                    type="primary"
-                    :disabled="isAdd"
-                    @click="firstStep"
-                    :loading="firstStepBtn"
-                    >下一步</el-button
-                  >
+                  <el-button type="primary" :disabled="isAdd" @click="firstStep" :loading="firstStepBtn">下一步</el-button>
                   <el-button @click="close">取 消</el-button>
                 </div>
               </div>
               <div v-if="active === 1">
                 <div class="middle">
-                  <el-descriptions
-                    class="margin-top"
-                    :title="`账号：${user.username}`"
-                    :column="3"
-                  >
-                    <el-descriptions-item label="姓名">{{
-                      user.name
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="性别">{{
-                      user.sex
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="民族">{{
-                      user.nation
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="生日">{{
-                      user.birthday
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="身份证">{{
-                      user.idcard
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="手机号">{{
-                      user.phone
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="签订时间">{{
-                      user.sign
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="过期时间">{{
-                      user.lose
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="签订机构">{{
-                      user.authority
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="地址">{{
-                      user.address
-                    }}</el-descriptions-item>
+                  <el-descriptions class="margin-top" :title="`账号：${user.username}`" :column="3">
+                    <el-descriptions-item label="姓名">{{ user.name }}</el-descriptions-item>
+                    <el-descriptions-item label="性别">{{ user.sex }}</el-descriptions-item>
+                    <el-descriptions-item label="民族">{{ user.nation }}</el-descriptions-item>
+                    <el-descriptions-item label="生日">{{ user.birthday }}</el-descriptions-item>
+                    <el-descriptions-item label="身份证">{{ user.idcard }}</el-descriptions-item>
+                    <el-descriptions-item label="手机号">{{ user.phone }}</el-descriptions-item>
+                    <el-descriptions-item label="签订时间">{{ user.sign }}</el-descriptions-item>
+                    <el-descriptions-item label="过期时间">{{ user.lose }}</el-descriptions-item>
+                    <el-descriptions-item label="签订机构">{{ user.authority }}</el-descriptions-item>
+                    <el-descriptions-item label="地址">{{ user.address }}</el-descriptions-item>
                   </el-descriptions>
                 </div>
                 <div class="bottom">
                   <template v-if="secondStepBtn">
-                    <el-button type="primary" :disabled="true"
-                      >确认无误后，下一步({{ second }}s)</el-button
-                    >
+                    <el-button type="primary" :disabled="true">确认无误后，下一步({{ second }}s)</el-button>
                   </template>
                   <template v-else>
-                    <el-button
-                      type="primary"
-                      @click="secondStep"
-                      :disabled="isAdd"
-                      >下一步</el-button
-                    >
+                    <el-button type="primary" @click="secondStep" :disabled="isAdd">下一步</el-button>
                   </template>
                   <el-button @click="back()">返 回</el-button>
                 </div>
@@ -172,56 +84,26 @@
               <div v-if="active === 2">
                 <div class="middle">
                   <div class="form">
-                    <el-form
-                      :inline="true"
-                      :model="houseForm"
-                      class="demo-form-inline"
-                      size="small"
-                      style="padding-right: 0"
-                    >
+                    <el-form :inline="true" :model="houseForm" class="demo-form-inline" size="small" style="padding-right: 0">
                       <el-row>
                         <el-col :span="7">
                           <el-form-item label="房型">
-                            <el-select
-                              v-model="houseForm.styleName"
-                              placeholder="请选择房型"
-                              ><el-option
-                                :label="item.styleName"
-                                :value="item.styleName"
-                                v-for="(item, index) in styleList"
-                                :key="index"
-                              ></el-option
-                            ></el-select> </el-form-item
+                            <el-select v-model="houseForm.styleName" placeholder="请选择房型"><el-option :label="item.styleName" :value="item.styleName" v-for="(item, index) in styleList" :key="index"></el-option></el-select> </el-form-item
                         ></el-col>
                         <el-col :span="7"
                           ><el-form-item label="楼层">
-                            <el-select
-                              v-model="houseForm.floor"
-                              placeholder="请选择楼层"
-                            >
-                              <el-option
-                                :label="item.floorName"
-                                :value="item.floorName"
-                                v-for="(item, index) in floorList"
-                                :key="index"
-                              ></el-option
-                            ></el-select> </el-form-item
+                            <el-select v-model="houseForm.floor" placeholder="请选择楼层"> <el-option :label="item.floorName" :value="item.floorName" v-for="(item, index) in floorList" :key="index"></el-option></el-select> </el-form-item
                         ></el-col>
                         <el-col :span="7"
                           ><el-form-item label="阳台">
-                            <el-select
-                              v-model="houseForm.balcony"
-                              placeholder="请选择阳台"
-                            >
+                            <el-select v-model="houseForm.balcony" placeholder="请选择阳台">
                               <el-option label="有" value="有"></el-option>
                               <el-option label="无" value="无"></el-option
                             ></el-select> </el-form-item
                         ></el-col>
                         <el-col :span="3">
                           <el-form-item>
-                            <el-button type="primary" @click="getHouse"
-                              >查询</el-button
-                            >
+                            <el-button type="primary" @click="getHouse">查询</el-button>
                           </el-form-item>
                         </el-col>
                       </el-row>
@@ -229,279 +111,107 @@
                   </div>
                   <div class="table">
                     <p style="color: #303133; font-size: 14px">请选择房间：</p>
-                    <el-table
-                      :data="tableData"
-                      style="width: 100%"
-                      @row-click="singleElection"
-                      highlight-current-row
-                      height="384"
-                      border
-                    >
+                    <el-table :data="tableData" style="width: 100%" @row-click="singleElection" highlight-current-row height="384" border>
                       <el-table-column width="55" label="选择">
                         <template slot-scope="scope">
                           <!-- 可以手动的修改label的值，从而控制选择哪一项 -->
-                          <el-radio
-                            class="radio"
-                            v-model="templateSelection"
-                            :label="scope.row.houseId"
-                            >&nbsp;</el-radio
-                          >
+                          <el-radio class="radio" v-model="templateSelection" :label="scope.row.houseId">&nbsp;</el-radio>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="houseName" label="房号">
-                      </el-table-column>
-                      <el-table-column prop="styleName" label="房型">
-                      </el-table-column>
-                      <el-table-column prop="balcony" label="阳台">
-                      </el-table-column>
-                      <el-table-column prop="area" label="面积(㎡)">
-                      </el-table-column>
-                      <el-table-column
-                        prop="price"
-                        label="房屋租金(月/元)"
-                      ></el-table-column>
+                      <el-table-column prop="houseName" label="房号"> </el-table-column>
+                      <el-table-column prop="styleName" label="房型"> </el-table-column>
+                      <el-table-column prop="balcony" label="阳台"> </el-table-column>
+                      <el-table-column prop="area" label="面积(㎡)"> </el-table-column>
+                      <el-table-column prop="price" label="房屋租金(月/元)"></el-table-column>
                     </el-table>
                   </div>
                 </div>
                 <div class="bottom">
-                  <el-button type="primary" :disabled="isAdd" @click="thirdStep"
-                    >下一步</el-button
-                  >
-                  <el-button :disabled="isAdd" @click="active = 8"
-                    >跳过</el-button
-                  >
+                  <el-button type="primary" :disabled="isAdd" @click="thirdStep">下一步</el-button>
+                  <el-button :disabled="isAdd" @click="active = 8">跳过</el-button>
                 </div>
               </div>
               <div v-if="active === 3">
                 <div class="middle">
                   <div class="table">
                     <p style="color: #303133; font-size: 14px">请选择杂费：</p>
-                    <el-table
-                      ref="multipleTable"
-                      :data="baseData"
-                      tooltip-effect="dark"
-                      style="width: 100%"
-                      height="438"
-                      border
-                      @selection-change="handleSelectionChange"
-                      :row-key="getRowKey"
-                    >
-                      <el-table-column
-                        type="selection"
-                        width="55"
-                        :reserve-selection="true"
-                      >
-                      </el-table-column>
-                      <el-table-column
-                        prop="baseName"
-                        label="收费名称"
-                        width="120"
-                      >
-                      </el-table-column>
-                      <el-table-column
-                        prop="price"
-                        label="价格(月/元)"
-                        width="120"
-                      >
-                      </el-table-column>
-                      <el-table-column prop="remark" label="收费说明">
-                      </el-table-column>
+                    <el-table ref="multipleTable" :data="baseData" tooltip-effect="dark" style="width: 100%" height="438" border @selection-change="handleSelectionChange" :row-key="getRowKey">
+                      <el-table-column type="selection" width="55" :reserve-selection="true"> </el-table-column>
+                      <el-table-column prop="baseName" label="收费名称" width="120"> </el-table-column>
+                      <el-table-column prop="price" label="价格(月/元)" width="120"> </el-table-column>
+                      <el-table-column prop="remark" label="收费说明"> </el-table-column>
                     </el-table>
                   </div>
                 </div>
                 <div class="bottom">
-                  <el-button type="primary" :disabled="isAdd" @click="active--"
-                    >上一步</el-button
-                  >
-                  <el-button type="primary" :disabled="isAdd" @click="forthStep"
-                    >下一步</el-button
-                  >
+                  <el-button type="primary" :disabled="isAdd" @click="active--">上一步</el-button>
+                  <el-button type="primary" :disabled="isAdd" @click="forthStep">下一步</el-button>
                 </div>
               </div>
               <div v-if="active === 4">
                 <div class="middle">
                   <p style="color: #303133; font-size: 14px">已选择房间：</p>
-                  <el-table
-                    :data="checkList"
-                    style="width: 100%"
-                    @row-click="singleElection"
-                    highlight-current-row
-                    size="mini"
-                    border
-                  >
-                    <el-table-column prop="houseName" label="房号">
-                    </el-table-column>
-                    <el-table-column prop="styleName" label="房型">
-                    </el-table-column>
-                    <el-table-column prop="balcony" label="阳台">
-                    </el-table-column>
-                    <el-table-column prop="area" label="面积(㎡)">
-                    </el-table-column>
-                    <el-table-column
-                      prop="price"
-                      label="房屋租金(月/元)"
-                    ></el-table-column>
-                    <el-table-column
-                      prop="deposit"
-                      label="总租金(月/元)"
-                    ></el-table-column>
+                  <el-table :data="checkList" style="width: 100%" @row-click="singleElection" highlight-current-row size="mini" border>
+                    <el-table-column prop="houseName" label="房号"> </el-table-column>
+                    <el-table-column prop="styleName" label="房型"> </el-table-column>
+                    <el-table-column prop="balcony" label="阳台"> </el-table-column>
+                    <el-table-column prop="area" label="面积(㎡)"> </el-table-column>
+                    <el-table-column prop="price" label="房屋租金(月/元)"></el-table-column>
+                    <el-table-column prop="deposit" label="总租金(月/元)"></el-table-column>
                   </el-table>
                   <p style="color: #303133; font-size: 14px">已选择杂费：</p>
-                  <el-table
-                    :data="multipleSelection"
-                    style="width: 100%"
-                    @row-click="singleElection"
-                    highlight-current-row
-                    size="mini"
-                    height="300"
-                    border
-                  >
-                    <el-table-column
-                      prop="baseName"
-                      label="收费名称"
-                      width="120"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                      prop="price"
-                      label="价格(月/元)"
-                      width="120"
-                    >
-                    </el-table-column>
-                    <el-table-column prop="remark" label="收费说明">
-                    </el-table-column>
+                  <el-table :data="multipleSelection" style="width: 100%" @row-click="singleElection" highlight-current-row size="mini" height="300" border>
+                    <el-table-column prop="baseName" label="收费名称" width="120"> </el-table-column>
+                    <el-table-column prop="price" label="价格(月/元)" width="120"> </el-table-column>
+                    <el-table-column prop="remark" label="收费说明"> </el-table-column>
                   </el-table>
                 </div>
                 <div class="bottom">
-                  <el-button type="primary" :disabled="isAdd" @click="backThird"
-                    >上一步</el-button
-                  >
-                  <el-button type="primary" :disabled="isAdd" @click="fithStep"
-                    >下一步</el-button
-                  >
+                  <el-button type="primary" :disabled="isAdd" @click="backThird">上一步</el-button>
+                  <el-button type="primary" :disabled="isAdd" @click="fithStep">下一步</el-button>
                 </div>
               </div>
               <div v-if="active === 5">
                 <div v-if="contractShow">
                   <div class="middle">
                     <p style="color: #303133; font-size: 14px">签署合同</p>
-                    <iframe
-                      frameborder="0"
-                      style="width: 100%; height: 450px"
-                      :src="pdfSrc"
-                    ></iframe>
+                    <iframe frameborder="0" style="width: 100%; height: 450px" :src="pdfSrc"></iframe>
                   </div>
                   <div class="bottom">
-                    <el-button @click="dialogVisible = active--"
-                      >上一步</el-button
-                    >
-                    <el-button type="primary" @click="signVisible = true"
-                      >确 定</el-button
-                    >
+                    <el-button @click="dialogVisible = active--">上一步</el-button>
+                    <el-button type="primary" @click="signVisible = true">确 定</el-button>
                   </div>
                 </div>
                 <div v-else>
                   <div class="middle">
                     <p style="color: #303133; font-size: 14px">合同签署完毕</p>
-                    <iframe
-                      frameborder="0"
-                      style="width: 100%; height: 450px"
-                      :src="pdfSrc"
-                    ></iframe>
+                    <iframe frameborder="0" style="width: 100%; height: 450px" :src="pdfSrc"></iframe>
                   </div>
                   <div class="bottom">
                     <el-button type="primary" @click="sixth">确 定</el-button>
                   </div>
                 </div>
 
-                <el-dialog
-                  title="电子签名"
-                  :visible.sync="signVisible"
-                  append-to-body
-                  :show-close="false"
-                  :close-on-click-modal="false"
-                >
-                  <sign-canvas
-                    @back="backContract"
-                    @commitSign="writeSign"
-                  ></sign-canvas>
+                <el-dialog title="电子签名" :visible.sync="signVisible" append-to-body :show-close="false" :close-on-click-modal="false">
+                  <sign-canvas @back="backContract" @commitSign="writeSign"></sign-canvas>
                 </el-dialog>
               </div>
               <div v-if="active === 6">
                 <div class="middle">
-                  <p
-                    style="
-                      color: #303133;
-                      font-size: 18px;
-                      border-left: 5px solid #3a3f63;
-                      padding-left: 5px;
-                    "
-                  >
-                    订单编号：{{ order.outTradeNo }}
-                  </p>
+                  <p style="color: #303133; font-size: 18px; border-left: 5px solid #3a3f63; padding-left: 5px">订单编号：{{ order.outTradeNo }}</p>
                   <div class="pay">{{ payTitle }}</div>
-                  <p
-                    style="
-                      color: #303133;
-                      font-size: 18px;
-                      border-left: 5px solid #3a3f63;
-                      padding-left: 5px;
-                    "
-                  >
-                    请选择支付方式：
-                  </p>
+                  <p style="color: #303133; font-size: 18px; border-left: 5px solid #3a3f63; padding-left: 5px">请选择支付方式：</p>
                   <div style="margin-top: 30px; padding-left: 15px">
-                    <el-button @click="alipay"
-                      ><i
-                        style="
-                          margin-right: 5px;
-                          color: #1296db;
-                          font-size: 20px;
-                        "
-                        class="iconfont"
-                        >&#xe634;</i
-                      >支付宝支付</el-button
-                    >
-                    <el-button @click="cashpay"
-                      ><i
-                        style="
-                          margin-right: 5px;
-                          color: #1296db;
-                          font-size: 20px;
-                        "
-                        class="iconfont"
-                        >&#xea5b;</i
-                      >现金支付</el-button
-                    >
+                    <el-button @click="alipay"><i style="margin-right: 5px; color: #1296db; font-size: 20px" class="iconfont">&#xe634;</i>支付宝支付</el-button>
+                    <el-button @click="cashpay"><i style="margin-right: 5px; color: #1296db; font-size: 20px" class="iconfont">&#xea5b;</i>现金支付</el-button>
                   </div>
-                  <p
-                    style="
-                      color: #303133;
-                      font-size: 14px;
-                      padding: 25px 15px 0;
-                    "
-                  >
-                    *支付后请点击此<el-button type="text" @click="judgePay"
-                      >刷新</el-button
-                    >，若稍后支付，可点击<el-button
-                      type="text"
-                      @click="active += 2"
-                      style="color: #ff2855; margin-left: 0"
-                      >跳过...</el-button
-                    >
-                  </p>
+                  <p style="color: #303133; font-size: 14px; padding: 25px 15px 0">*支付后请点击此<el-button type="text" @click="judgePay">刷新</el-button>，若稍后支付，可点击<el-button type="text" @click="active += 2" style="color: #ff2855; margin-left: 0">跳过...</el-button></p>
                 </div>
               </div>
               <div v-if="active === 8">
-                <el-result
-                  icon="success"
-                  title="支付成功"
-                  subTitle="租客录入成功，3秒后刷新页面"
-                >
+                <el-result icon="success" title="支付成功" subTitle="租客录入成功，3秒后刷新页面">
                   <template slot="extra">
-                    <el-button type="primary" size="medium" @click="flash"
-                      >确定</el-button
-                    >
+                    <el-button type="primary" size="medium" @click="flash">确定</el-button>
                   </template>
                 </el-result>
               </div>
@@ -514,56 +224,49 @@
 </template>
 
 <script>
-import { getDeposit, getPriceElse, getBaseIdStrList } from "@/utils/financial";
-import { getBasic } from "@/api/basic";
-import { getFloor } from "@/api/floor";
-import { getAllStyleName } from "@/api/house_type";
-import { validMobile } from "@/utils/validate";
-import { getHouse } from "@/api/house";
-import { insertRent } from "@/api/rent";
-import {
-  createUserName,
-  validateIDCard,
-  confirmMsg,
-  insertUser,
-} from "@/api/user";
-import { targetUrl } from "@/targetUrl.js";
-import { writeRentContract, writeSign } from "@/api/contract";
-import * as permission from "@/utils/permission";
-import SignCanvas from "@/components/utils/SignCanvas.vue";
-import { payByCash, payByAlipay, generateOrder, judgePay } from "@/api/order";
+import { getDeposit, getPriceElse, getBaseIdStrList } from '@/utils/financial';
+import { getBasic } from '@/api/basic';
+import { getFloor } from '@/api/floor';
+import { getAllStyleName } from '@/api/house_type';
+import { validMobile } from '@/utils/validate';
+import { getHouse } from '@/api/house';
+import { insertRent } from '@/api/rent';
+import { createUserName, validateIDCard, confirmMsg, insertUser } from '@/api/user';
+import { targetUrl } from '@/targetUrl.js';
+import { writeRentContract, writeSign } from '@/api/contract';
+import * as permission from '@/utils/permission';
+import SignCanvas from '@/components/utils/SignCanvas.vue';
+import { payByCash, payByAlipay, generateOrder, judgePay } from '@/api/order';
 export default {
-  inject: ["reload"],
+  inject: ['reload'],
   components: {
-    SignCanvas,
+    SignCanvas
   },
   data() {
     const validateMobile = (rule, value, callback) => {
-      validMobile(value)
-        ? callback()
-        : callback(new Error("请输入正确的手机号"));
+      validMobile(value) ? callback() : callback(new Error('请输入正确的手机号'));
     };
     return {
       loading: false,
-      activeName: "",
+      activeName: '',
       active: 0,
       //第一步
-      userForm: { phone: "" },
-      fontUrl: "",
-      backUrl: "",
-      fontFile: "",
-      backFile: "",
-      username: "",
+      userForm: { phone: '' },
+      fontUrl: '',
+      backUrl: '',
+      fontFile: '',
+      backFile: '',
+      username: '',
       isErrorFont: false,
       isErrorBack: false,
       rules: {
         phone: [
-          { required: true, trigger: "blur", message: "请输入住户手机" },
+          { required: true, trigger: 'blur', message: '请输入住户手机' },
           {
-            trigger: "blur",
-            validator: validateMobile, // 校验手机号
-          },
-        ],
+            trigger: 'blur',
+            validator: validateMobile // 校验手机号
+          }
+        ]
       },
       isfont: false,
       isback: false,
@@ -575,13 +278,13 @@ export default {
       timer: null,
       //第三步
       houseForm: {
-        styleName: "",
-        floor: "",
-        balcony: "",
+        styleName: '',
+        floor: '',
+        balcony: ''
       },
       tableData: [],
       //   当前选择的行的id
-      templateSelection: "",
+      templateSelection: '',
       //   当前选择的行的数据
       checkList: [],
       floorList: [],
@@ -591,16 +294,16 @@ export default {
       multipleSelection: [],
       //第五步
       // dialogVisible: true,
-      pdfSrc: "",
+      pdfSrc: '',
       signVisible: false,
-      localSrc: "",
+      localSrc: '',
       // finishVisible: false,
       contractShow: true,
-      rentId: "",
-      total: "",
+      rentId: '',
+      total: '',
       order: {},
       //第六步
-      payTitle: "",
+      payTitle: ''
     };
   },
   methods: {
@@ -613,12 +316,12 @@ export default {
       clearInterval(this.timer);
     },
     close() {
-      this.activeName = "";
-      this.userForm.phone = "";
-      this.fontUrl = "";
-      this.backUrl = "";
-      this.fontFile = "";
-      this.backFile = "";
+      this.activeName = '';
+      this.userForm.phone = '';
+      this.fontUrl = '';
+      this.backUrl = '';
+      this.fontFile = '';
+      this.backFile = '';
     },
     /**
      * 获取新的用户账号
@@ -663,7 +366,7 @@ export default {
           //校检上传的文件
           const fr = new FileReader();
           fr.readAsDataURL(files[0]); // 传入文件对象开始阅读
-          fr.onload = async (e) => {
+          fr.onload = async e => {
             try {
               if (direction === `font`) {
                 this.isfont = false;
@@ -701,14 +404,14 @@ export default {
     },
     //校检函数
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error('上传头像图片只能是 JPG 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     },
@@ -717,7 +420,7 @@ export default {
      */
     firstStep() {
       this.firstStepBtn = true;
-      this.$refs.userForm.validate(async (isOK) => {
+      this.$refs.userForm.validate(async isOK => {
         if (isOK) {
           if (this.isfont && this.isback) {
             try {
@@ -738,7 +441,7 @@ export default {
             }
           } else {
             this.firstStepBtn = false;
-            this.$message.error("请上传对应的证件");
+            this.$message.error('请上传对应的证件');
           }
         } else {
           this.firstStepBtn = false;
@@ -768,7 +471,7 @@ export default {
         // console.log(this.user);
         const { data } = await insertUser(form);
         this.user = data;
-        this.$message.success("创建成功,请录入房间信息");
+        this.$message.success('创建成功,请录入房间信息');
         this.active++;
         this.getHouse();
       } catch (error) {
@@ -789,24 +492,22 @@ export default {
     //重置下拉框
     resetHouse() {
       this.houseForm = {
-        styleName: "",
-        floor: "",
-        balcony: "",
+        styleName: '',
+        floor: '',
+        balcony: ''
       };
     },
     //获取teble 单选框数据
     singleElection(row) {
       // console.log(row);
       this.templateSelection = row.houseId;
-      this.checkList = this.tableData.filter(
-        (item) => item.houseId === row.houseId
-      );
+      this.checkList = this.tableData.filter(item => item.houseId === row.houseId);
       // console.log(`该行的编号为${row.houseId}`);
     },
     //第三步
     async thirdStep() {
       if (this.checkList.length === 0) {
-        this.$message.error("请选择房间，再进行下一步");
+        this.$message.error('请选择房间，再进行下一步');
       } else {
         const { data } = await getBasic();
         this.baseData = data;
@@ -830,10 +531,10 @@ export default {
     //第四步
     forthStep() {
       if (this.multipleSelection.length == 0) {
-        this.$confirm("没有选择房屋杂费, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+        this.$confirm('没有选择房屋杂费, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }).then(() => {
           this.checkList = getDeposit(this.multipleSelection, this.checkList);
           this.active++;
@@ -846,7 +547,7 @@ export default {
     //第五步
     async fithStep() {
       try {
-        this.$message.info("正在生成合同，请稍等...");
+        this.$message.info('正在生成合同，请稍等...');
         this.loading = true;
         let param = {
           name: this.user.name,
@@ -856,7 +557,7 @@ export default {
           price: this.checkList[0].deposit,
           idcard: this.user.idcard,
           address: this.user.address,
-          phone: this.user.phone,
+          phone: this.user.phone
         };
         const { data } = await writeRentContract(param);
         this.pdfSrc = `${targetUrl}/view/Contract/${data}`;
@@ -876,13 +577,13 @@ export default {
     //签名
     async writeSign(e) {
       try {
-        this.$message.info("正在处理合同，请稍等...");
+        this.$message.info('正在处理合同，请稍等...');
         let param = {
           area: this.checkList[0].area,
           priceArea: this.checkList[0].priceArea,
           priceElse: getPriceElse(this.multipleSelection),
           price: this.checkList[0].price,
-          ...this.user,
+          ...this.user
         };
         this.total = this.checkList[0].price;
         const form = new FormData();
@@ -894,19 +595,19 @@ export default {
         let rent = {
           houseId: this.checkList[0].houseId,
           userId: this.user.userId,
-          deposit: this.checkList[0].deposit,
+          deposit: this.checkList[0].deposit
         };
         const res = await insertRent({
           ...rent,
-          basicList: getBaseIdStrList(this.multipleSelection),
+          basicList: getBaseIdStrList(this.multipleSelection)
         });
-        this.$message.success("签署成功");
+        this.$message.success('签署成功');
         this.rentId = res.data;
         const { data: order } = await generateOrder({
           rentId: this.rentId,
           total: this.checkList[0].price,
           userId: this.$store.getters.userId,
-          type: "押金",
+          type: '押金'
         });
         this.order = order;
         this.payTitle = `待支付：￥${this.order.total}`;
@@ -934,10 +635,10 @@ export default {
         // 首先先跳转到新的页面 然后等待支付结果
         const { data } = await payByAlipay({
           ...this.order,
-          subject: "押金",
+          subject: '押金'
         });
         // console.log(data);
-        const newWindow = window.open("", "_target");
+        const newWindow = window.open('', '_target');
         newWindow.document.write(data);
         newWindow.focus();
       } catch (error) {
@@ -947,13 +648,13 @@ export default {
     //现金支付
     cashpay() {
       this.judgePay();
-      this.$confirm("确定收款成功, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定收款成功, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(async () => {
         await payByCash({
-          ...this.order,
+          ...this.order
         });
         this.active = 8;
       });
@@ -964,7 +665,7 @@ export default {
       try {
         const { data } = await judgePay(this.order);
         if (data > 0) {
-          this.$message.success("支付成功");
+          this.$message.success('支付成功');
           this.payTitle = `已支付：￥${this.order.total}`;
           this.active = 8;
         }
@@ -977,7 +678,7 @@ export default {
     //第七步
     flash() {
       this.reload();
-    },
+    }
   },
   computed: {
     isAdd() {
@@ -997,8 +698,8 @@ export default {
     },
     isGet() {
       return permission.isGet(this.$route.params.type);
-    },
-  },
+    }
+  }
 };
 </script>
 

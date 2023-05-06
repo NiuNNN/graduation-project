@@ -2,40 +2,16 @@
   <div class="welcome">
     <h1>WELCOME TO THE SYSTEM!</h1>
     <p class="detail">Sign in and start managing your house.</p>
-    <el-form
-      :model="user"
-      :rules="rules"
-      ref="LoginForm"
-      label-width="100px"
-      class="LoginForm"
-      label-position="top"
-    >
+    <el-form :model="user" :rules="rules" ref="LoginForm" label-width="100px" class="LoginForm" label-position="top">
       <el-form-item label="Account" prop="username">
-        <el-input
-          v-model="user.username"
-          placeholder="Please enter your account"
-        ></el-input>
+        <el-input v-model="user.username" placeholder="Please enter your account"></el-input>
       </el-form-item>
-      <el-form-item
-        label="Password"
-        prop="password"
-        @keyup.enter.native="handleLogin"
-      >
-        <el-input
-          v-model="user.password"
-          show-password
-          placeholder="Please enter your password"
-        ></el-input>
+      <el-form-item label="Password" prop="password" @keyup.enter.native="handleLogin">
+        <el-input v-model="user.password" show-password placeholder="Please enter your password"></el-input>
       </el-form-item>
     </el-form>
     <span class="back" @click="change">Forgot Password?</span>
-    <el-button
-      type="primary"
-      round
-      @click.native.prevent="handleLogin"
-      :loading="loading"
-      >Sign in</el-button
-    >
+    <el-button type="primary" round @click.native.prevent="handleLogin" :loading="loading">Sign in</el-button>
   </div>
 </template>
 
@@ -44,66 +20,66 @@ export default {
   data() {
     return {
       user: {
-        username: "",
-        password: "",
+        username: '',
+        password: ''
       },
       loading: false,
       rules: {
         username: [
           {
             required: true,
-            message: "Please enter your account",
-            trigger: "blur",
+            message: 'Please enter your account',
+            trigger: 'blur'
           },
           {
             min: 8,
             max: 16,
-            message: "Please enter the correct account",
-            trigger: "blur",
-          },
+            message: 'Please enter the correct account',
+            trigger: 'blur'
+          }
         ],
         password: [
           {
             required: true,
-            message: "Please enter your password",
-            trigger: "blur",
+            message: 'Please enter your password',
+            trigger: 'blur'
           },
           {
             pattern: /^\w{5,12}$/,
-            message: "Please enter the correct password",
-            trigger: "blur",
-          },
-        ],
-      },
+            message: 'Please enter the correct password',
+            trigger: 'blur'
+          }
+        ]
+      }
     };
   },
   methods: {
     handleLogin() {
-      this.$refs.LoginForm.validate(async (isOK) => {
+      this.$refs.LoginForm.validate(async isOK => {
         if (isOK) {
           this.loading = true;
           try {
-            const res = await this.$store.dispatch("user/login", this.user);
+            const res = await this.$store.dispatch('user/login', this.user);
             // console.log(res);
-            this.$router.push("/");
+            this.$router.push('/');
           } catch (error) {
             console.log(error);
           } finally {
             this.loading = false;
           }
         } else {
-          this.$message.error("Please enter the correct information!");
+          this.$message.error('Please enter the correct information!');
         }
       });
     },
     change() {
-      this.$store.dispatch("setting/changeLogin", "Forget");
-    },
-  },
+      this.$store.dispatch('setting/changeLogin', 'Forget');
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
-@import "@/styles/index.scss";
+@import '@/styles/index.scss';
 .welcome {
   width: 640px / $rootSize;
   height: 600px / $rootSize;

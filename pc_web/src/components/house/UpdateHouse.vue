@@ -1,35 +1,15 @@
 <template>
   <div class="container">
     <div class="form">
-      <el-form
-        :inline="true"
-        :model="houseForm"
-        class="demo-form-inline"
-        size="small"
-        style="padding-right: 0"
-      >
+      <el-form :inline="true" :model="houseForm" class="demo-form-inline" size="small" style="padding-right: 0">
         <el-row>
           <el-col :span="7">
             <el-form-item label="房型">
-              <el-select v-model="houseForm.styleName" placeholder="请选择房型"
-                ><el-option
-                  :label="item.styleName"
-                  :value="item.styleName"
-                  v-for="(item, index) in styleList"
-                  :key="index"
-                ></el-option
-              ></el-select> </el-form-item
+              <el-select v-model="houseForm.styleName" placeholder="请选择房型"><el-option :label="item.styleName" :value="item.styleName" v-for="(item, index) in styleList" :key="index"></el-option></el-select> </el-form-item
           ></el-col>
           <el-col :span="7"
             ><el-form-item label="楼层">
-              <el-select v-model="houseForm.floor" placeholder="请选择楼层">
-                <el-option
-                  :label="item.floorName"
-                  :value="item.floorName"
-                  v-for="(item, index) in floorList"
-                  :key="index"
-                ></el-option
-              ></el-select> </el-form-item
+              <el-select v-model="houseForm.floor" placeholder="请选择楼层"> <el-option :label="item.floorName" :value="item.floorName" v-for="(item, index) in floorList" :key="index"></el-option></el-select> </el-form-item
           ></el-col>
           <el-col :span="7"
             ><el-form-item label="阳台">
@@ -48,24 +28,11 @@
     </div>
     <div class="table" v-loading="loading">
       <p style="color: #303133; font-size: 14px">请选择房间：</p>
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        @row-click="singleElection"
-        highlight-current-row
-        height="450"
-        size="mini"
-        border
-      >
+      <el-table :data="tableData" style="width: 100%" @row-click="singleElection" highlight-current-row height="450" size="mini" border>
         <el-table-column width="55" label="选择">
           <template slot-scope="scope">
             <!-- 可以手动的修改label的值，从而控制选择哪一项 -->
-            <el-radio
-              class="radio"
-              v-model="templateSelection"
-              :label="scope.row.houseId"
-              >&nbsp;</el-radio
-            >
+            <el-radio class="radio" v-model="templateSelection" :label="scope.row.houseId">&nbsp;</el-radio>
           </template>
         </el-table-column>
         <el-table-column prop="houseName" label="房号"> </el-table-column>
@@ -86,34 +53,34 @@
 </template>
 
 <script>
-import { getFloor } from "@/api/floor";
-import { getAllStyleName } from "@/api/house_type";
-import { getHouse } from "@/api/house";
+import { getFloor } from '@/api/floor';
+import { getAllStyleName } from '@/api/house_type';
+import { getHouse } from '@/api/house';
 export default {
   props: {
     user: {
       type: Object,
       default: () => {
         return {};
-      },
-    },
+      }
+    }
   },
   data() {
     return {
       houseForm: {
-        styleName: "",
-        floor: "",
-        balcony: "",
+        styleName: '',
+        floor: '',
+        balcony: ''
       },
       tableData: [],
       //   当前选择的行的id
-      templateSelection: "",
+      templateSelection: '',
       //   当前选择的行的数据
       checkList: [],
       floorList: [],
       styleList: [],
       loading: true,
-      newUser: {},
+      newUser: {}
     };
   },
   created() {
@@ -151,37 +118,35 @@ export default {
     //重置下拉框
     resetHouse() {
       this.houseForm = {
-        styleName: "",
-        floor: "",
-        balcony: "",
+        styleName: '',
+        floor: '',
+        balcony: ''
       };
     },
     //获取teble 单选框数据
     singleElection(row) {
       // console.log(row);
       this.templateSelection = row.houseId;
-      this.checkList = this.tableData.filter(
-        (item) => item.houseId === row.houseId
-      );
+      this.checkList = this.tableData.filter(item => item.houseId === row.houseId);
       // console.log(`该行的编号为${row.houseId}`);
     },
     submit() {
       if (this.checkList.length === 0) {
-        this.$message.error("请选择房间，再进行下一步");
+        this.$message.error('请选择房间，再进行下一步');
       } else {
         console.log(this.checkList);
         this.$emit(`changeUpdateHouseComponent`, {
           houseData: this.checkList,
-          component: `UpdateContract`,
+          component: `UpdateContract`
         });
       }
     },
     //取消
     close() {
       this.newUser = this.user;
-      this.$emit("afterUpdateHouse", this.newUser);
-    },
-  },
+      this.$emit('afterUpdateHouse', this.newUser);
+    }
+  }
 };
 </script>
 

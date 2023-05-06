@@ -40,10 +40,11 @@ public interface RepairService {
      *
      * @param currentPage
      * @param pageSize
-     * @param houseId
+     * @param houseName
+     * @param report
      * @return
      */
-    IPage<RepairVO> getAllRepair(int currentPage, int pageSize, Integer houseId);
+    IPage<RepairVO> getAllRepair(int currentPage, int pageSize, String houseName, String report);
 
     /**
      * 获取用户维修信息
@@ -52,4 +53,21 @@ public interface RepairService {
      * @return
      */
     CommonResult getRepairByUserId(Integer userId);
+
+    /**
+     * 获取维修详细信息
+     *
+     * @param repairId
+     * @return
+     */
+    CommonResult getRepairByRepairId(Integer repairId);
+
+
+    /**
+     * 完成维修
+     *
+     * @param repair
+     * @return
+     */
+    CommonResult completeRepair(Repair repair);
 }

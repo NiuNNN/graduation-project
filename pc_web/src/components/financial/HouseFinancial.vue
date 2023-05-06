@@ -5,72 +5,30 @@
         <div style="width: 60%">
           <el-form ref="form" :model="form" label-width="50px" :inline="true">
             <el-form-item label="房号">
-              <el-input
-                v-model="form.houseName"
-                placeholder="请输入房号"
-              ></el-input>
+              <el-input v-model="form.houseName" placeholder="请输入房号"></el-input>
             </el-form-item>
             <el-form-item label="时间">
-              <el-date-picker
-                v-model="form.month"
-                type="month"
-                placeholder="请选择时间"
-                :picker-options="pickerBeginOption"
-                value-format="yyyy-MM"
-              >
-              </el-date-picker>
+              <el-date-picker v-model="form.month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
             </el-form-item>
-            <el-button
-              type="primary"
-              style="height: 35px; line-height: 5px"
-              @click="search"
-              >查询</el-button
-            >
+            <el-button type="primary" style="height: 35px; line-height: 5px" @click="search">查询</el-button>
           </el-form>
         </div>
         <div style="margin-right: 35px">
-          <el-button
-            type="primary"
-            style="height: 35px; line-height: 5px"
-            @click="dialogVisible = true"
-            >一键报表</el-button
-          >
+          <el-button type="primary" style="height: 35px; line-height: 5px" @click="dialogVisible = true">一键报表</el-button>
         </div>
       </div>
       <div class="table">
-        <el-table
-          :data="tableData"
-          stripe
-          style="width: 100%"
-          height="454"
-          v-loading="loading"
-          :default-sort="{ prop: 'date', order: 'descending' }"
-        >
+        <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }">
           <el-table-column prop="date" label="时间" sortable> </el-table-column>
           <el-table-column prop="houseName" label="房号"> </el-table-column>
-          <el-table-column prop="numElectric" label="用电量(度)">
-          </el-table-column>
-          <el-table-column prop="costElectric" label="电费(元)">
-          </el-table-column>
-          <el-table-column prop="numWater" label="用水量(方)">
-          </el-table-column>
+          <el-table-column prop="numElectric" label="用电量(度)"> </el-table-column>
+          <el-table-column prop="costElectric" label="电费(元)"> </el-table-column>
+          <el-table-column prop="numWater" label="用水量(方)"> </el-table-column>
           <el-table-column prop="costWater" label="水费(元)"> </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                size="small"
-                :disabled="isEdit"
-                @click="generateRent(scope.row)"
-                >报 表</el-button
-              >
-              <el-button
-                type="danger"
-                size="small"
-                :disabled="isDel || scope.row.state != `0`"
-                @click="deleteCost(scope.row)"
-                >删 除</el-button
-              >
+              <el-button type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">报 表</el-button>
+              <el-button type="danger" size="small" :disabled="isDel || scope.row.state != `0`" @click="deleteCost(scope.row)">删 除</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -79,33 +37,13 @@
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="pagination.currentPage"
-          :page-size="pagination.pageSize"
-          background
-          layout="prev, pager, next"
-          :total="pagination.total"
-        >
-        </el-pagination>
+        <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
       </div>
       <div class="dialog">
         <el-dialog title="报表" :visible.sync="dialogVisible" width="30%">
-          <el-form
-            ref="form"
-            :model="generate"
-            label-width="50px"
-            :inline="true"
-          >
+          <el-form ref="form" :model="generate" label-width="50px" :inline="true">
             <el-form-item label="时间">
-              <el-date-picker
-                v-model="generate.month"
-                type="month"
-                placeholder="请选择时间"
-                :picker-options="pickerBeginOption"
-                value-format="yyyy-MM"
-              >
-              </el-date-picker>
+              <el-date-picker v-model="generate.month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -119,40 +57,34 @@
 </template>
 
 <script>
-import * as permission from "@/utils/permission";
-import {
-  getAllCost,
-  deleteCost,
-  generatePersonCost,
-  generateAllCost,
-  judgeCost,
-} from "@/api/cost";
-import { validatePassword } from "@/api/user";
+import * as permission from '@/utils/permission';
+import { getAllCost, deleteCost, generatePersonCost, generateAllCost, judgeCost } from '@/api/cost';
+import { validatePassword } from '@/api/user';
 export default {
   data() {
     return {
       pickerBeginOption: {
-        disabledDate: (time) => {
+        disabledDate: time => {
           return time.getTime() > Date.now();
-        },
+        }
       },
       dialogVisible: false,
       form: {
-        month: "",
-        houseName: "",
+        month: '',
+        houseName: ''
       },
       tableData: [],
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 7, //每页显示的记录数
-        total: 0,
+        total: 0
       },
       loading: false,
-      password: "",
+      password: '',
       personData: [],
       generate: {
-        month: "",
-      },
+        month: ''
+      }
     };
   },
   created() {
@@ -160,40 +92,40 @@ export default {
   },
   methods: {
     async addAll() {
-      this.$confirm(`此操作将生成住房账单, 是否继续?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm(`此操作将生成住房账单, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
-          this.$prompt("请输入密码", "生成账单", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            inputType: "password",
+          this.$prompt('请输入密码', '生成账单', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputType: 'password',
             inputPattern: /^\w{5,12}$/,
-            inputErrorMessage: "密码格式不正确",
+            inputErrorMessage: '密码格式不正确'
           }).then(async ({ value }) => {
             try {
               await validatePassword({
                 password: value,
-                username: this.$store.getters.username,
+                username: this.$store.getters.username
               });
               await judgeCost({ time: this.generate.month });
-              this.$message.info("正在生成中，请稍等...");
+              this.$message.info('正在生成中，请稍等...');
               await generateAllCost({ time: this.generate.month });
             } catch (error) {
               console.log(error);
             } finally {
               this.getAll();
-              this.generate = { month: "" };
+              this.generate = { month: '' };
               this.dialogVisible = false;
             }
           });
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消生成",
+            type: 'info',
+            message: '已取消生成'
           });
         });
     },
@@ -203,7 +135,7 @@ export default {
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllCost(param, {
           houseName: this.form.houseName,
-          time: this.form.month,
+          time: this.form.month
         });
         // console.log(data);
         this.tableData = data.records;
@@ -226,41 +158,35 @@ export default {
     search() {
       this.getAll();
       this.form = {
-        month: "",
-        houseName: "",
+        month: '',
+        houseName: ''
       };
     },
     //生成报表
     generateRent(row) {
-      if (row.numElectric == "待处理" || row.numWater == "待处理") {
-        this.$message.info(
-          `请先录入 ${row.houseName}房 该月用电或用水信息信息`
-        );
+      if (row.numElectric == '待处理' || row.numWater == '待处理') {
+        this.$message.info(`请先录入 ${row.houseName}房 该月用电或用水信息信息`);
       } else {
-        this.$confirm(
-          `此操作将生成 ${row.houseName}房 该月账单, 是否继续?`,
-          "提示",
-          {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }
-        )
+        this.$confirm(`此操作将生成 ${row.houseName}房 该月账单, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
           .then(() => {
-            this.$prompt("请输入密码", "生成账单", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              inputType: "password",
+            this.$prompt('请输入密码', '生成账单', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              inputType: 'password',
               inputPattern: /^\w{5,12}$/,
-              inputErrorMessage: "密码格式不正确",
+              inputErrorMessage: '密码格式不正确'
             }).then(async ({ value }) => {
               try {
                 // console.log(value);
                 await validatePassword({
                   password: value,
-                  username: this.$store.getters.username,
+                  username: this.$store.getters.username
                 });
-                this.$message.info("正在生成中，请稍等...");
+                this.$message.info('正在生成中，请稍等...');
                 // console.log(row);
                 await generatePersonCost(row);
               } catch (error) {
@@ -272,27 +198,27 @@ export default {
           })
           .catch(() => {
             this.$message({
-              type: "info",
-              message: "已取消生成",
+              type: 'info',
+              message: '已取消生成'
             });
           });
       }
     },
     //删除账单
     deleteCost(row) {
-      this.$prompt("请输入密码", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputType: "password",
+      this.$prompt('请输入密码', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password',
         inputPattern: /^\w{5,12}$/,
-        inputErrorMessage: "密码格式不正确",
+        inputErrorMessage: '密码格式不正确'
       })
         .then(async ({ value }) => {
           try {
             // console.log(value);
             await validatePassword({
               password: value,
-              username: this.$store.getters.username,
+              username: this.$store.getters.username
             });
             await deleteCost({ costId: row.costId });
           } catch (error) {
@@ -303,11 +229,11 @@ export default {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "取消删除",
+            type: 'info',
+            message: '取消删除'
           });
         });
-    },
+    }
   },
   computed: {
     isAdd() {
@@ -330,8 +256,8 @@ export default {
     },
     isTooggle() {
       return this.multipleSelection.length > 0 ? false : true;
-    },
-  },
+    }
+  }
 };
 </script>
 

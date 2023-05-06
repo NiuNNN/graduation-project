@@ -42,7 +42,7 @@ public class LoginController {
 
 
     /**
-     * 用户
+     * 用户登录
      *
      * @param user
      * @return
@@ -53,6 +53,11 @@ public class LoginController {
         return loginService.UserLogin(user);
     }
 
+    /**
+     * 用户退出
+     *
+     * @return
+     */
     @GetMapping("/user/logout")
     public CommonResult loginUserOut() {
         System.out.println("退出");

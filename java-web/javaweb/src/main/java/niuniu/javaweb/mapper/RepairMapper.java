@@ -39,12 +39,13 @@ public interface RepairMapper extends BaseMapper<Repair> {
     /**
      * 获取全部维修信息
      *
-     * @param houseId
+     * @param houseName
+     * @param report
      * @param page
      * @param wrapper
      * @return
      */
-    IPage<RepairVO> getAllRepair(@Param("houseId") Integer houseId, @Param("page") Page<RepairVO> page, @Param(Constants.WRAPPER) Wrapper<RepairVO> wrapper);
+    IPage<RepairVO> getAllRepair(@Param("houseName") String houseName, @Param("report") String report, @Param("page") Page<RepairVO> page, @Param(Constants.WRAPPER) Wrapper<RepairVO> wrapper);
 
     /**
      * 获取用户维修信息
@@ -53,4 +54,20 @@ public interface RepairMapper extends BaseMapper<Repair> {
      * @return
      */
     List<Repair> getRepairByUserId(Integer userId);
+
+    /**
+     * 获取维系信息
+     *
+     * @param repairId
+     * @return
+     */
+    RepairVO getRepairByRepairId(Integer repairId);
+
+    /**
+     * 完成维修
+     *
+     * @param repair
+     * @return
+     */
+    int completeRepair(Repair repair);
 }

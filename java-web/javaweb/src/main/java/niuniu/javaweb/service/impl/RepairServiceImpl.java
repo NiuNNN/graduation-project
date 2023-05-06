@@ -55,7 +55,7 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
      */
     @Override
     public CommonResult deleteRepair(Repair repair) {
-        if (repair.getState().equals("待处理")) {
+        if (repair.getState().equals("待处理") || repair.getState().equals("0")) {
             repairMapper.deleteById(repair);
             return CommonResult.success();
         } else {
@@ -68,14 +68,15 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
      *
      * @param currentPage
      * @param pageSize
-     * @param houseId
+     * @param houseName
+     * @param report
      * @return
      */
     @Override
-    public IPage<RepairVO> getAllRepair(int currentPage, int pageSize, Integer houseId) {
+    public IPage<RepairVO> getAllRepair(int currentPage, int pageSize, String houseName, String report) {
         Page<RepairVO> page = new Page<>(currentPage, pageSize);
         QueryWrapper<RepairVO> queryWrapper = new QueryWrapper<>();
-        return repairMapper.getAllRepair(houseId, page, queryWrapper);
+        return repairMapper.getAllRepair(houseName, report, page, queryWrapper);
     }
 
     /**
@@ -95,5 +96,27 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
             }
         }
         return CommonResult.success(repairList);
+    }
+
+    /**
+     * 获取维修详细信息
+     *
+     * @param repairId
+     * @return
+     */
+    @Override
+    public CommonResult getRepairByRepairId(Integer repairId) {
+        return CommonResult.success(repairMapper.getRepairByRepairId(repairId));
+    }
+
+    /**
+     * 完成维修
+     *
+     * @param repair
+     * @return
+     */
+    @Override
+    public CommonResult completeRepair(Repair repair) {
+        return repairMapper.completeRepair(repair) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 }

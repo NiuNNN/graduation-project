@@ -1,30 +1,15 @@
 <template>
   <div class="container" v-loading="loading">
     <p style="color: #303133; font-size: 14px">请签署合同：</p>
-    <iframe
-      frameborder="0"
-      style="width: 100%; height: 500px"
-      :src="pdfSrc"
-    ></iframe>
+    <iframe frameborder="0" style="width: 100%; height: 500px" :src="pdfSrc"></iframe>
     <div class="btn">
       <el-button type="primary" @click="innerDrawer = true">确 定</el-button>
       <el-button @click="close">取 消</el-button>
     </div>
     <div class="drawer">
-      <el-drawer
-        title="电子签名"
-        :wrapperClosable="false"
-        :show-close="false"
-        :append-to-body="true"
-        :destroy-on-close="true"
-        size="50%"
-        :visible.sync="innerDrawer"
-      >
+      <el-drawer title="电子签名" :wrapperClosable="false" :show-close="false" :append-to-body="true" :destroy-on-close="true" size="50%" :visible.sync="innerDrawer">
         <div style="padding: 30px">
-          <sign-canvas
-            @back="backContract"
-            @commitSign="writeSign"
-          ></sign-canvas>
+          <sign-canvas @back="backContract" @commitSign="writeSign"></sign-canvas>
         </div>
       </el-drawer>
     </div>
@@ -32,46 +17,42 @@
 </template>
 
 <script>
-import { getDeposit, getPriceElse } from "@/utils/financial";
-import { targetUrl } from "@/targetUrl.js";
-import { changeRent } from "@/api/rent";
-import {
-  writeRentContract,
-  writeSign,
-  changeContractStateByUserId,
-} from "@/api/contract";
-import SignCanvas from "@/components/utils/SignCanvas.vue";
+import { getDeposit, getPriceElse } from '@/utils/financial';
+import { targetUrl } from '@/targetUrl.js';
+import { changeRent } from '@/api/rent';
+import { writeRentContract, writeSign, changeContractStateByUserId } from '@/api/contract';
+import SignCanvas from '@/components/utils/SignCanvas.vue';
 export default {
   components: {
-    SignCanvas,
+    SignCanvas
   },
   props: {
     user: {
       type: Object,
       default: () => {
         return {};
-      },
+      }
     },
     house: {
       type: Array,
       default: () => {
         return [];
-      },
+      }
     },
     miscellaneous: {
       type: Array,
       default: () => {
         return [];
-      },
-    },
+      }
+    }
   },
   data() {
     return {
-      pdfSrc: "",
+      pdfSrc: '',
       loading: false,
       newUser: {},
       newCheckList: [],
-      innerDrawer: false,
+      innerDrawer: false
     };
   },
   created() {
@@ -81,7 +62,7 @@ export default {
     //取消
     close() {
       this.newUser = this.user;
-      this.$emit("afterUpdateHouse", this.newUser);
+      this.$emit('afterUpdateHouse', this.newUser);
     },
     //生成合同
     async writeRentContract() {
@@ -99,7 +80,7 @@ export default {
           price: this.newCheckList[0].deposit,
           idcard: this.user.idcard,
           address: this.user.address,
-          phone: this.user.phone,
+          phone: this.user.phone
         };
         console.log(param);
         const { data } = await writeRentContract(param);
@@ -124,7 +105,7 @@ export default {
           priceArea: this.newCheckList[0].priceArea,
           priceElse: getPriceElse(this.miscellaneous),
           price: this.newCheckList[0].deposit,
-          ...this.user,
+          ...this.user
         };
         await changeContractStateByUserId({ userId: this.user.userId });
         const form = new FormData();
@@ -138,18 +119,18 @@ export default {
           userId: this.user.userId,
           deposit: this.newCheckList[0].deposit,
           oldHouseId: this.user.houseId,
-          rentId: this.user.rentId,
+          rentId: this.user.rentId
         };
         await changeRent(rent);
-        this.$message.success("修改成功");
+        this.$message.success('修改成功');
         this.newUser = { ...this.user, ...house };
       } catch (error) {
         console.log(error);
       } finally {
-        this.$emit("afterUpdateHouse", this.newUser);
+        this.$emit('afterUpdateHouse', this.newUser);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

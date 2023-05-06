@@ -5,16 +5,8 @@
     </div>
     <div class="table-container">
       <div class="navbar">
-        <span
-          :class="{ current: isCurrent == `HouseFinancial` }"
-          @click="changeCurrent(`HouseFinancial`)"
-          >住 房 报 表</span
-        >
-        <span
-          :class="{ current: isCurrent == `all` }"
-          @click="changeCurrent(`all`)"
-          >全 部</span
-        >
+        <span :class="{ current: isCurrent == `HouseFinancial` }" @click="changeCurrent(`HouseFinancial`)">住 房 报 表</span>
+        <span :class="{ current: isCurrent == `all` }" @click="changeCurrent(`all`)">全 部</span>
       </div>
       <div class="table">
         <component :is="isCurrent"></component>
@@ -23,21 +15,21 @@
   </div>
 </template>
 <script>
-import HouseFinancial from "@/components/financial/HouseFinancial.vue";
+import HouseFinancial from '@/components/financial/HouseFinancial.vue';
 export default {
   components: {
-    HouseFinancial,
+    HouseFinancial
   },
   data() {
     return {
-      isCurrent: "HouseFinancial",
+      isCurrent: 'HouseFinancial'
     };
   },
   methods: {
     changeCurrent(name) {
       this.isCurrent = name;
-    },
-  },
+    }
+  }
 };
 </script>
 

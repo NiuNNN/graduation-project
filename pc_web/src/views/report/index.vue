@@ -6,80 +6,30 @@
     </div>
     <div class="table-container">
       <div class="navbar">
-        <span
-          :class="{ current: isCurrent == `news` }"
-          @click="changeCurrent(`news`)"
-          >最 新<i class="iconfont new">&#xe680;</i></span
-        >
-        <span
-          :class="{ current: isCurrent == `all` }"
-          @click="changeCurrent(`all`)"
-          >全 部</span
-        >
-        <span
-          :class="{ current: isCurrent == `draft` }"
-          @click="changeCurrent(`draft`)"
-          >草 稿 箱</span
-        >
-        <span
-          :class="{ current: isCurrent == `del` }"
-          @click="changeCurrent(`del`)"
-          >回 收 站</span
-        >
+        <span :class="{ current: isCurrent == `news` }" @click="changeCurrent(`news`)">最 新<i class="iconfont new">&#xe680;</i></span>
+        <span :class="{ current: isCurrent == `all` }" @click="changeCurrent(`all`)">全 部</span>
+        <span :class="{ current: isCurrent == `draft` }" @click="changeCurrent(`draft`)">草 稿 箱</span>
+        <span :class="{ current: isCurrent == `del` }" @click="changeCurrent(`del`)">回 收 站</span>
       </div>
       <div>
         <div class="table" v-loading="loading">
-          <el-table
-            :data="
-              tables[0].slice(
-                (pagination.currentPage - 1) * pagination.pageSize,
-                pagination.currentPage * pagination.pageSize
-              )
-            "
-            style="width: 100%"
-          >
-            <el-table-column label="编 号" prop="reportId" width="80">
-            </el-table-column>
+          <el-table :data="tables[0].slice((pagination.currentPage - 1) * pagination.pageSize, pagination.currentPage * pagination.pageSize)" style="width: 100%">
+            <el-table-column label="编 号" prop="reportId" width="80"> </el-table-column>
             <el-table-column label="标 题" prop="stem"> </el-table-column>
             <el-table-column label="发 布 者" prop="name"> </el-table-column>
             <el-table-column label="浏 览 量" prop="views"> </el-table-column>
             <el-table-column label="时 间" prop="time"> </el-table-column>
             <el-table-column align="right" width="240">
               <template slot="header" slot-scope="scope">
-                <el-input
-                  v-model="inputContent"
-                  class="searchinput"
-                  placeholder="请输入发布者或时间"
-                  prefix-icon="el-icon-search"
-                  size="mini"
-                >
-                  <el-button slot="append" class="searchbtn" @click="searchput"
-                    >搜索</el-button
-                  >
+                <el-input v-model="inputContent" class="searchinput" placeholder="请输入发布者或时间" prefix-icon="el-icon-search" size="mini">
+                  <el-button slot="append" class="searchbtn" @click="searchput">搜索</el-button>
                 </el-input>
               </template>
               <template #default="{ row }">
-                <el-button
-                  size="mini"
-                  @click="openDrawer('preview', row)"
-                  :disabled="isGet"
-                  >查 看</el-button
-                >
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="openDrawer('edit', row)"
-                  :disabled="isEdit"
-                  >编 辑</el-button
-                >
+                <el-button size="mini" @click="openDrawer('preview', row)" :disabled="isGet">查 看</el-button>
+                <el-button size="mini" type="primary" @click="openDrawer('edit', row)" :disabled="isEdit">编 辑</el-button>
                 <template v-if="isCurrent != `del`">
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(row)"
-                    :disabled="isDel"
-                    >删 除</el-button
-                  >
+                  <el-button size="mini" type="danger" @click="handleDelete(row)" :disabled="isDel">删 除</el-button>
                 </template>
               </template>
             </el-table-column>
@@ -90,59 +40,27 @@
         </div>
         <!-- 分页器 -->
         <div class="pagination">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="pagination.currentPage"
-            :page-size="pagination.pageSize"
-            background
-            layout="prev, pager, next"
-            :total="pagination.total"
-          >
-          </el-pagination>
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
         </div>
       </div>
 
       <div class="drawer">
-        <el-drawer
-          :title="drawerTitle"
-          size="50%"
-          :visible.sync="isShowDrawer"
-          :direction="direction"
-          :before-close="handleClose"
-        >
+        <el-drawer :title="drawerTitle" size="50%" :visible.sync="isShowDrawer" :direction="direction" :before-close="handleClose">
           <div v-if="drawerType === 'preview'" class="article-preview">
             <h5>{{ report.stem }}</h5>
             <div v-html="report.content"></div>
           </div>
-          <el-form
-            v-else
-            ref="reportForm"
-            :model="report"
-            :rules="rules"
-            label-width="80px"
-          >
+          <el-form v-else ref="reportForm" :model="report" :rules="rules" label-width="80px">
             <el-form-item label="标题" prop="stem">
-              <el-input
-                v-model="report.stem"
-                placeholder="请输入公告标题"
-              ></el-input>
+              <el-input v-model="report.stem" placeholder="请输入公告标题"></el-input>
             </el-form-item>
             <el-form-item label="内容" prop="content">
-              <quill-editor
-                class="ql-editor-class"
-                v-model="report.content"
-                @blur="handleBlur"
-              ></quill-editor>
+              <quill-editor class="ql-editor-class" v-model="report.content" @blur="handleBlur"></quill-editor>
             </el-form-item>
             <el-form-item>
               <div style="margin-top: 20px">
-                <el-button type="primary" @click="submit" :disabled="isAdd"
-                  >发 送</el-button
-                >
-                <el-button type="info" @click="save" :disabled="isEdit"
-                  >保 存</el-button
-                >
+                <el-button type="primary" @click="submit" :disabled="isAdd">发 送</el-button>
+                <el-button type="info" @click="save" :disabled="isEdit">保 存</el-button>
                 <el-button @click="isShowDrawer = false">取 消</el-button>
               </div>
             </el-form-item>
@@ -154,53 +72,42 @@
 </template>
 
 <script>
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-import { quillEditor } from "vue-quill-editor";
-import {
-  changeReport,
-  getAllReport,
-  getDelReport,
-  getNewAllReport,
-  getSaveReport,
-  postInsertReport,
-  updatePreview,
-  updateReport,
-} from "@/api/report.js";
-import * as permission from "@/utils/permission";
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+import { quillEditor } from 'vue-quill-editor';
+import { changeReport, getAllReport, getDelReport, getNewAllReport, getSaveReport, postInsertReport, updatePreview, updateReport } from '@/api/report.js';
+import * as permission from '@/utils/permission';
 export default {
   components: {
-    quillEditor,
+    quillEditor
   },
-  inject: ["reload"],
+  inject: ['reload'],
   data() {
     return {
       loading: true,
-      isCurrent: "news",
+      isCurrent: 'news',
       tableData: [],
-      search: "",
+      search: '',
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 8, //每页显示的记录数
-        total: 0,
+        total: 0
       },
       isShowDrawer: false,
-      direction: "rtl",
+      direction: 'rtl',
 
-      searchContent: "",
-      inputContent: "",
-      drawerType: "add",
+      searchContent: '',
+      inputContent: '',
+      drawerType: 'add',
       report: {
-        stem: "",
-        content: "",
+        stem: '',
+        content: ''
       },
       rules: {
-        stem: [{ required: true, message: "请输入公告标题", trigger: "blur" }],
-        content: [
-          { required: true, message: "请输入公告内容", trigger: "blur" },
-        ],
-      },
+        stem: [{ required: true, message: '请输入公告标题', trigger: 'blur' }],
+        content: [{ required: true, message: '请输入公告内容', trigger: 'blur' }]
+      }
     };
   },
   created() {
@@ -214,16 +121,16 @@ export default {
     async changeCurrent(name) {
       this.isCurrent = name;
       this.loading = true;
-      if (name === "news") {
+      if (name === 'news') {
         await this.getNewAllReport();
       }
-      if (name === "all") {
+      if (name === 'all') {
         await this.getAllReport();
       }
-      if (name === "draft") {
+      if (name === 'draft') {
         await this.getSaveReport();
       }
-      if (name === "del") {
+      if (name === 'del') {
         await this.getDelReport();
       }
       this.loading = false;
@@ -276,24 +183,24 @@ export default {
     },
     reset() {
       this.$refs.reportForm.resetFields();
-      this.report.content = "";
-      this.report.stem = "";
+      this.report.content = '';
+      this.report.stem = '';
       this.reload();
     },
     handleClose(done) {
-      if (this.report.stem == "" && this.report.content == "") {
+      if (this.report.stem == '' && this.report.content == '') {
         done();
-      } else if (this.drawerType === "preview") {
+      } else if (this.drawerType === 'preview') {
         this.isShowDrawer = false;
         this.changeCurrent(this.isCurrent);
       } else {
-        if (this.isCurrent == "add") {
-          this.$confirm("公告信息还未保存，确定要退出吗？")
-            .then((_) => {
+        if (this.isCurrent == 'add') {
+          this.$confirm('公告信息还未保存，确定要退出吗？')
+            .then(_ => {
               this.reset();
               done();
             })
-            .catch((_) => {});
+            .catch(_ => {});
         } else {
           this.reset();
           done();
@@ -305,48 +212,48 @@ export default {
       this.drawerType = type;
       this.isShowDrawer = true;
       // console.log(row);
-      if (type !== "add") {
+      if (type !== 'add') {
         this.report = { ...row };
       }
-      if (type == "preview") {
+      if (type == 'preview') {
         updatePreview({ reportId: row.reportId });
       }
     },
     handleBlur() {
-      this.$refs.reportForm.validateField("content");
+      this.$refs.reportForm.validateField('content');
     },
     //发送公告
     async submit() {
       try {
-        if (this.drawerType === "add") {
+        if (this.drawerType === 'add') {
           await this.$refs.reportForm.validate();
           await postInsertReport({
             username: this.$store.getters.username,
             ...this.report,
-            state: 1,
+            state: 1
           });
         }
-        if (this.drawerType === "edit") {
+        if (this.drawerType === 'edit') {
           await updateReport({
             ...this.report,
             username: this.$store.getters.username,
-            state: 1,
+            state: 1
           });
         }
-        if (this.isCurrent == "del") {
+        if (this.isCurrent == 'del') {
           await updateReport({
             ...this.report,
             username: this.$store.getters.username,
-            state: 1,
+            state: 1
           });
         }
       } catch (error) {
         console.log(error);
       } finally {
-        this.$message.success("发送成功");
+        this.$message.success('发送成功');
         this.isShowDrawer = false;
         this.reset();
-        await this.changeCurrent("news");
+        await this.changeCurrent('news');
       }
     },
     //保存信息
@@ -354,26 +261,26 @@ export default {
       try {
         await this.$refs.reportForm.validate();
 
-        if (this.drawerType === "add") {
+        if (this.drawerType === 'add') {
           try {
             await postInsertReport({
               username: this.$store.getters.username,
               ...this.report,
-              state: 2,
+              state: 2
             });
-            this.$message.success("保存成功");
+            this.$message.success('保存成功');
           } catch (error) {
             console.log(error);
           }
-          await this.changeCurrent("news");
-        } else if (this.isCurrent !== "del") {
+          await this.changeCurrent('news');
+        } else if (this.isCurrent !== 'del') {
           try {
             await updateReport({
               username: this.$store.getters.username,
               ...this.report,
-              state: 2,
+              state: 2
             });
-            this.$message.success("保存成功");
+            this.$message.success('保存成功');
           } catch (error) {
             console.log(error);
           }
@@ -384,12 +291,12 @@ export default {
             await updateReport({
               username: this.$store.getters.username,
               ...this.report,
-              state: 0,
+              state: 0
             });
           } catch (error) {
             console.log(error);
           }
-          this.$message.success("保存成功");
+          this.$message.success('保存成功');
           this.isShowDrawer = false;
           this.reset();
         }
@@ -401,46 +308,43 @@ export default {
     async handleDelete(row) {
       try {
         await changeReport(row.reportId, 0);
-        this.$message.success("删除成功");
+        this.$message.success('删除成功');
       } catch (error) {
         console.log(error);
       }
       await this.changeCurrent(this.isCurrent);
-    },
+    }
   },
   computed: {
     tables() {
       const search = this.searchContent;
       //当将input框清空时，使列表自动展示搜索前的完整数据，并返回至首页，防止叠加搜索
-      if (this.inputContent == "") {
-        this.searchContent = "";
+      if (this.inputContent == '') {
+        this.searchContent = '';
         this.currentPage = 1;
-        return [
-          this.tableData,
-          (this.pagination.total = this.tableData.length),
-        ];
+        return [this.tableData, (this.pagination.total = this.tableData.length)];
       }
-      if (search !== "") {
+      if (search !== '') {
         return [
-          this.tableData.filter((dataNews) => {
-            return Object.keys(dataNews).some((key) => {
+          this.tableData.filter(dataNews => {
+            return Object.keys(dataNews).some(key => {
               return String(dataNews[key]).toLowerCase().indexOf(search) > -1;
             });
           }),
-          (this.pagination.total = this.tableData.filter((dataNews) => {
-            return Object.keys(dataNews).some((key) => {
+          (this.pagination.total = this.tableData.filter(dataNews => {
+            return Object.keys(dataNews).some(key => {
               return String(dataNews[key]).toLowerCase().indexOf(search) > -1;
             });
-          }).length),
+          }).length)
         ];
       }
       return [this.tableData, (this.pagination.total = this.tableData.length)];
     },
     drawerTitle() {
-      let title = "默认大标题";
-      if (this.drawerType === "add") title = "添 加 公 告";
-      if (this.drawerType === "preview") title = "公 告 预 览";
-      if (this.drawerType === "edit") title = "修 改 公 告";
+      let title = '默认大标题';
+      if (this.drawerType === 'add') title = '添 加 公 告';
+      if (this.drawerType === 'preview') title = '公 告 预 览';
+      if (this.drawerType === 'edit') title = '修 改 公 告';
       return title;
     },
     isAdd() {
@@ -460,8 +364,8 @@ export default {
     },
     isGet() {
       return permission.isGet(this.$route.params.type);
-    },
-  },
+    }
+  }
 };
 </script>
 

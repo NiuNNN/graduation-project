@@ -10,36 +10,33 @@
 </template>
 
 <script>
-import * as permission from "@/utils/permission";
-import { targetUrl } from "@/targetUrl.js";
+import * as permission from '@/utils/permission';
+import { targetUrl } from '@/targetUrl.js';
 export default {
   props: {
     name: {
       type: String,
-      default: "合同",
+      default: '合同'
     },
     contractObj: {
       type: Object,
       default: function () {
         return {};
-      },
-    },
+      }
+    }
   },
   methods: {
     preview() {
-      this.$emit(
-        "preview",
-        `${targetUrl}/view/Contract/${this.contractObj.url}`
-      );
+      this.$emit('preview', `${targetUrl}/view/Contract/${this.contractObj.url}`);
     },
     download() {
-      this.$emit("download");
-      console.log("download");
+      this.$emit('download');
+      console.log('download');
     },
     del() {
-      this.$emit("del");
-      console.log("del");
-    },
+      this.$emit('del');
+      console.log('del');
+    }
   },
   computed: {
     isAdd() {
@@ -59,8 +56,8 @@ export default {
     },
     isGet() {
       return permission.isGet(this.$route.params.type);
-    },
-  },
+    }
+  }
 };
 </script>
 

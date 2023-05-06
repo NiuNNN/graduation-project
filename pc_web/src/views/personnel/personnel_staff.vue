@@ -5,17 +5,9 @@
     </div>
     <div class="table-container">
       <div class="navbar">
-        <span
-          :class="{ current: isCurrent == `Staff` }"
-          @click="change(`Staff`)"
-          >员 工 总 览</span
-        >
+        <span :class="{ current: isCurrent == `Staff` }" @click="change(`Staff`)">员 工 总 览</span>
         <template v-if="roleId">
-          <span
-            :class="{ current: isCurrent == `Permission` }"
-            @click="change(`Permission`)"
-            >管 理 员</span
-          >
+          <span :class="{ current: isCurrent == `Permission` }" @click="change(`Permission`)">管 理 员</span>
         </template>
       </div>
       <div>
@@ -28,28 +20,28 @@
 </template>
 
 <script>
-import Permission from "@/components/personal/permission.vue";
-import Staff from "@/components/personal/staff.vue";
+import Permission from '@/components/personal/permission.vue';
+import Staff from '@/components/personal/staff.vue';
 export default {
   components: {
     Permission,
-    Staff,
+    Staff
   },
   data() {
     return {
-      isCurrent: "Staff",
+      isCurrent: 'Staff'
     };
   },
   methods: {
     change(name) {
       this.isCurrent = name;
-    },
+    }
   },
   computed: {
     roleId() {
       return this.$store.getters.roleId === 2 ? true : false;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -7,58 +7,26 @@
       <div class="navbar">
         <el-form ref="form" :model="form" label-width="50px" :inline="true">
           <el-form-item label="房号">
-            <el-input
-              v-model="form.houseName"
-              placeholder="请输入房号"
-            ></el-input>
+            <el-input v-model="form.houseName" placeholder="请输入房号"></el-input>
           </el-form-item>
           <el-form-item label="时间">
-            <el-date-picker
-              v-model="form.month"
-              type="month"
-              placeholder="请选择时间"
-              :picker-options="pickerBeginOption"
-              value-format="yyyy-MM"
-            >
-            </el-date-picker>
+            <el-date-picker v-model="form.month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
           </el-form-item>
-          <el-button type="primary" style="height: 35px" @click="search"
-            >查询</el-button
-          >
+          <el-button type="primary" style="height: 38px" @click="search">查询</el-button>
         </el-form>
       </div>
       <div class="table">
-        <el-table
-          :data="tableData"
-          stripe
-          style="width: 100%"
-          height="478"
-          v-loading="loading"
-          :default-sort="{ prop: 'date', order: 'descending' }"
-        >
-          <el-table-column prop="date" label="时间" sortable width="120">
-          </el-table-column>
-          <el-table-column prop="outTradeNo" label="订单编号" width="200">
-          </el-table-column>
+        <el-table :data="tableData" stripe style="width: 100%" height="478" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }">
+          <el-table-column prop="date" label="时间" sortable width="120"> </el-table-column>
+          <el-table-column prop="outTradeNo" label="订单编号" width="200"> </el-table-column>
           <el-table-column prop="houseName" label="房号"> </el-table-column>
           <el-table-column prop="type" label="类型"> </el-table-column>
           <el-table-column prop="total" label="金额"> </el-table-column>
           <el-table-column prop="time" label="上传时间"> </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                :disabled="isGet"
-                @click="showDrawer(scope.row)"
-                >查 看</el-button
-              >
-              <el-button
-                type="primary"
-                size="mini"
-                :disabled="isAdd || scope.row.state == 1"
-                @click="openDrawer(scope.row)"
-                >缴 费</el-button
-              >
+              <el-button size="mini" :disabled="isGet" @click="showDrawer(scope.row)">查 看</el-button>
+              <el-button type="primary" size="mini" :disabled="isAdd || scope.row.state == 1" @click="openDrawer(scope.row)">缴 费</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -67,32 +35,15 @@
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="pagination.currentPage"
-          :page-size="pagination.pageSize"
-          background
-          layout="prev, pager, next"
-          :total="pagination.total"
-        >
-        </el-pagination>
+        <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
       </div>
       <div class="drawer">
         <el-drawer :title="drawerTitle" :visible.sync="drawer" size="50%">
-          <order-detail
-            :order="order"
-            :table-data="misTable"
-            :detail="detail"
-          ></order-detail>
+          <order-detail :order="order" :table-data="misTable" :detail="detail"></order-detail>
         </el-drawer>
       </div>
       <div class="drawer">
-        <el-drawer
-          :title="PayTitle"
-          :visible.sync="payDrawer"
-          :destroy-on-close="true"
-          size="50%"
-        >
+        <el-drawer :title="PayTitle" :visible.sync="payDrawer" :destroy-on-close="true" size="50%">
           <pay :order="order" @closePayDrawer="closePayDrawer"></pay>
         </el-drawer>
       </div>
@@ -101,43 +52,43 @@
 </template>
 
 <script>
-import * as permission from "@/utils/permission";
-import { getAllOrder } from "@/api/order";
-import OrderDetail from "@/components/financial/OrderDetail.vue";
-import { getName } from "@/api/user";
-import { getOrderMis } from "@/api/basic";
-import { getCostByRentId } from "@/api/cost";
-import Pay from "@/components/financial/Pay.vue";
+import * as permission from '@/utils/permission';
+import { getAllOrder } from '@/api/order';
+import OrderDetail from '@/components/financial/OrderDetail.vue';
+import { getName } from '@/api/user';
+import { getOrderMis } from '@/api/basic';
+import { getCostByRentId } from '@/api/cost';
+import Pay from '@/components/financial/Pay.vue';
 export default {
   components: {
     OrderDetail,
-    Pay,
+    Pay
   },
   data() {
     return {
       pickerBeginOption: {
-        disabledDate: (time) => {
+        disabledDate: time => {
           return time.getTime() > Date.now();
-        },
+        }
       },
       form: {
-        month: "",
-        houseName: "",
+        month: '',
+        houseName: ''
       },
       tableData: [],
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 8, //每页显示的记录数
-        total: 0,
+        total: 0
       },
       loading: false,
       drawer: false,
-      drawerTitle: "",
+      drawerTitle: '',
       order: {},
       misTable: [],
       detail: {},
       payDrawer: false,
-      PayTitle: "",
+      PayTitle: ''
     };
   },
   created() {
@@ -150,7 +101,7 @@ export default {
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllOrder(param, {
           houseName: this.form.houseName,
-          time: this.form.month,
+          time: this.form.month
         });
         // console.log(data);
         this.tableData = data.records;
@@ -172,8 +123,8 @@ export default {
     search() {
       this.getAll();
       this.form = {
-        month: "",
-        houseName: "",
+        month: '',
+        houseName: ''
       };
     },
     async showDrawer(row) {
@@ -185,12 +136,12 @@ export default {
         if (row.type != `押金`) {
           const { data } = await getCostByRentId({
             rentId: row.rentId,
-            time: row.date,
+            time: row.date
           });
           // console.log(data);
           this.detail = data;
         }
-        if (row.userId != "" && row.userId != null) {
+        if (row.userId != '' && row.userId != null) {
           const { data: name } = await getName(row.userId);
           // console.log(result);
           row.name = name;
@@ -213,7 +164,7 @@ export default {
     closePayDrawer() {
       this.getAll();
       this.payDrawer = false;
-    },
+    }
   },
   computed: {
     isAdd() {
@@ -236,8 +187,8 @@ export default {
     },
     isTooggle() {
       return this.multipleSelection.length > 0 ? false : true;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -257,7 +208,7 @@ export default {
       text-align: right;
       .cancel {
         width: 130px;
-        height: 40px;
+        height: 42px;
         border-radius: 27px;
         background-color: #fff;
         font-size: 16px;
@@ -266,7 +217,7 @@ export default {
       }
       .save {
         width: 100px;
-        height: 40px;
+        height: 42px;
         border-radius: 27px;
         background: linear-gradient(45deg, #4f8aff 0%, #4b5eff 100%);
         background-blend-mode: normal;

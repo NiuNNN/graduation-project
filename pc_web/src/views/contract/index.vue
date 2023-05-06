@@ -14,20 +14,8 @@
             </template>
             <div class="bg-container">
               <el-row :gutter="20">
-                <el-col
-                  type="flex"
-                  justify="space-around"
-                  :span="3"
-                  style="margin-bottom: 20px"
-                  v-for="(item, index) in baseData"
-                  :key="index"
-                >
-                  <pdf-card
-                    :contractObj="item"
-                    :name="item.contractName"
-                    @preview="preview"
-                    @del="del"
-                  ></pdf-card>
+                <el-col type="flex" justify="space-around" :span="3" style="margin-bottom: 20px" v-for="(item, index) in baseData" :key="index">
+                  <pdf-card :contractObj="item" :name="item.contractName" @preview="preview" @del="del"></pdf-card>
                 </el-col>
               </el-row>
             </div>
@@ -37,34 +25,15 @@
     </div>
     <div class="bg">
       <div class="navbar">
-        <span :class="{ current: isCurrent == `rent` }" @click="change(`rent`)"
-          >租 赁 合 同</span
-        >
-        <span :class="{ current: isCurrent == `work` }" @click="change(`work`)"
-          >劳 动 合 同</span
-        >
-        <span :class="{ current: isCurrent == `lose` }" @click="change(`lose`)"
-          >失 效 合 同</span
-        >
+        <span :class="{ current: isCurrent == `rent` }" @click="change(`rent`)">租 赁 合 同</span>
+        <span :class="{ current: isCurrent == `work` }" @click="change(`work`)">劳 动 合 同</span>
+        <span :class="{ current: isCurrent == `lose` }" @click="change(`lose`)">失 效 合 同</span>
       </div>
       <div class="bg-container" style="height: 520px" v-loading="loading">
         <template v-if="Data.length > 0">
           <el-row :gutter="20">
-            <el-col
-              type="flex"
-              justify="space-around"
-              :span="3"
-              style="margin-bottom: 20px"
-              v-for="(item, index) in Data"
-              :key="index"
-            >
-              <pdf-card
-                :contractObj="item"
-                :isShow="false"
-                :name="item.url"
-                @preview="preview"
-                @del="del"
-              ></pdf-card>
+            <el-col type="flex" justify="space-around" :span="3" style="margin-bottom: 20px" v-for="(item, index) in Data" :key="index">
+              <pdf-card :contractObj="item" :isShow="false" :name="item.url" @preview="preview" @del="del"></pdf-card>
             </el-col>
           </el-row>
         </template>
@@ -73,59 +42,39 @@
         </template>
         <!-- 分页器 -->
         <div class="pagination">
-          <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page="pagination.currentPage"
-            :page-size="pagination.pageSize"
-            background
-            layout="prev, pager, next"
-            :total="pagination.total"
-          >
-          </el-pagination>
+          <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
         </div>
       </div>
     </div>
     <div class="dialog">
-      <el-dialog
-        title="PDF预览"
-        :visible.sync="dialogVisible"
-        width="70%"
-        append-to-body
-        top
-        :before-close="handleClose"
-        style="margin-top: 40px !important"
-      >
-        <iframe
-          frameborder="0"
-          style="width: 100%; height: 500px"
-          :src="pdfSrc"
-        ></iframe>
+      <el-dialog title="PDF预览" :visible.sync="dialogVisible" width="70%" append-to-body top :before-close="handleClose" style="margin-top: 40px !important">
+        <iframe frameborder="0" style="width: 100%; height: 500px" :src="pdfSrc"></iframe>
       </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import PdfCard from "@/components/utils/PdfCard.vue";
-import { getBaseContract, getAllContract } from "@/api/contract";
+import PdfCard from '@/components/utils/PdfCard.vue';
+import { getBaseContract, getAllContract } from '@/api/contract';
 export default {
   data() {
     return {
       dialogVisible: false,
-      pdfSrc: "", // 将从后台获取到的 PDF 文件地址赋值给这个字段
+      pdfSrc: '', // 将从后台获取到的 PDF 文件地址赋值给这个字段
       baseData: [],
-      isCurrent: "rent",
+      isCurrent: 'rent',
       Data: [],
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 16, //每页显示的记录数
-        total: 0,
+        total: 0
       },
-      loading: false,
+      loading: false
     };
   },
   components: {
-    PdfCard,
+    PdfCard
   },
   created() {
     this.getBaseContract();
@@ -151,11 +100,11 @@ export default {
     },
     del() {},
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
+      this.$confirm('确认关闭？')
+        .then(_ => {
           done();
         })
-        .catch((_) => {});
+        .catch(_ => {});
     },
     //换页
     handleCurrentChange(currentPage) {
@@ -170,7 +119,7 @@ export default {
         // console.log(this.kindId);
         const { data } = await getAllContract(param, {
           state: this.state,
-          kindId: this.kindId,
+          kindId: this.kindId
         });
         this.Data = data.records;
         this.pagination.currentPage = data.current;
@@ -182,20 +131,20 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
+    }
   },
   computed: {
     state() {
       return this.isCurrent != `lose` ? 1 : 0;
     },
     kindId() {
-      let result = "";
+      let result = '';
       if (this.isCurrent === `work`) result = 2;
       if (this.isCurrent === `rent`) result = 1;
       if (this.isCurrent === `lose`) result = 0;
       return result;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -3,107 +3,44 @@
     <div class="header">
       <el-row justify="space-between">
         <el-col :span="12"><h1>员 工 权 限 管 理</h1></el-col>
-        <el-col :span="12" style="text-align: right"
-          ><el-button class="add" @click="addRole(`add`)"
-            >添 加 职 位</el-button
-          ></el-col
-        >
+        <el-col :span="12" style="text-align: right"><el-button class="add" @click="addRole(`add`)">添 加 职 位</el-button></el-col>
       </el-row>
     </div>
     <div class="table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        v-loading="loading"
-        max-height="467"
-      >
+      <el-table :data="tableData" style="width: 100%" v-loading="loading" max-height="467">
         <el-table-column prop="id" label="编号" width="80"> </el-table-column>
-        <el-table-column prop="roleName" label="职位" width="80">
-        </el-table-column>
+        <el-table-column prop="roleName" label="职位" width="80"> </el-table-column>
         <el-table-column prop="remark" label="主要职务"> </el-table-column>
         <el-table-column label="操作" width="220">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="addRole(`edit`, scope.row)"
-              :disabled="scope.row.roleId === 2"
-              >编 辑</el-button
-            >
-            <el-button type="primary" size="mini" @click="authorise(scope.row)"
-              >授 权</el-button
-            >
+            <el-button size="mini" @click="addRole(`edit`, scope.row)" :disabled="scope.row.roleId === 2">编 辑</el-button>
+            <el-button type="primary" size="mini" @click="authorise(scope.row)">授 权</el-button>
             <template v-if="scope.row.state == 1">
-              <el-button
-                type="danger"
-                size="mini"
-                :disabled="scope.row.roleId === 2"
-                @click="changeRoleState(scope.row.roleId, 0)"
-                >删 除</el-button
-              >
+              <el-button type="danger" size="mini" :disabled="scope.row.roleId === 2" @click="changeRoleState(scope.row.roleId, 0)">删 除</el-button>
             </template>
             <template v-else>
-              <el-button
-                type="warning"
-                size="mini"
-                @click="changeRoleState(scope.row.roleId, 1)"
-                >恢 复</el-button
-              >
+              <el-button type="warning" size="mini" @click="changeRoleState(scope.row.roleId, 1)">恢 复</el-button>
             </template>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="dialog">
-      <el-dialog
-        title="权限管理"
-        :visible.sync="dialogVisible"
-        width="40%"
-        :before-close="handleClose"
-        v-loading="dialogLoading"
-      >
-        <tree-transfer
-          ref="transfer"
-          :title="title"
-          :from_data="fromData"
-          :to_data="toData"
-          :defaultProps="{ label: 'label' }"
-          @add-btn="add"
-          @remove-btn="remove"
-          :mode="mode"
-          height="400px"
-          :transferOpenNode="false"
-        >
-        </tree-transfer>
+      <el-dialog title="权限管理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" v-loading="dialogLoading">
+        <tree-transfer ref="transfer" :title="title" :from_data="fromData" :to_data="toData" :defaultProps="{ label: 'label' }" @add-btn="add" @remove-btn="remove" :mode="mode" height="400px" :transferOpenNode="false"> </tree-transfer>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">确定</el-button>
         </span>
       </el-dialog>
     </div>
     <div class="drawer">
-      <el-drawer
-        :title="drawTitle"
-        :visible.sync="drawer"
-        :before-close="handleClose"
-      >
-        <el-form
-          ref="roleForm"
-          :model="form"
-          label-width="100px"
-          :rules="rules"
-        >
+      <el-drawer :title="drawTitle" :visible.sync="drawer" :before-close="handleClose">
+        <el-form ref="roleForm" :model="form" label-width="100px" :rules="rules">
           <el-form-item label="职位名称" prop="roleName">
-            <el-input
-              v-model="form.roleName"
-              placeholder="请输入职位名称"
-            ></el-input>
+            <el-input v-model="form.roleName" placeholder="请输入职位名称"></el-input>
           </el-form-item>
           <el-form-item label="主要职务" prop="remark">
-            <el-input
-              v-model="form.remark"
-              type="textarea"
-              :autosize="{ minRows: 10, maxRows: 20 }"
-              placeholder="请输入主要职务信息"
-            ></el-input>
+            <el-input v-model="form.remark" type="textarea" :autosize="{ minRows: 10, maxRows: 20 }" placeholder="请输入主要职务信息"></el-input>
           </el-form-item>
           <el-form-item>
             <div>
@@ -118,20 +55,11 @@
 </template>
 
 <script>
-import {
-  updatePermsByRoleId,
-  selectElsePermsByRoleId,
-  selectPermsByRoleId,
-  getAllRole,
-  deletePermsByRoleId,
-  changeRoleState,
-  insertRole,
-  updateRole,
-} from "@/api/role";
-import treeTransfer from "el-tree-transfer"; // 引入
+import { updatePermsByRoleId, selectElsePermsByRoleId, selectPermsByRoleId, getAllRole, deletePermsByRoleId, changeRoleState, insertRole, updateRole } from '@/api/role';
+import treeTransfer from 'el-tree-transfer'; // 引入
 export default {
   components: {
-    treeTransfer,
+    treeTransfer
   },
   created() {
     this.getAllRole();
@@ -143,26 +71,22 @@ export default {
       dialogLoading: true,
       tableData: [],
       dialogVisible: false,
-      title: ["源权限", "已有权限"],
-      mode: "transfer", // transfer addressList
+      title: ['源权限', '已有权限'],
+      mode: 'transfer', // transfer addressList
       fromData: [],
       toData: [],
-      isCurrent: "",
+      isCurrent: '',
       keys: [],
       form: {
-        roleName: "",
-        remark: "",
+        roleName: '',
+        remark: ''
       },
       edit: true,
-      drawTitle: "",
+      drawTitle: '',
       rules: {
-        roleName: [
-          { required: true, message: "请输入职位名称", trigger: "blur" },
-        ],
-        remark: [
-          { required: true, message: "请输入主要职务信息", trigger: "blur" },
-        ],
-      },
+        roleName: [{ required: true, message: '请输入职位名称', trigger: 'blur' }],
+        remark: [{ required: true, message: '请输入主要职务信息', trigger: 'blur' }]
+      }
     };
   },
   methods: {
@@ -216,7 +140,7 @@ export default {
       try {
         const param = {
           roleId: roleId,
-          keys: JSON.stringify(this.keys),
+          keys: JSON.stringify(this.keys)
         };
         const res = await updatePermsByRoleId(param);
         // console.log(param);
@@ -229,7 +153,7 @@ export default {
       try {
         const param = {
           roleId: roleId,
-          keys: JSON.stringify(this.keys),
+          keys: JSON.stringify(this.keys)
         };
         const res = await deletePermsByRoleId(param);
         // console.log(param);
@@ -239,23 +163,23 @@ export default {
     },
     //关闭对话框
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
+      this.$confirm('确认关闭？')
+        .then(_ => {
           done();
         })
-        .catch((_) => {});
+        .catch(_ => {});
     },
     // 切换模式 现有树形穿梭框模式transfer 和通讯录模式addressList
     changeMode() {
-      if (this.mode == "transfer") {
-        this.mode = "addressList";
+      if (this.mode == 'transfer') {
+        this.mode = 'addressList';
       } else {
-        this.mode = "transfer";
+        this.mode = 'transfer';
       }
     },
     // 监听穿梭框组件添加
     async add(fromData, toData, obj) {
-      console.log("obj:", obj.keys);
+      console.log('obj:', obj.keys);
       this.keys = obj.keys;
       try {
         const res = await this.addPermission(this.isCurrent);
@@ -267,7 +191,7 @@ export default {
     },
     // 监听穿梭框组件移除
     async remove(fromData, toData, obj) {
-      console.log("obj:", obj.keys);
+      console.log('obj:', obj.keys);
       this.keys = obj.keys;
       try {
         const res = await this.removePermission(this.isCurrent);
@@ -281,7 +205,7 @@ export default {
     async changeRoleState(roleId, state) {
       try {
         const res = await changeRoleState(roleId, { state });
-        this.$message.success("修改成功");
+        this.$message.success('修改成功');
         this.getAllRole();
       } catch (error) {
         console.log(error);
@@ -290,12 +214,12 @@ export default {
     //添加职位
     async addRole(operation, row) {
       this.form = {
-        roleName: "",
-        remark: "",
+        roleName: '',
+        remark: ''
       };
       if (operation === `edit`) {
         this.edit = true;
-        this.drawTitle = "修改职务";
+        this.drawTitle = '修改职务';
         this.form = row;
         console.log(this.form);
       }
@@ -311,12 +235,12 @@ export default {
     async submit() {
       if (this.edit) {
         //修改
-        this.$refs.roleForm.validate(async (isOK) => {
+        this.$refs.roleForm.validate(async isOK => {
           if (isOK) {
             this.loading = true;
             try {
               await updateRole(this.form);
-              this.$message.success("修改成功");
+              this.$message.success('修改成功');
               this.getAllRole();
               this.drawer = false;
             } catch (error) {
@@ -325,17 +249,17 @@ export default {
               this.loading = false;
             }
           } else {
-            this.$message.error("请正确输入职位信息");
+            this.$message.error('请正确输入职位信息');
           }
         });
       } else {
         //添加
-        this.$refs.roleForm.validate(async (isOK) => {
+        this.$refs.roleForm.validate(async isOK => {
           if (isOK) {
             this.loading = true;
             try {
               await insertRole(this.form);
-              this.$message.success("添加成功");
+              this.$message.success('添加成功');
               this.getAllRole();
               this.drawer = false;
             } catch (error) {
@@ -344,12 +268,12 @@ export default {
               this.loading = false;
             }
           } else {
-            this.$message.error("请正确输入职位信息");
+            this.$message.error('请正确输入职位信息');
           }
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

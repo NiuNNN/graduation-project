@@ -2,31 +2,14 @@
   <div class="container">
     <div class="table">
       <p style="color: #303133; font-size: 14px">已选择杂费：</p>
-      <el-table
-        :data="tableData"
-        stripe
-        style="width: 100%"
-        height="250"
-        size="small"
-        border
-        v-loading="loading"
-      >
-        <el-table-column prop="baseName" label="收费名称" width="100">
-        </el-table-column>
-        <el-table-column prop="price" label="价格(月/元)" width="100">
-        </el-table-column>
+      <el-table :data="tableData" stripe style="width: 100%" height="250" size="small" border v-loading="loading">
+        <el-table-column prop="baseName" label="收费名称" width="100"> </el-table-column>
+        <el-table-column prop="price" label="价格(月/元)" width="100"> </el-table-column>
         <el-table-column prop="remark" label="收费详情"> </el-table-column>
         <el-table-column prop="time" label="录入时间"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="80">
           <template slot-scope="scope">
-            <el-button
-              @click="deleteRow(scope.row)"
-              type="text"
-              size="mini"
-              :disabled="isDel"
-            >
-              删除
-            </el-button>
+            <el-button @click="deleteRow(scope.row)" type="text" size="mini" :disabled="isDel"> 删除 </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -36,30 +19,13 @@
     </div>
     <div class="table">
       <p style="color: #303133; font-size: 14px">待选择杂费:</p>
-      <el-table
-        :data="noBasicData"
-        stripe
-        style="width: 100%"
-        height="250"
-        size="small"
-        border
-        v-loading="loading"
-      >
-        <el-table-column prop="baseName" label="收费名称" width="120">
-        </el-table-column>
-        <el-table-column prop="price" label="价格(月/元)" width="120">
-        </el-table-column>
+      <el-table :data="noBasicData" stripe style="width: 100%" height="250" size="small" border v-loading="loading">
+        <el-table-column prop="baseName" label="收费名称" width="120"> </el-table-column>
+        <el-table-column prop="price" label="价格(月/元)" width="120"> </el-table-column>
         <el-table-column prop="remark" label="收费详情"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="80">
           <template slot-scope="scope">
-            <el-button
-              @click="addRow(scope.row)"
-              type="text"
-              size="mini"
-              :disabled="isAdd"
-            >
-              添加
-            </el-button>
+            <el-button @click="addRow(scope.row)" type="text" size="mini" :disabled="isAdd"> 添加 </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -74,33 +40,29 @@
 </template>
 
 <script>
-import {
-  changeMiscellaneousState,
-  insertMiscellaneous,
-  getNoBasicByRentId,
-} from "@/api/basic";
+import { changeMiscellaneousState, insertMiscellaneous, getNoBasicByRentId } from '@/api/basic';
 export default {
   props: {
     user: {
       type: Object,
       default: () => {
         return {};
-      },
+      }
     },
     tableData: {
       type: Array,
       default: () => {
         return [];
-      },
+      }
     },
     isDel: {
       type: Boolean,
-      default: true,
+      default: true
     },
     isAdd: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   created() {
     this.getNoBasic();
@@ -109,7 +71,7 @@ export default {
     return {
       newTableData: [],
       noBasicData: [],
-      loading: true,
+      loading: true
     };
   },
   methods: {
@@ -128,18 +90,18 @@ export default {
     },
     //删除
     async deleteRow(row) {
-      this.$confirm("此操作将永久删除该杂费, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将永久删除该杂费, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(async () => {
           try {
             await changeMiscellaneousState({
               state: 2,
-              miscellaneousId: row.miscellaneousId,
+              miscellaneousId: row.miscellaneousId
             });
-            this.$message.success("删除成功");
+            this.$message.success('删除成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -149,26 +111,26 @@ export default {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消删除",
+            type: 'info',
+            message: '已取消删除'
           });
         });
     },
     //添加
     async addRow(row) {
-      this.$confirm("此操作将添加该杂费, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将添加该杂费, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(async () => {
           try {
             this.loading = true;
             await insertMiscellaneous({
               rentId: this.user.rentId,
-              baseId: row.baseId,
+              baseId: row.baseId
             });
-            this.$message.success("添加成功");
+            this.$message.success('添加成功');
           } catch (error) {
             console.log(error);
           } finally {
@@ -179,17 +141,17 @@ export default {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消添加",
+            type: 'info',
+            message: '已取消添加'
           });
         });
     },
     //关闭弹窗
     close() {
       this.newTableData = this.tableData;
-      this.$emit("afterUpdateBasic", this.newTableData);
-    },
-  },
+      this.$emit('afterUpdateBasic', this.newTableData);
+    }
+  }
 };
 </script>
 

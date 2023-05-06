@@ -16,7 +16,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/index.scss";
+@import '@/styles/index.scss';
 .login-container {
   display: flex;
   width: 1440px / $rootSize;
@@ -32,7 +32,7 @@ export default {};
     position: relative;
     width: 480px / $rootSize;
     height: 900px / $rootSize;
-    background: url("@/assets/image/Banner.png") no-repeat;
+    background: url('@/assets/image/Banner.png') no-repeat;
     background-size: cover;
   }
   .form-container {

@@ -71,4 +71,9 @@ public class RepairVO implements Serializable {
      * 房间名
      */
     private String houseName;
+
+    /**
+     * 维修价格
+     */
+    private String price;
 }
