@@ -89,4 +89,15 @@ public class HouseController {
     public CommonResult getHouseDetailByUserId(Integer userId) {
         return houseService.getHouseDetailByUserId(userId);
     }
+
+    /**
+     * 判断房间是否已出租
+     *
+     * @param houseName
+     * @return
+     */
+    @GetMapping("judgeHouseState")
+    public CommonResult judgeHouseState(String houseName) {
+        return houseService.judgeHouseState(houseName);
+    }
 }

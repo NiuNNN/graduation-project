@@ -43,4 +43,6 @@ public interface RentMapper extends BaseMapper<Rent> {
      * @return
      */
     int logout(Integer rentId);
+
+    Integer getRentIdByHouseName(String houseName);
 }

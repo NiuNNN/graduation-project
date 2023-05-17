@@ -160,4 +160,15 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
     public CommonResult getHouseDetailByUserId(Integer userId) {
         return CommonResult.success(houseMapper.getHouseDetailByUserId(userId));
     }
+
+    /**
+     * 判断房间是否已租
+     *
+     * @param houseName
+     * @return
+     */
+    @Override
+    public CommonResult judgeHouseState(String houseName) {
+        return CommonResult.success(houseMapper.judgeHouseState(houseName));
+    }
 }

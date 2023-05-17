@@ -10,6 +10,8 @@ import niuniu.javaweb.vo.CheckOutVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.mapper
@@ -21,12 +23,10 @@ public interface CheckOutMapper extends BaseMapper<CheckOut> {
     /**
      * 退房申请
      *
-     * @param userId
-     * @param rentId
-     * @param message
+     * @param checkOut
      * @return
      */
-    int insertCheckOut(Integer userId, Integer rentId, String message);
+    int insertCheckOut(CheckOut checkOut);
 
     /**
      * 处理退房
@@ -36,6 +36,12 @@ public interface CheckOutMapper extends BaseMapper<CheckOut> {
      */
     int updateCheckOut(CheckOut checkOut);
 
+    /**
+     * 获取退房状态
+     *
+     * @param userId
+     * @return
+     */
     CheckOut getCheckOutState(Integer userId);
 
     /**
@@ -64,4 +70,12 @@ public interface CheckOutMapper extends BaseMapper<CheckOut> {
      * @return
      */
     CheckOutVO getCheckOutDetail(Integer checkoutId);
+
+    /**
+     * 判断是否有对应未处理的房间
+     *
+     * @param houseName
+     * @return
+     */
+    List<CheckOut> judgeHasCheckOut(String houseName);
 }

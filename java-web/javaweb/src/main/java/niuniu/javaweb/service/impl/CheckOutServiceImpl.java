@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * @author NiuNiu666
@@ -59,9 +60,12 @@ public class CheckOutServiceImpl extends ServiceImpl<CheckOutMapper, CheckOut> i
         QueryWrapper<Rent> queryWrapper = new QueryWrapper<Rent>();
         queryWrapper.eq("user_id", userId);
         Rent rent = rentMapper.selectOne(queryWrapper);
-        if (checkOutMapper.insertCheckOut(userId, rent.getRentId(), message) <= 0) return CommonResult.failed();
+        CheckOut checkOut = new CheckOut();
+        checkOut.setRentId(rent.getRentId());
+        checkOut.setMessage(message);
+        if (checkOutMapper.insertCheckOut(checkOut) <= 0) return CommonResult.success();
 //        System.out.println(rent);
-        return CommonResult.success();
+        return CommonResult.failed();
     }
 
     /**
@@ -162,6 +166,8 @@ public class CheckOutServiceImpl extends ServiceImpl<CheckOutMapper, CheckOut> i
         Rent rent = rentMapper.selectById(checkOut.getRentId());
         //修改house表
         houseMapper.changeState(rent.getHouseId(), "空闲");
+        //修改user表
+        userMapper.changeUserState(rent.getUserId(), 0);
     }
 
     /**
@@ -194,5 +200,43 @@ public class CheckOutServiceImpl extends ServiceImpl<CheckOutMapper, CheckOut> i
             checkOutDetail.setName(user.getName());
         }
         return CommonResult.success(checkOutDetail);
+    }
+
+    /**
+     * 押金退还提醒
+     *
+     * @param houseName
+     * @return
+     */
+    @Override
+    public CommonResult judgeDepositByHouseName(String houseName) {
+        if (contractMapper.checkSign(rentMapper.getRentIdByHouseName(houseName), DateUtil.getNowTime())) {
+            return CommonResult.success(0);
+        } else {
+            return CommonResult.success(1);
+        }
+    }
+
+    /**
+     * 退房处理
+     *
+     * @param houseName
+     * @param userId
+     * @return
+     */
+    @Override
+    public CommonResult insertCheckOutByStaff(String houseName, Integer userId) throws ParseException {
+        //先判断该房间有没有已经申请未处理的
+        List<CheckOut> checkOuts = checkOutMapper.judgeHasCheckOut(houseName);
+        if (checkOuts.isEmpty()) {
+            CheckOut checkOut = new CheckOut();
+            checkOut.setRentId(rentMapper.getRentIdByHouseName(houseName));
+            checkOut.setMessage("员工代退房申请...");
+            if (checkOutMapper.insertCheckOut(checkOut) <= 0) return CommonResult.failed();
+            System.out.println(checkOutMapper.selectById(checkOut.getCheckoutId()));
+            checkOuts.add(checkOutMapper.selectById(checkOut.getCheckoutId()));
+        }
+        checkOuts.get(0).setUserId(userId);
+        return deleteCheckOut(checkOuts.get(0));
     }
 }

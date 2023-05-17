@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="header-container">
       <h1>退 房 处 理</h1>
-      <el-button class="add" @click="openDrawer('add')" :disabled="isAdd">退 房 +</el-button>
+      <el-button class="add" @click="addCheckOut" :disabled="isAdd">退 房 +</el-button>
     </div>
     <div class="table-container">
       <div class="navbar">
@@ -54,18 +54,11 @@
                 </template>
                 <el-descriptions-item label="房号">{{ checkout.houseName }}</el-descriptions-item>
                 <el-descriptions-item label="处理人">{{ checkout.name }}</el-descriptions-item>
-                <el-descriptions-item label="申请时间">{{ checkout.start }}</el-descriptions-item>
-                <el-descriptions-item label="处理时间">{{ checkout.end }}</el-descriptions-item>
-                <el-descriptions-item label="申请备注">{{ checkout.message }}</el-descriptions-item>
-                <el-descriptions-item label="审核备注">{{ checkout.remark }}</el-descriptions-item>
+                <el-descriptions-item label="申请时间" :span="2">{{ checkout.start }}</el-descriptions-item>
+                <el-descriptions-item label="处理时间" :span="2">{{ checkout.end }}</el-descriptions-item>
+                <el-descriptions-item label="申请备注" :span="2">{{ checkout.message }}</el-descriptions-item>
+                <el-descriptions-item label="审核备注" :span="2">{{ checkout.remark }}</el-descriptions-item>
               </el-descriptions>
-            </div>
-            <div class="drawer-add" v-if="drawerType == `add`">
-              <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="活动名称">
-                  <el-input v-model="form.name"></el-input>
-                </el-form-item>
-              </el-form>
             </div>
           </div>
         </el-drawer>
@@ -76,8 +69,10 @@
 
 <script>
 import * as permission from '@/utils/permission';
-import { getAllCheckOut, cancelCheckOut, deleteCheckOut, getCheckOutDetail } from '@/api/checkout';
+import { getAllCheckOut, cancelCheckOut, deleteCheckOut, getCheckOutDetail, judgeDepositByHouseName, handleCheckOut } from '@/api/checkout';
+import { judgeHouseState } from '@/api/house';
 import { validNumber } from '@/utils/validate';
+import { validatePassword } from '@/api/user';
 export default {
   data() {
     const validateNumber = (rule, value, callback) => {
@@ -143,13 +138,11 @@ export default {
         .catch(_ => {});
     },
     //打开弹窗
-    openDrawer(type, row) {
+    async openDrawer(type, row) {
       this.drawerType = type;
-      if (type == `add`) {
-      }
       if (type == `show`) {
         // console.log(row);
-        this.getCheckOutDetail({ checkoutId: row.checkoutId });
+        await this.getCheckOutDetail({ checkoutId: row.checkoutId });
       }
       this.drawer = true;
     },
@@ -162,7 +155,9 @@ export default {
       })
         .then(async () => {
           try {
-            await cancelCheckOut(row);
+            const param = { ...row, userId: this.$store.getters.userId };
+            // console.log(param);
+            await cancelCheckOut(param);
             this.$message.success('撤销成功...');
           } catch (error) {
             console.log(error);
@@ -200,6 +195,74 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    //添加退房申请
+    addCheckOut() {
+      this.$prompt('请输入房号', '退房申请', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^[0-9]*$/,
+        inputErrorMessage: '房号格式不正确'
+      })
+        .then(async ({ value }) => {
+          try {
+            //先查找是否存在该房间
+            const { data: flag } = await judgeHouseState({ houseName: value });
+            if (flag > 0) {
+              //确认入住时间 给予提示
+              const { data } = await judgeDepositByHouseName({ houseName: value });
+              let msg = data > 0 ? `此操作将进行退房处理，是否继续？` : `该房间尚未租完合同时间，确认需要退房？`;
+              this.$confirm(msg, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              })
+                .then(() => {
+                  this.handleCheckOut(value);
+                })
+                .catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消退房...'
+                  });
+                });
+            } else {
+              this.$message.info('该房间尚未出租...');
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        })
+        .catch(() => {});
+    },
+    handleCheckOut(val) {
+      this.$prompt('请输入密码', '上传电费', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password',
+        inputPattern: /^\w{5,12}$/,
+        inputErrorMessage: '密码格式不正确'
+      })
+        .then(async ({ value }) => {
+          try {
+            await validatePassword({
+              password: value,
+              username: this.$store.getters.username
+            });
+            await handleCheckOut({ houseName: val, userId: this.$store.getters.userId });
+            this.$message.success('退房成功');
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.getAll();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消退房...'
+          });
+        });
     }
   },
   computed: {

@@ -36,3 +36,21 @@ export function deleteCheckOut(param) {
 export function getCheckOutDetail(param) {
   return get(`getCheckOutDetail`, param);
 }
+
+/**
+ * 判断是否退回押金
+ * @param {*} param
+ * @returns
+ */
+export function judgeDepositByHouseName(param) {
+  return get(`judgeDepositByHouseName`, param);
+}
+
+/**
+ * 退房处理
+ * @param {*} param
+ * @returns
+ */
+export function handleCheckOut(param) {
+  return post(`handleCheckOut`, param);
+}

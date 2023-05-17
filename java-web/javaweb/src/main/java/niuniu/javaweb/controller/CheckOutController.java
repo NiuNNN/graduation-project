@@ -8,6 +8,7 @@ import niuniu.javaweb.vo.CheckOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
@@ -96,5 +97,28 @@ public class CheckOutController {
     @GetMapping("getCheckOutDetail")
     public CommonResult getCheckOutDetail(Integer checkoutId) {
         return checkOutService.getCheckOutDetail(checkoutId);
+    }
+
+    /**
+     * 押金退还提醒
+     *
+     * @param houseName
+     * @return
+     */
+    @GetMapping("judgeDepositByHouseName")
+    public CommonResult judgeDepositByHouseName(String houseName) {
+        return checkOutService.judgeDepositByHouseName(houseName);
+    }
+
+    /**
+     * 退房申请
+     *
+     * @param houseName
+     * @param userId
+     * @return
+     */
+    @PostMapping("handleCheckOut")
+    public CommonResult handleCheckOut(String houseName, Integer userId) throws ParseException {
+        return checkOutService.insertCheckOutByStaff(houseName, userId);
     }
 }

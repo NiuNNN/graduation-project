@@ -64,4 +64,21 @@ public interface CheckOutService {
      * @return
      */
     CommonResult getCheckOutDetail(Integer checkoutId);
+
+    /**
+     * 押金退还提醒
+     *
+     * @param houseName
+     * @return
+     */
+    CommonResult judgeDepositByHouseName(String houseName);
+
+    /**
+     * 退房处理
+     *
+     * @param houseName
+     * @param userId
+     * @return
+     */
+    CommonResult insertCheckOutByStaff(String houseName, Integer userId) throws ParseException;
 }

@@ -26,4 +26,12 @@
             state  = 0
         where rent_id = #{rentId}
     </update>
+    <select id="getRentIdByHouseName" resultType="Integer">
+        select a.rent_id
+        from rent as a,
+             house as b
+        where a.house_id = b.house_id
+          and a.state = 1
+          and b.house_name = #{houseName}
+    </select>
 </mapper>

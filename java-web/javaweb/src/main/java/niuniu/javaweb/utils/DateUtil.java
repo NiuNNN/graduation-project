@@ -24,10 +24,20 @@ public class DateUtil {
 
     static String DEFAULT_FORMAT_MONTH = "yyyy-MM";
 
-    static String DEFAULT_FORMAT_DAY = "yyyy-MM-dd";
+    static String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 
     static String MONTH[] = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
+
+    /**
+     * 转换当前日期 转换为 yyyy-MM-dd-HH-mm-ss
+     *
+     * @return
+     */
+    public static String getNowTime() {
+        DateTime now = new DateTime();
+        return now.toString(DEFAULT_FORMAT);
+    }
 
     /**
      * 转换当前日期 转换为 yyyy-MM-dd-HH-mm-ss

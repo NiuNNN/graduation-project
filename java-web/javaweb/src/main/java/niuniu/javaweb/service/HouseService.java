@@ -68,4 +68,12 @@ public interface HouseService {
      * @return
      */
     CommonResult getHouseDetailByUserId(Integer userId);
+
+    /**
+     * 判断房间是否已出租
+     *
+     * @param houseName
+     * @return
+     */
+    CommonResult judgeHouseState(String houseName);
 }

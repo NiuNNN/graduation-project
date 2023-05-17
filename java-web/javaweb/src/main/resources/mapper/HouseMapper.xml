@@ -82,4 +82,10 @@
           and a.style_id = b.style_id
           and a.house_id = c.house_id
     </select>
+    <select id="judgeHouseState" resultType="int">
+        select count(*)
+        from house
+        where house_name = #{houseName}
+          and state = "已租"
+    </select>
 </mapper>

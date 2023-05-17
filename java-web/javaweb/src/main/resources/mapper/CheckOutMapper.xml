@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="niuniu.javaweb.mapper.CheckOutMapper">
-    <insert id="insertCheckOut">
+    <insert id="insertCheckOut" parameterType="niuniu.javaweb.pojo.CheckOut">
         insert into checkout (rent_id, start, state, message)
         values (#{rentId}, current_timestamp, 0, #{message})
+        <selectKey keyProperty="checkoutId" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
     <update id="updateCheckOut">
         update checkout
@@ -47,9 +50,12 @@
     </select>
     <update id="cancelCheckout">
         update checkout
-        set end    = current_timestamp,
-            remark = "撤销申请",
-            state  = 3
+        set end = current_timestamp,
+        remark = "撤销申请",
+        state = 3
+        <if test="userId!=null and userId!= ''">
+            ,user_id = #{userId}
+        </if>
         where checkout_id = #{checkoutId}
     </update>
     <select id="getCheckOutDetail" resultType="niuniu.javaweb.vo.CheckOutVO">
@@ -60,5 +66,15 @@
         where a.rent_id = c.rent_id
           and b.house_id = c.house_id
           and a.checkout_id = #{checkoutId}
+    </select>
+    <select id="judgeHasCheckOut" resultType="niuniu.javaweb.pojo.CheckOut">
+        select a.*
+        from checkout as a,
+             rent as b,
+             house as c
+        where c.house_name = #{houseName}
+          and c.house_id = b.house_id
+          and b.rent_id = a.rent_id
+          and a.state = 0
     </select>
 </mapper>

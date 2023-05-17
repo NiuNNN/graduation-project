@@ -82,5 +82,12 @@ public interface HouseMapper extends BaseMapper<House> {
      */
     HouseVO getHouseDetailByUserId(Integer userId);
 
+    /**
+     * 查询房间是否为空
+     *
+     * @param houseName
+     * @return
+     */
+    int judgeHouseState(String houseName);
 }
 
