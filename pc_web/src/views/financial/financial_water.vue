@@ -173,9 +173,15 @@ export default {
       }
     },
     //下载模板
-    download() {
-      this.$message.info('正在获取下载链接，请稍等...');
-      sheetWaterExcel();
+    async download() {
+      try {
+        this.$message.info('正在获取下载链接，请稍等...');
+        await sheetWaterExcel();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.getAll();
+      }
     },
     //上传模板
     upload() {
