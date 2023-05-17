@@ -26,6 +26,7 @@ public class DateUtil {
 
     static String DEFAULT_FORMAT_DAY = "yyyy-MM-dd";
 
+
     static String MONTH[] = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
 
     /**
@@ -119,23 +120,12 @@ public class DateUtil {
      * @return
      * @throws ParseException
      */
-    public static boolean checkOrderTime(String time) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_FORMAT_DAY);
-        // 获取当月第三天
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, 3);
-        String day = format.format(calendar.getTime());
-        System.out.println(day);
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        c1.setTime(format.parse(day));
-        c2.setTime(format.parse(time));
-        int result = c1.compareTo(c2);
-        if (result >= 0) {
-            return true;
-        }
-        return false;
+    public static boolean checkOrderTime(String time) {
+        Integer start = Integer.valueOf(time.substring(8, 10));
+        System.out.println(time.substring(8, 10));
+        System.out.println("start:" + start);
+        System.out.println(start <= 3);
+        return start <= 3 ? true : false;
     }
-    
+
 }

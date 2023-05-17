@@ -1,7 +1,9 @@
 package niuniu.javaweb.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.pojo.CheckOut;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.CheckOutVO;
 
 import java.text.ParseException;
 
@@ -43,4 +45,23 @@ public interface CheckOutService {
      * @return
      */
     CommonResult cancelCheckOut(CheckOut checkOut);
+
+    /**
+     * 获取全部申请信息
+     *
+     * @param time
+     * @param houseName
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    IPage<CheckOutVO> getAllCheckOut(String time, String houseName, int currentPage, int pageSize);
+
+    /**
+     * 获取退房详细信息
+     *
+     * @param checkoutId
+     * @return
+     */
+    CommonResult getCheckOutDetail(Integer checkoutId);
 }

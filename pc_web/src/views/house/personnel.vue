@@ -11,7 +11,7 @@
         <span :class="{ current: isCurrent == `in` }" @click="changeCurrent(`in`)">已 入 住 用 户</span>
         <span :class="{ current: isCurrent == `house` }" @click="changeCurrent(`house`)">待 添 加 房 间</span>
         <span :class="{ current: isCurrent == `pay` }" @click="changeCurrent(`pay`)">待 缴 纳 押 金</span>
-        <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">退 房 用 户</span>
+        <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 退 房 用 户</span>
       </div>
       <div class="table" v-loading="loading">
         <div class="top">

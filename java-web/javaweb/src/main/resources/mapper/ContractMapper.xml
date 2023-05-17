@@ -22,4 +22,12 @@
         where user_id = #{userId}
           and state = 1
     </update>
+    <select id="checkSign" resultType="Boolean">
+        select COUNT(*)
+        from rent as a,
+             contract as b
+        where a.user_id = b.user_id
+          and a.rent_id = #{rentId}
+          and (#{time} BETWEEN b.sign and DATE_ADD(b.sign, INTERVAL 1 YEAR))
+    </select>
 </mapper>

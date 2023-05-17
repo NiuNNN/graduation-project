@@ -119,4 +119,13 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @return
      */
     OrderVO getUserOrderDetail(Integer rentId);
+
+    /**
+     * 判断是否存在该月账单
+     *
+     * @param rentId
+     * @param time
+     * @return
+     */
+    boolean checkOrder(Integer rentId, String time);
 }

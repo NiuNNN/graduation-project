@@ -10,7 +10,7 @@
         set user_id = #{userId},
             end     = current_timestamp,
             remark  = #{remark},
-            state   = 1
+            state   = #{state}
         where checkout_id = #{checkoutId}
     </update>
     <select id="getCheckOutState" resultType="niuniu.javaweb.pojo.CheckOut">
@@ -29,5 +29,36 @@
           and a.state!=3
         ORDER BY
         start DESC LIMIT 1
+    </select>
+    <select id="getAllCheckOut" resultType="niuniu.javaweb.vo.CheckOutVO">
+        select a.checkout_id,a.rent_id,a.user_id,a.start,IFNULL(a.end,"待处理")as
+        end,a.remark,a.state,a.message,c.house_name
+        from checkout as a,rent as b,house as c
+        <where>b.rent_id = a.rent_id
+            and b.house_id = c.house_id
+            <if test="houseName!=null and houseName !=''">
+                and c.house_name = #{houseName}
+            </if>
+            <if test="time!=null and time !=''">
+                and DATE_FORMAT(a.start, '%Y-%m-%d') = #{time}
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+    <update id="cancelCheckout">
+        update checkout
+        set end    = current_timestamp,
+            remark = "撤销申请",
+            state  = 3
+        where checkout_id = #{checkoutId}
+    </update>
+    <select id="getCheckOutDetail" resultType="niuniu.javaweb.vo.CheckOutVO">
+        select a.*, b.house_name
+        from checkout as a,
+             house as b,
+             rent as c
+        where a.rent_id = c.rent_id
+          and b.house_id = c.house_id
+          and a.checkout_id = #{checkoutId}
     </select>
 </mapper>

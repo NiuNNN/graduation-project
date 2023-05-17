@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +124,7 @@ public class testUtil {
     }
 
     @Test
-    void testCheckOrderTime() throws ParseException {
+    void testCheckOrderTime() {
         System.out.println(DateUtil.checkOrderTime("2023-04-01 20:37:54"));
     }
 }

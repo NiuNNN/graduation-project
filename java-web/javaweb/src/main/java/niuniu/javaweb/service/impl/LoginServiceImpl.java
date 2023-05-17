@@ -9,6 +9,7 @@ import niuniu.javaweb.utils.jwt.JWTUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,7 +43,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-//    @CacheEvict(cacheNames = "Login", key = "#user.username", beforeInvocation = true)
+    @CacheEvict(cacheNames = "userMenu", key = "#user.username", beforeInvocation = true)
     public CommonResult StaffLogin(User user) {
         redisCache.deleteObject("Login:" + user.getUsername());
         System.out.println(user);

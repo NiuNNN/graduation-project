@@ -40,7 +40,7 @@
             and b.rent_id = e.rent_id
             and b.state = 1
             <if test="orderState !=null and orderState !=''">
-                and e.state = ${orderState}
+                and e.state = #{orderState}
             </if>
             <if test="state !=null and state !=''">
                 and a.state = #{state}

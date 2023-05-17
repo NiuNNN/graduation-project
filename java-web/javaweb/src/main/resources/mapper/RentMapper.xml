@@ -20,7 +20,7 @@
         set deposit = #{deposit}
         where rent_id = #{rentId}
     </update>
-    <update id="rent">
+    <update id="logout">
         update rent
         set logout = current_timestamp,
             state  = 0

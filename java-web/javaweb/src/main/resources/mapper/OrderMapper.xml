@@ -110,4 +110,11 @@
           and b.style_id = d.style_id
           and a.order_id = #{orderId}
     </select>
+    <select id="checkOrder" resultType="boolean">
+        select count(*)
+        from order_pay
+        where rent_id = #{rentId}
+          and type = "租金"
+          and (DATE_FORMAT(time, '%Y%m') = DATE_FORMAT(#{time}, '%Y%m'))
+    </select>
 </mapper>

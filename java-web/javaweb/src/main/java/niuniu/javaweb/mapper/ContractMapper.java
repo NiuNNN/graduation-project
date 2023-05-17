@@ -44,4 +44,13 @@ public interface ContractMapper extends BaseMapper<Contract> {
      * @return
      */
     int changeStateByUserId(Integer userId);
+
+    /**
+     * 判断合同时间
+     *
+     * @param rentId
+     * @param time
+     * @return
+     */
+    boolean checkSign(Integer rentId, String time);
 }
