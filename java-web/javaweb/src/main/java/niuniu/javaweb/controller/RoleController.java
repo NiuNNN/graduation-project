@@ -1,8 +1,10 @@
 package niuniu.javaweb.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.service.RoleService;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +27,14 @@ public class RoleController {
      *
      * @return
      */
-    @GetMapping("/getAllRole")
-    public CommonResult getAllRole() {
-        return roleService.getAllRole();
+    @GetMapping("/getAllRole/{currentPage}/{pageSize}")
+    public CommonResult getAllRole(@PathVariable int currentPage, @PathVariable int pageSize) {
+        IPage<RoleVO> page = roleService.getAllRole(currentPage, pageSize);
+        //如果当前页码大于了总页码值，那么重新执行查询操作，使用最大页码值作为当前页码值
+        if (currentPage > page.getPages()) {
+            page = roleService.getAllRole((int) page.getPages(), pageSize);
+        }
+        return CommonResult.success(page);
     }
 
     /**

@@ -1,7 +1,9 @@
 package niuniu.javaweb.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.RoleVO;
 
 /**
  * @author NiuNiu666
@@ -13,9 +15,11 @@ public interface RoleService {
     /**
      * 获取全部职位
      *
+     * @param currentPage
+     * @param pageSize
      * @return
      */
-    CommonResult getAllRole();
+    IPage<RoleVO> getAllRole(int currentPage, int pageSize);
 
     /**
      * 按职务获取已选择权限

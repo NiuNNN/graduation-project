@@ -1,11 +1,14 @@
 package niuniu.javaweb.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.vo.RoleVO;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author NiuNiu666
@@ -15,11 +18,11 @@ import java.util.List;
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
     /**
-     * 获取全部职位
-     *
+     * @param page
+     * @param wrapper
      * @return
      */
-    List<RoleVO> getAllRole();
+    IPage<RoleVO> getAllRole(@Param("page") Page<RoleVO> page, @Param(Constants.WRAPPER) Wrapper<RoleVO> wrapper);
 
     /**
      * 修改用户状态

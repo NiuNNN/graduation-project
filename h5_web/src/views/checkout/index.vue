@@ -12,7 +12,7 @@
         <van-field v-model="message" rows="2" autosize label="留言" type="textarea" maxlength="50" placeholder="请输入留言" show-word-limit />
       </div>
       <div class="footer">
-        <van-button round type="info" style="width: 80%" @click="checkout">申 请 退 房</van-button>
+        <van-button round type="info" style="width: 80%" @click="checkout" :disabled="disabled">申 请 退 房</van-button>
       </div>
     </div>
     <div class="main" v-if="state === 0">
@@ -164,6 +164,11 @@ export default {
         }
         this.showCancel = false;
       }
+    }
+  },
+  computed: {
+    disabled() {
+      return this.$store.getters.state == 1 ? false : true;
     }
   }
 };

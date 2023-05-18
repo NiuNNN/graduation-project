@@ -4,5 +4,6 @@ export default {
   username: state => state.user.user.username,
   userId: state => state.user.user.userId,
   avatar: state => state.user.user.avatar,
-  isCurrent: state => state.setting.isCurrent
+  isCurrent: state => state.setting.isCurrent,
+  state: state => state.user.user.state
 };

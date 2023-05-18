@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11409127",
+      "name": "权限管理",
+      "font_class": "quanxianguanli",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
       "icon_id": "9682162",
       "name": "退房",
       "font_class": "tuifang",

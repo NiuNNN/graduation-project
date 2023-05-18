@@ -1,49 +1,62 @@
 <template>
-  <div class="container">
-    <div class="table">
-      <el-table :data="tableData" style="width: 100%" v-loading="loading" max-height="467">
-        <el-table-column prop="id" label="编号" width="80"> </el-table-column>
-        <el-table-column prop="roleName" label="职位" width="80"> </el-table-column>
-        <el-table-column prop="remark" label="主要职务"> </el-table-column>
-        <el-table-column label="操作" width="220">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="addRole(`edit`, scope.row)" :disabled="scope.row.roleId === 2">编 辑</el-button>
-            <el-button type="primary" size="mini" @click="authorise(scope.row)">授 权</el-button>
-            <template v-if="scope.row.state == 1">
-              <el-button type="danger" size="mini" :disabled="scope.row.roleId === 2" @click="changeRoleState(scope.row.roleId, 0)">删 除</el-button>
-            </template>
-            <template v-else>
-              <el-button type="warning" size="mini" @click="changeRoleState(scope.row.roleId, 1)">恢 复</el-button>
-            </template>
-          </template>
-        </el-table-column>
-      </el-table>
+  <div class="main-container">
+    <div class="header-container">
+      <h1>权 限 管 理</h1>
+      <el-button class="add" @click="addRole(`add`)">添 加 职 位</el-button>
     </div>
-    <div class="dialog">
-      <el-dialog title="权限管理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" v-loading="dialogLoading">
-        <tree-transfer ref="transfer" :title="title" :from_data="fromData" :to_data="toData" :defaultProps="{ label: 'label' }" @add-btn="add" @remove-btn="remove" :mode="mode" height="400px" :transferOpenNode="false"> </tree-transfer>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">确定</el-button>
-        </span>
-      </el-dialog>
-    </div>
-    <div class="drawer">
-      <el-drawer :title="drawTitle" :visible.sync="drawer" :before-close="handleClose">
-        <el-form ref="roleForm" :model="form" label-width="100px" :rules="rules">
-          <el-form-item label="职位名称" prop="roleName">
-            <el-input v-model="form.roleName" placeholder="请输入职位名称"></el-input>
-          </el-form-item>
-          <el-form-item label="主要职务" prop="remark">
-            <el-input v-model="form.remark" type="textarea" :autosize="{ minRows: 10, maxRows: 20 }" placeholder="请输入主要职务信息"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <div>
-              <el-button type="primary" @click="submit">确 认</el-button>
-              <el-button @click="drawer = false">取 消</el-button>
-            </div>
-          </el-form-item>
-        </el-form>
-      </el-drawer>
+    <div class="table-container">
+      <div class="table">
+        <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column prop="id" label="编号" width="80"> </el-table-column>
+          <el-table-column prop="roleName" label="职位" width="80"> </el-table-column>
+          <el-table-column label="主要职务">
+            <template slot-scope="scope">
+              <div class="remark" :data-title="scope.row.remark">{{ scope.row.remark }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="220">
+            <template slot-scope="scope">
+              <el-button size="mini" @click="addRole(`edit`, scope.row)" :disabled="scope.row.roleId === 2">编 辑</el-button>
+              <el-button type="primary" size="mini" @click="authorise(scope.row)">授 权</el-button>
+              <template v-if="scope.row.state == 1">
+                <el-button type="danger" size="mini" :disabled="scope.row.roleId === 2" @click="changeRoleState(scope.row.roleId, 0)">删 除</el-button>
+              </template>
+              <template v-else>
+                <el-button type="warning" size="mini" @click="changeRoleState(scope.row.roleId, 1)">恢 复</el-button>
+              </template>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="dialog">
+        <el-dialog title="权限管理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" v-loading="dialogLoading">
+          <tree-transfer ref="transfer" :title="title" :from_data="fromData" :to_data="toData" :defaultProps="{ label: 'label' }" @add-btn="add" @remove-btn="remove" :mode="mode" height="400px" :transferOpenNode="false"> </tree-transfer>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="close">确定</el-button>
+          </span>
+        </el-dialog>
+      </div>
+      <div class="pagination">
+        <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
+      </div>
+      <div class="drawer">
+        <el-drawer :title="drawTitle" :visible.sync="drawer" :before-close="handleClose">
+          <el-form ref="roleForm" :model="form" label-width="100px" :rules="rules">
+            <el-form-item label="职位名称" prop="roleName">
+              <el-input v-model="form.roleName" placeholder="请输入职位名称"></el-input>
+            </el-form-item>
+            <el-form-item label="主要职务" prop="remark">
+              <el-input v-model="form.remark" type="textarea" :autosize="{ minRows: 10, maxRows: 20 }" placeholder="请输入主要职务信息"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <div>
+                <el-button type="primary" @click="submit">确 认</el-button>
+                <el-button @click="drawer = false">取 消</el-button>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-drawer>
+      </div>
     </div>
   </div>
 </template>
@@ -80,10 +93,23 @@ export default {
       rules: {
         roleName: [{ required: true, message: '请输入职位名称', trigger: 'blur' }],
         remark: [{ required: true, message: '请输入主要职务信息', trigger: 'blur' }]
+      },
+      change: 0,
+      pagination: {
+        currentPage: 1, //当前页码
+        pageSize: 7, //每页显示的记录数
+        total: 0
       }
     };
   },
   methods: {
+    close() {
+      this.dialogVisible = false;
+      if (this.change > 0) {
+        this.$message.success('修改成功');
+      }
+      this.change = 0;
+    },
     //打开弹窗
     authorise(row) {
       this.isCurrent = row.roleId;
@@ -101,9 +127,13 @@ export default {
     async getAllRole() {
       this.loading = true;
       try {
-        const { data } = await getAllRole();
+        const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
+        const { data } = await getAllRole(param);
         // console.log(data);
-        this.tableData = data;
+        this.tableData = data.records;
+        this.pagination.currentPage = data.current;
+        this.pagination.total = data.total;
+        this.pagination.pageSize = data.size;
         this.loading = false;
       } catch (error) {
         console.log(error);
@@ -179,6 +209,7 @@ export default {
         const res = await this.addPermission(this.isCurrent);
         this.selectPermsByRoleId(this.isCurrent);
         console.log(res);
+        this.change++;
       } catch (error) {
         console.log(error);
       }
@@ -191,6 +222,7 @@ export default {
         const res = await this.removePermission(this.isCurrent);
         this.selectElsePermsByRoleId(this.isCurrent);
         console.log(res);
+        this.change++;
       } catch (error) {
         console.log(error);
       }
@@ -266,30 +298,50 @@ export default {
           }
         });
       }
+    },
+    handleCurrentChange(currentPage) {
+      this.loading = true;
+      this.pagination.currentPage = currentPage;
+      this.getAllRole();
+      this.loading = false;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.header {
-  margin-bottom: 15px;
-  h1 {
-    font-size: 16px;
-    color: #6a74a5;
-    font-weight: 700;
-    line-height: 30px;
+.main-container {
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+
+    h1 {
+      font-size: 24px;
+      line-height: 40px;
+      color: #3a3f63;
+      font-weight: 400;
+    }
+    .add {
+      width: 115px;
+      height: 42px;
+      border-radius: 27px;
+      background: linear-gradient(45deg, #4f8aff 0%, #4b5eff 100%);
+      background-blend-mode: normal;
+      box-shadow: 0px 4px 16px #b3c0e7;
+      color: #fff;
+      font-size: 16px;
+    }
   }
-  .add {
-    width: 110px;
-    height: 20px;
-    border-radius: 27px;
-    background: linear-gradient(45deg, #4f8aff 0%, #4b5eff 100%);
-    background-blend-mode: normal;
-    box-shadow: 0px 4px 16px #b3c0e7;
-    color: #fff;
-    font-size: 14px;
-    line-height: 0px;
+  .table-container {
+    height: 600px;
+    width: 100%;
+    margin-top: 25px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    .pagination {
+      margin-top: 15px;
+    }
   }
 }
 .drawer {
@@ -327,5 +379,11 @@ export default {
       display: none;
     }
   }
+}
+.remark {
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
 }
 </style>

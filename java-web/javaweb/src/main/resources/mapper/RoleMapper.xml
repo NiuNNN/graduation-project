@@ -4,7 +4,8 @@
     <select id="getAllRole" resultType="niuniu.javaweb.vo.RoleVO">
         select @i:=@i+1 as id,role.*
         from role, (select @i := 0) as itable
-        where role_id !=1
+        <where>role_id !=1</where>
+        ${ew.customSqlSegment}
     </select>
 
     <update id="changeRoleState">

@@ -1,6 +1,9 @@
 package niuniu.javaweb.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.MenuMapper;
 import niuniu.javaweb.mapper.RoleMapper;
@@ -10,6 +13,7 @@ import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.StringUtils;
 import niuniu.javaweb.utils.TransferUtil;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.RoleVO;
 import niuniu.javaweb.vo.TransferVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -36,12 +40,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     /**
      * 获取全部职位
      *
+     * @param currentPage
+     * @param pageSize
      * @return
      */
     @Override
-    @Cacheable(cacheNames = "allRole")
-    public CommonResult getAllRole() {
-        return CommonResult.success(roleMapper.getAllRole());
+    @Cacheable(cacheNames = "allRole", key = "#currentPage")
+    public IPage<RoleVO> getAllRole(int currentPage, int pageSize) {
+        Page<RoleVO> page = new Page<>(currentPage, pageSize);
+        QueryWrapper<RoleVO> queryWrapper = new QueryWrapper<>();
+        return roleMapper.getAllRole(page, queryWrapper);
     }
 
     /**

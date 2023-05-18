@@ -9,7 +9,7 @@ import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.MenuUtils;
 import niuniu.javaweb.utils.StringUtils;
 import niuniu.javaweb.vo.TransferVO;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -70,7 +70,7 @@ public class testMapper {
 
     @Test
     void testGetAllRole() {
-        System.out.println(roleMapper.getAllRole());
+//        System.out.println(roleMapper.getAllRole());
     }
 
     @Test

@@ -42,9 +42,9 @@ public class ProjectInit implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         //初始化支付宝SDK
         Factory.setOptions(getOptions());
-        System.out.println(this.privateKey);
-        System.out.println(this.publicKey);
-        System.out.println("**********支付宝SDK初始化完成**********");
+//        System.out.println(this.privateKey);
+//        System.out.println(this.publicKey);
+        System.out.println("**********系统初始化完成**********");
     }
 
     private Config getOptions() {

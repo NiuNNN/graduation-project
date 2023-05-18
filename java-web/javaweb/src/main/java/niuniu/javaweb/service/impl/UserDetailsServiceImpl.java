@@ -29,13 +29,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(username);
-        System.out.println(1);
+//        System.out.println(username);
+//        System.out.println(1);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
-        System.out.println(2);
+//        System.out.println(2);
         User user = userMapper.selectOne(queryWrapper);
-        System.out.println("运行到此处" + user);
+//        System.out.println("运行到此处" + user);
         if (null == user) {
             throw new UsernameNotFoundException("用户名未找到或者密码错误！");
         }
