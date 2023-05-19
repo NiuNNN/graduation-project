@@ -38,12 +38,11 @@
             and c.style_id = d.style_id
             and e.type = "押金"
             and b.rent_id = e.rent_id
-            and b.state = 1
+            <if test="state !=null and state !=''">
+                and b.state = #{state}
+            </if>
             <if test="orderState !=null and orderState !=''">
                 and e.state = #{orderState}
-            </if>
-            <if test="state !=null and state !=''">
-                and a.state = #{state}
             </if>
             <if test="username !=null and username !=''">
                 and a.username like concat('%',#{username},'%')

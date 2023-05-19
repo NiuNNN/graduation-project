@@ -190,11 +190,20 @@ export default {
       this.loading = true;
       this.isCurrent = name;
       this.reset();
-      if (name == `in` || name == `out` || name == `pay`) {
-        this.getUserPage();
+      if (name == `in`) {
+        const obj = { state: 1, orderState: '' };
+        await this.getUserPage(obj);
+      }
+      if (name == `out`) {
+        const obj = { state: 0, orderState: '' };
+        await this.getUserPage(obj);
+      }
+      if (name == `pay`) {
+        const obj = { state: 1, orderState: '1' };
+        await this.getUserPage(obj);
       }
       if (name == `house`) {
-        this.getNoHouseUserPage();
+        await this.getNoHouseUserPage();
       }
     },
     //换页
@@ -207,16 +216,13 @@ export default {
       }
     },
     //已入住、退房、缴纳押金用户
-    async getUserPage() {
+    async getUserPage(obj) {
       try {
         this.loading = true;
-        let state = this.isCurrent != `out` ? '1' : '0';
-        let orderState = this.isCurrent == `pay` ? '0' : '1';
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getUserPage(param, {
           ...this.searchForm,
-          state,
-          orderState
+          ...obj
         });
         this.tableData = data.records;
         this.pagination.currentPage = data.current;

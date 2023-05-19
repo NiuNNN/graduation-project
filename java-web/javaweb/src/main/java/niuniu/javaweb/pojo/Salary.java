@@ -1,5 +1,6 @@
 package niuniu.javaweb.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +21,41 @@ public class Salary implements Serializable {
 
     private static final long serialVersionUID = 4077468185367639457L;
 
+    @TableId
     private Integer salaryId;
 
-    private String salaryValue;
+    /**
+     * 薪水名称
+     */
+    private String salaryName;
+
+    /**
+     * 薪水
+     */
+    private String price;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 状态
+     */
+    private Integer state;
+
+    /**
+     * 时间
+     */
+    private String time;
+
+    /**
+     * 执行时间
+     */
+    private String operation;
+
+    /**
+     * 旧的薪水
+     */
+    private String oldPrice;
 }
