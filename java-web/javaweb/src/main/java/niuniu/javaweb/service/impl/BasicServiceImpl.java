@@ -43,6 +43,9 @@ public class BasicServiceImpl extends ServiceImpl<BasicMapper, Basic> implements
     @Override
     @CacheEvict(cacheNames = "getBasic")
     public CommonResult insertBasic(Basic basic) {
+        QueryWrapper<Basic> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("base_name", basic.getBaseName()).ne("state", 0);
+        if (basicMapper.selectCount(queryWrapper) > 0) return CommonResult.failed("存在该项收费标准,请重新填写...");
         return basicMapper.insert(basic) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 
