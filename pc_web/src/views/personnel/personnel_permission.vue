@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="header-container">
-      <h1>权 限 管 理</h1>
+      <h1>职 位 管 理</h1>
       <el-button class="add" @click="addRole(`add`)">添 加 职 位</el-button>
     </div>
     <div class="table-container">

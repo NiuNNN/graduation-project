@@ -1,8 +1,13 @@
 package niuniu.javaweb.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import niuniu.javaweb.pojo.Salary;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author NiuNiu666
@@ -43,4 +48,13 @@ public interface SalaryMapper extends BaseMapper<Salary> {
      * @return
      */
     int deleteSalary(Integer salaryId);
+
+    /**
+     * 获取薪水信息分页显示
+     *
+     * @param page
+     * @param wrapper
+     * @return
+     */
+    IPage<Salary> getAllSalary(@Param("page") Page<Salary> page, @Param(Constants.WRAPPER) Wrapper<Salary> wrapper);
 }

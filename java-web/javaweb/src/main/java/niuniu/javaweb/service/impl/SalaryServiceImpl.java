@@ -33,8 +33,7 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
     public IPage<Salary> getAllSalary(int currentPage, int pageSize) {
         Page<Salary> page = new Page<>(currentPage, pageSize);
         QueryWrapper<Salary> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ne("state", 0);
-        return salaryMapper.selectPage(page, queryWrapper);
+        return salaryMapper.getAllSalary(page, queryWrapper);
     }
 
     /**

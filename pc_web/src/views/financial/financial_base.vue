@@ -47,7 +47,7 @@
               <span style="font-size: 10px; color: #ff2855">*默认不立即生效为下一个月生效</span>
               <div>
                 <el-button type="primary" :disabled="isAdd" @click="submit">确 认</el-button>
-                <el-button @click="reset">取 消</el-button>
+                <el-button @click="isShowDrawer = false">取 消</el-button>
               </div>
             </el-form-item>
           </el-form>

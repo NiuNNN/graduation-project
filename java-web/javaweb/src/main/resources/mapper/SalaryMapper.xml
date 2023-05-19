@@ -27,4 +27,10 @@
         set state = 0
         where salary_id = #{salaryId}
     </update>
+    <select id="getAllSalary" resultType="niuniu.javaweb.pojo.Salary">
+        select *
+        from salary
+        where state !=0
+        order by state ${ew.customSqlSegment}
+    </select>
 </mapper>

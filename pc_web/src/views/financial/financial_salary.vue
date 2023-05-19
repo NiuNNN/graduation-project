@@ -35,8 +35,9 @@
             </el-form-item>
             <el-form-item label="薪水对象" prop="state">
               <el-radio-group v-model="salaryForm.state">
-                <el-radio label="1">正式员工</el-radio>
-                <el-radio label="2">试用员工</el-radio>
+                <el-radio label="1">正式</el-radio>
+                <el-radio label="2">试用期</el-radio>
+                <el-radio label="3">其他</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="立即生效" prop="operation">
@@ -52,7 +53,7 @@
               <span style="font-size: 10px; color: #ff2855">*默认不立即生效为下一个月生效</span>
               <div>
                 <el-button type="primary" :disabled="isAdd" @click="submit">确 认</el-button>
-                <el-button @click="reset">取 消</el-button>
+                <el-button @click="isShowDrawer = false">取 消</el-button>
               </div>
             </el-form-item>
           </el-form>
