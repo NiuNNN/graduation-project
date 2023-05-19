@@ -175,8 +175,8 @@ export default {
     },
     //清空form
     reset() {
-      this.baseForm = {
-        baseName: '',
+      this.salaryForm = {
+        salaryName: '',
         price: '',
         remark: '',
         operation: '0',

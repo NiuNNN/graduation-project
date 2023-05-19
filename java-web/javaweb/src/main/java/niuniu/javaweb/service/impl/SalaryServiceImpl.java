@@ -60,6 +60,11 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
     @Override
     public CommonResult updateSalary(Salary salary) {
         Salary salary1 = salaryMapper.selectById(salary.getSalaryId());
+        if (!salary1.getSalaryName().equals(salary.getSalaryName())) {
+            QueryWrapper<Salary> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("salary_name", salary.getSalaryName()).ne("state", 0);
+            if (salaryMapper.selectCount(queryWrapper) > 0) return CommonResult.failed("存在该项薪水,请重新填写...");
+        }
         if (!salary1.getPrice().equals(salary.getPrice())) {
             salary.setOldPrice(salary1.getPrice());
         }

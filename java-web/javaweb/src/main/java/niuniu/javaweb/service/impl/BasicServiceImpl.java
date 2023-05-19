@@ -170,6 +170,11 @@ public class BasicServiceImpl extends ServiceImpl<BasicMapper, Basic> implements
     @Override
     public CommonResult updateBasic(Basic basic) {
         Basic basic1 = basicMapper.selectById(basic.getBaseId());
+        if (!basic1.getBaseName().equals(basic.getBaseName())) {
+            QueryWrapper<Basic> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("base_name", basic.getBaseName()).ne("state", 0);
+            if (basicMapper.selectCount(queryWrapper) > 0) return CommonResult.failed("存在该项薪水,请重新填写...");
+        }
         if (!basic1.getPrice().equals(basic.getPrice())) {
             basic.setOldPrice(basic1.getPrice());
         }
