@@ -35,3 +35,12 @@ export function updateSalary(param) {
 export function deleteSalary(param) {
   return get(`deleteSalary`, param);
 }
+
+/**
+ * 获取薪水map
+ * @param {*} param
+ * @returns
+ */
+export function getSalaryMap(param) {
+  return get(`getSalaryMap`, param);
+}

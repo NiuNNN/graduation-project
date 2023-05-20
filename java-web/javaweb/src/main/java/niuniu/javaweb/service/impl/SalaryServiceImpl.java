@@ -9,7 +9,11 @@ import niuniu.javaweb.pojo.Salary;
 import niuniu.javaweb.service.SalaryService;
 import niuniu.javaweb.utils.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author NiuNiu666
@@ -57,6 +61,7 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "roleSalary", allEntries = true)
     public CommonResult updateSalary(Salary salary) {
         Salary salary1 = salaryMapper.selectById(salary.getSalaryId());
         if (!salary1.getSalaryName().equals(salary.getSalaryName())) {
@@ -77,12 +82,26 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "roleSalary", allEntries = true)
     public CommonResult deleteSalary(Integer salaryId) {
         //首先先判断是否被使用
         if (salaryMapper.selectSalaryCount(salaryId) > 0) return CommonResult.failed("该薪水项被使用中，无法删除...");
         else {
-            salaryMapper.deleteSalary(salaryId);
-            return CommonResult.success();
+            return salaryMapper.deleteSalary(salaryId) > 0 ? CommonResult.success() : CommonResult.failed();
         }
+    }
+
+    /**
+     * 获取工资按map返回
+     *
+     * @return
+     */
+    @Override
+    public CommonResult getSalaryMap() {
+        HashMap<String, List<Salary>> map = new HashMap<>();
+        map.put("baseSalary", salaryMapper.getSalaryByState(1));
+        map.put("probationSalary", salaryMapper.getSalaryByState(2));
+        map.put("elseSalary", salaryMapper.getSalaryByState(3));
+        return CommonResult.success(map);
     }
 }

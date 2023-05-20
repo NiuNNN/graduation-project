@@ -43,4 +43,11 @@ public interface SalaryService {
      * @return
      */
     CommonResult deleteSalary(Integer salaryId);
+
+    /**
+     * 获取工资按map返回
+     *
+     * @return
+     */
+    CommonResult getSalaryMap();
 }

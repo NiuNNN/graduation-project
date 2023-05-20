@@ -9,6 +9,8 @@ import niuniu.javaweb.pojo.Salary;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.mapper
@@ -57,4 +59,40 @@ public interface SalaryMapper extends BaseMapper<Salary> {
      * @return
      */
     IPage<Salary> getAllSalary(@Param("page") Page<Salary> page, @Param(Constants.WRAPPER) Wrapper<Salary> wrapper);
+
+    /**
+     * 根据状态获取薪水
+     *
+     * @param state
+     * @return
+     */
+    List<Salary> getSalaryByState(Integer state);
+
+    /**
+     * 插入职工薪水
+     *
+     * @param salaryId
+     * @param roleId
+     * @return
+     */
+    int insertRoleSalary(Integer salaryId, Integer roleId, Integer state);
+
+    /**
+     * 修改状态
+     *
+     * @param roleId
+     * @param salaryId
+     * @param state
+     * @return
+     */
+    int updateRoleSalary(Integer roleId, Integer salaryId, Integer state);
+
+    /**
+     * 获取职工是否存在该条薪水记录
+     *
+     * @param roleId
+     * @param salaryId
+     * @return
+     */
+    int selectHasRoleSalary(Integer roleId, Integer salaryId);
 }

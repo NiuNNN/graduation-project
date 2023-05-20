@@ -70,3 +70,12 @@ export function insertRole(param) {
 export function updateRole(param) {
   return post(`/updateRole`, param);
 }
+
+/**
+ * 获取职工薪水
+ * @param {*} param
+ * @returns
+ */
+export function getRoleSalary(param) {
+  return get(`getRoleSalary`, param);
+}

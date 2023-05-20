@@ -14,9 +14,12 @@
         where role_id = #{roleId}
     </update>
 
-    <insert id="insertRole">
+    <insert id="insertRole" parameterType="niuniu.javaweb.pojo.Role">
         insert into role (role_name, remark, state)
         values (#{roleName}, #{remark}, 1)
+        <selectKey keyProperty="roleId" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <update id="updateRole">
@@ -25,4 +28,12 @@
             remark    =#{remark}
         where role_id = #{roleId}
     </update>
+    <select id="getRoleSalary" resultType="niuniu.javaweb.pojo.Salary">
+        select a.*
+        from salary as a,
+             salary_role as b
+        where b.role_id = #{roleId}
+          and a.salary_id = b.salary_id
+          and b.state not in (0, 2)
+    </select>
 </mapper>

@@ -102,18 +102,32 @@ public class RoleController {
      * @return
      */
     @PostMapping("insertRole")
-    public CommonResult insertRole(Role role) {
-        return roleService.insertRole(role);
+    public CommonResult insertRole(Role role, String arrList) {
+        return roleService.insertRole(role, arrList);
     }
 
     /**
      * 修改职务信息
      *
      * @param role
+     * @param base
+     * @param probation
+     * @param arrList
      * @return
      */
     @PostMapping("updateRole")
-    public CommonResult updateRole(Role role) {
-        return roleService.updateRole(role);
+    public CommonResult updateRole(Role role, Integer base, Integer probation, String arrList) {
+        return roleService.updateRole(role, base, probation, arrList);
+    }
+
+    /**
+     * 获取职位所对应的薪水
+     *
+     * @param roleId
+     * @return
+     */
+    @GetMapping("getRoleSalary")
+    public CommonResult getRoleSalary(Integer roleId) {
+        return roleService.getRoleSalary(roleId);
     }
 }

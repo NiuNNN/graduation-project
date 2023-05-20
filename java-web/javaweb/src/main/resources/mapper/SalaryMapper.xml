@@ -21,6 +21,7 @@
         select count(*)
         from salary_role
         where salary_id = #{salaryId}
+          and state !=0
     </select>
     <update id="deleteSalary">
         update salary
@@ -32,5 +33,26 @@
         from salary
         where state !=0
         order by state ${ew.customSqlSegment}
+    </select>
+    <select id="getSalaryByState" resultType="niuniu.javaweb.pojo.Salary">
+        select *
+        from salary
+        where state = #{state}
+    </select>
+    <insert id="insertRoleSalary">
+        insert into salary_role (salary_id, role_id, time, state)
+        values (#{salaryId}, #{roleId}, current_timestamp, #{state})
+    </insert>
+    <update id="updateRoleSalary">
+        update salary_role
+        set state = #{state}
+        where salary_id = #{salaryId}
+          and role_id = #{roleId}
+    </update>
+    <select id="selectHasRoleSalary" resultType="int">
+        select count(*)
+        from salary_role
+        where role_id = #{roleId}
+          and salary_id = #{salaryId}
     </select>
 </mapper>

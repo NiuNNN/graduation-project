@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,8 +20,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Salary implements Serializable {
 
-    private static final long serialVersionUID = 4077468185367639457L;
-
+    @Serial
+    private static final long serialVersionUID = -5958076330794867765L;
+    
     @TableId
     private Integer salaryId;
 

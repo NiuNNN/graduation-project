@@ -68,15 +68,27 @@ public interface RoleService {
      * 新建职务
      *
      * @param role
+     * @param arrList
      * @return
      */
-    CommonResult insertRole(Role role);
+    CommonResult insertRole(Role role, String arrList);
 
     /**
      * 修改职务信息
      *
      * @param role
+     * @param base
+     * @param probation
+     * @param arrList
      * @return
      */
-    CommonResult updateRole(Role role);
+    CommonResult updateRole(Role role, Integer base, Integer probation, String arrList);
+
+    /**
+     * 获取职位对应的薪水
+     *
+     * @param roleId
+     * @return
+     */
+    CommonResult getRoleSalary(Integer roleId);
 }

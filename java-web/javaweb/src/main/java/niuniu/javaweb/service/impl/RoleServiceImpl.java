@@ -1,13 +1,16 @@
 package niuniu.javaweb.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.MenuMapper;
 import niuniu.javaweb.mapper.RoleMapper;
+import niuniu.javaweb.mapper.SalaryMapper;
 import niuniu.javaweb.pojo.Role;
+import niuniu.javaweb.pojo.Salary;
 import niuniu.javaweb.service.RoleService;
 import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.StringUtils;
@@ -19,9 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,6 +41,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Autowired
     MenuMapper menuMapper;
+
+    @Autowired
+    SalaryMapper salaryMapper;
 
     /**
      * 获取全部职位
@@ -261,23 +269,161 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      * 新建职务
      *
      * @param role
+     * @param arrList
      * @return
      */
     @Override
+    @Transactional
     @CacheEvict(cacheNames = "allRole", allEntries = true)
-    public CommonResult insertRole(Role role) {
-        return roleMapper.insertRole(role) > 0 ? CommonResult.success() : CommonResult.failed();
+    public CommonResult insertRole(Role role, String arrList) {
+        roleMapper.insertRole(role);
+//        System.out.println(role);
+//        System.out.println(JSON.parseArray(arrList));
+        List<Integer> list = JSONArray.parseArray(arrList, Integer.class);
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                salaryMapper.insertRoleSalary(list.get(i), role.getRoleId(), 1);
+            }
+        }
+        return CommonResult.success();
     }
 
     /**
      * 修改职务信息
      *
      * @param role
+     * @param base
+     * @param probation
+     * @param arrList
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "allRole", allEntries = true)
-    public CommonResult updateRole(Role role) {
-        return roleMapper.updateRole(role) > 0 ? CommonResult.success() : CommonResult.failed();
+    @Transactional
+    @CacheEvict(cacheNames = {"allRole", "roleSalary"}, allEntries = true)
+    public CommonResult updateRole(Role role, Integer base, Integer probation, String arrList) {
+        //获取用户现存的薪水标准 获取的salary_role对象中 state只有 1，3
+        List<Salary> roleSalary = roleMapper.getRoleSalary(role.getRoleId());
+        //获取新的用户薪水标准
+        List<Integer> newList = JSONArray.parseArray(arrList, Integer.class);
+        List<Integer> list1 = JSONArray.parseArray(arrList, Integer.class);
+        //存放用户旧的薪水标准
+        List<Salary> oldList = new ArrayList<>();
+        List<Salary> list2 = new ArrayList<>();
+        for (Salary salary : roleSalary) {
+            if (salary.getState() == 1) {
+                if (salary.getSalaryId() != base) {
+                    handleUpdate(role, salary, base);
+                }
+            } else if (salary.getState() == 2) {
+                if (salary.getSalaryId() != probation) {
+                    handleUpdate(role, salary, probation);
+                }
+            } else if (salary.getState() == 3) {
+                System.out.println(salary);
+                oldList.add(salary);
+                list2.add(salary);
+            }
+        }
+        handleUpdate(role, newList, oldList, list1, list2);
+        //修改职务信息
+        roleMapper.updateRole(role);
+        return CommonResult.success();
+    }
+
+    /**
+     * 更新主要薪水
+     *
+     * @param role
+     * @param salary
+     * @param target
+     */
+    public void handleUpdate(Role role, Salary salary, Integer target) {
+        /**
+         * 先删除后添加
+         * 首先先修改原来薪水标准置为 如果该月已经修改过 那就把最新的一次进行删除 如果没有则修改为2
+         * 然后确认是否以前存在该条记录 存在则修改状态 不存在则添加
+         *
+         */
+        if (salary.getState() == 3) {
+            salaryMapper.updateRoleSalary(role.getRoleId(), salary.getSalaryId(), 0);
+        } else {
+            salaryMapper.updateRoleSalary(role.getRoleId(), salary.getSalaryId(), 2);
+        }
+        //判断是否存在该条记录
+        if (salaryMapper.selectHasRoleSalary(role.getRoleId(), target) > 0) {
+            //存在 修改状态
+            salaryMapper.updateRoleSalary(role.getRoleId(), target, 3);
+        } else {
+            //不存在 进行添加
+            salaryMapper.insertRoleSalary(target, role.getRoleId(), 3);
+        }
+    }
+
+    /**
+     * 处理更新其余薪水
+     *
+     * @param role
+     * @param newList
+     * @param oldList
+     */
+    public void handleUpdate(Role role, List<Integer> newList, List<Salary> oldList, List<Integer> list1, List<Salary> list2) {
+        for (Integer integer : newList) {
+            System.out.println(integer);
+            System.out.println("运行到1");
+            for (Salary salary : oldList) {
+                System.out.println("运行到2");
+                //若存在 则不添加也不删除
+                if (integer == salary.getSalaryId()) {
+                    System.out.println("运行到3");
+                    list1.remove(integer); //add
+                    list2.remove(salary); //del
+                }
+            }
+        }
+        //添加新的
+        for (Integer target : list1) {
+            //判断是否存在该条记录
+            if (salaryMapper.selectHasRoleSalary(role.getRoleId(), target) > 0) {
+                //存在 修改状态
+                salaryMapper.updateRoleSalary(role.getRoleId(), target, 3);
+            } else {
+                //不存在 进行添加
+                salaryMapper.insertRoleSalary(target, role.getRoleId(), 3);
+            }
+        }
+        //删除旧的
+        for (Salary salary : list2) {
+            //判断原薪水状态 如果为3 直接设置为0
+            if (salary.getState() == 3) {
+                salaryMapper.updateRoleSalary(role.getRoleId(), salary.getSalaryId(), 0);
+            } else {
+                salaryMapper.updateRoleSalary(role.getRoleId(), salary.getSalaryId(), 2);
+            }
+        }
+    }
+
+    /**
+     * 获取职位对应的薪水
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    @Cacheable(cacheNames = "roleSalary", key = "#roleId")
+    public CommonResult getRoleSalary(Integer roleId) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        List<Salary> roleSalary = roleMapper.getRoleSalary(roleId);
+        List<Integer> list = new ArrayList<>();
+        for (Salary salary : roleSalary) {
+            if (salary.getState() == 1) {
+                hashMap.put("base", JSON.toJSONString(salary.getSalaryId()));
+            } else if (salary.getState() == 2) {
+                hashMap.put("probation", JSON.toJSONString(salary.getSalaryId()));
+            } else if (salary.getState() == 3) {
+                list.add(salary.getSalaryId());
+            }
+        }
+        hashMap.put("else", JSON.toJSONString(list));
+        return CommonResult.success(hashMap);
     }
 }

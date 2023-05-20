@@ -6,9 +6,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import niuniu.javaweb.pojo.Role;
+import niuniu.javaweb.pojo.Salary;
 import niuniu.javaweb.vo.RoleVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author NiuNiu666
@@ -49,4 +52,11 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     int updateRole(Role role);
 
+    /**
+     * 获取职位薪水信息
+     *
+     * @param roleId
+     * @return
+     */
+    List<Salary> getRoleSalary(Integer roleId);
 }

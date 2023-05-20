@@ -60,7 +60,7 @@ public class SalaryController {
     }
 
     /**
-     * 删除收费标准
+     * 删除薪水标准
      *
      * @param salaryId
      * @return
@@ -68,5 +68,15 @@ public class SalaryController {
     @GetMapping("/deleteSalary")
     public CommonResult deleteSalary(Integer salaryId) {
         return salaryService.deleteSalary(salaryId);
+    }
+
+    /**
+     * 获取工资按map返回
+     *
+     * @return
+     */
+    @GetMapping("/getSalaryMap")
+    public CommonResult getSalaryMap() {
+        return salaryService.getSalaryMap();
     }
 }
