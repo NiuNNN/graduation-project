@@ -18,7 +18,7 @@
           <el-descriptions-item label="付款状态">{{ state }}</el-descriptions-item>
           <el-descriptions-item label="支付方式">{{ order.operation }}</el-descriptions-item>
           <el-descriptions-item label="支付时间">{{ order.payTime }}</el-descriptions-item>
-          <el-descriptions-item label="收款人">{{ order.name }}</el-descriptions-item>
+          <el-descriptions-item label="处理人">{{ order.name }}</el-descriptions-item>
           <el-descriptions-item label="上传时间">{{ order.time }}</el-descriptions-item>
         </el-descriptions>
       </div>

@@ -26,7 +26,8 @@
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button size="mini" :disabled="isGet" @click="showDrawer(scope.row)">查 看</el-button>
-              <el-button type="primary" size="mini" :disabled="isAdd || scope.row.state == 1" @click="openDrawer(scope.row)">缴 费</el-button>
+              <el-button v-if="scope.row.type != `退款`" type="primary" size="mini" :disabled="isAdd || scope.row.state == 1" @click="openDrawer(scope.row)">缴 费</el-button>
+              <el-button v-else type="primary" size="mini" :disabled="isAdd || scope.row.state == 1" @click="payOut(scope.row)">退 款</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -59,6 +60,8 @@ import { getName } from '@/api/user';
 import { getOrderMis } from '@/api/basic';
 import { getCostByRentId } from '@/api/cost';
 import Pay from '@/components/financial/Pay.vue';
+import { payByCash } from '@/api/order';
+import { validatePassword } from '@/api/user';
 export default {
   components: {
     OrderDetail,
@@ -95,6 +98,41 @@ export default {
     this.getAll();
   },
   methods: {
+    //退款
+    payOut(row) {
+      this.$prompt('请输入密码,完成退款操作', '退款', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password',
+        inputPattern: /^\w{5,12}$/,
+        inputErrorMessage: '密码格式不正确'
+      })
+        .then(async ({ value }) => {
+          try {
+            // console.log(value);
+            await validatePassword({
+              password: value,
+              username: this.$store.getters.username
+            });
+            await payByCash({
+              ...row,
+              userId: this.$store.getters.userId
+            });
+            this.$message.success('系统记账成功...');
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.getAll();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });
+        });
+    },
+    //获取全部信息
     async getAll() {
       try {
         this.loading = true;
