@@ -199,7 +199,7 @@ export default {
         await this.getUserPage(obj);
       }
       if (name == `pay`) {
-        const obj = { state: 1, orderState: '1' };
+        const obj = { state: 1, orderState: 0 };
         await this.getUserPage(obj);
       }
       if (name == `house`) {
@@ -217,6 +217,7 @@ export default {
     },
     //已入住、退房、缴纳押金用户
     async getUserPage(obj) {
+      // console.log(obj);
       try {
         this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
