@@ -23,7 +23,17 @@ public class RoleController {
     RoleService roleService;
 
     /**
-     * 获取全部权限
+     * 获取职位
+     *
+     * @return
+     */
+    @GetMapping("/getRole")
+    public CommonResult getRole() {
+        return roleService.getRole();
+    }
+
+    /**
+     * 获取全部职位并分页展示
      *
      * @return
      */
@@ -129,5 +139,16 @@ public class RoleController {
     @GetMapping("getRoleSalary")
     public CommonResult getRoleSalary(Integer roleId) {
         return roleService.getRoleSalary(roleId);
+    }
+
+    /**
+     * 获取用户职位薪水
+     *
+     * @param roleId
+     * @return
+     */
+    @GetMapping("getUserSalary")
+    public CommonResult getUserSalary(Integer roleId) {
+        return roleService.getUserSalary(roleId);
     }
 }

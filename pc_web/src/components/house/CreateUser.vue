@@ -427,11 +427,9 @@ export default {
               const form = new FormData();
               form.append(`font`, this.fontFile);
               form.append(`back`, this.backFile);
-              form.append(`phone`, this.userForm.phone);
-              form.append(`username`, this.username);
               const { data } = await confirmMsg(form);
               // console.log(data);
-              this.user = data;
+              this.user = { ...data, ...this.userForm, username: this.username, state: 1 };
               this.active++;
               this.countTimeOut();
             } catch (error) {
@@ -468,6 +466,7 @@ export default {
         form.append(`font`, this.fontFile);
         form.append(`back`, this.backFile);
         form.append(`user`, JSON.stringify(this.user));
+        form.append(`roleId`, JSON.stringify(1));
         // console.log(this.user);
         const { data } = await insertUser(form);
         this.user = data;

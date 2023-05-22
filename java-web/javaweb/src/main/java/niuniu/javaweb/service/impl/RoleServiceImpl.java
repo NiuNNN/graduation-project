@@ -426,4 +426,35 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         hashMap.put("else", JSON.toJSONString(list));
         return CommonResult.success(hashMap);
     }
+
+    /**
+     * 获取全部职位
+     *
+     * @return
+     */
+    @Override
+    public CommonResult getRole() {
+        return CommonResult.success(roleMapper.getRole());
+    }
+
+    /**
+     * 获取用户职位薪水
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    public CommonResult getUserSalary(Integer roleId) {
+        List<RoleVO> userSalary = roleMapper.getUserSalary(roleId);
+        if (!userSalary.isEmpty()) {
+            for (RoleVO roleVO : userSalary) {
+                if (roleVO.getState() == 1) {
+                    roleVO.setSalaryName("正常薪水");
+                } else if (roleVO.getState() == 2) {
+                    roleVO.setSalaryName("实习薪水");
+                }
+            }
+        }
+        return CommonResult.success(userSalary);
+    }
 }

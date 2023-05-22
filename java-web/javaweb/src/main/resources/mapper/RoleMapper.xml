@@ -21,7 +21,6 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
-
     <update id="updateRole">
         update role
         set role_name = #{roleName},
@@ -35,5 +34,22 @@
         where b.role_id = #{roleId}
           and a.salary_id = b.salary_id
           and b.state not in (0, 2)
+    </select>
+    <select id="getRole" resultType="niuniu.javaweb.pojo.Role">
+        select *
+        from role
+        where state !=0
+        and role_id > 2
+    </select>
+    <select id="getUserSalary" resultType="niuniu.javaweb.vo.RoleVO">
+        select a.*, c.role_name
+        from salary as a,
+             salary_role as b,
+             role as c
+        where a.salary_id = b.salary_id
+          and b.role_id = c.role_id
+          and c.role_id = #{roleId}
+          and b.state not in (0, 2)
+        order by a.state
     </select>
 </mapper>

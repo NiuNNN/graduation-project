@@ -91,4 +91,19 @@ public interface RoleService {
      * @return
      */
     CommonResult getRoleSalary(Integer roleId);
+
+    /**
+     * 获取全部职位
+     *
+     * @return
+     */
+    CommonResult getRole();
+
+    /**
+     * 获取用户职位薪水
+     *
+     * @param roleId
+     * @return
+     */
+    CommonResult getUserSalary(Integer roleId);
 }

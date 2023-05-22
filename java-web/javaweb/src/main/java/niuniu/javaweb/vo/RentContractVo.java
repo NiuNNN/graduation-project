@@ -69,4 +69,10 @@ public class RentContractVo implements Serializable {
      * 用户id
      */
     private Integer userId;
+    
+
+    /**
+     * 职业id
+     */
+    private Integer roleId;
 }

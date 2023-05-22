@@ -41,4 +41,34 @@ public class RoleVO implements Serializable {
      * 状态
      */
     private Integer state;
+
+    /**
+     * 薪水id
+     */
+    private Integer salaryId;
+
+    /**
+     * 薪水名称
+     */
+    private String salaryName;
+
+    /**
+     * 薪水
+     */
+    private String price;
+
+    /**
+     * 时间
+     */
+    private String time;
+
+    /**
+     * 执行时间
+     */
+    private String operation;
+
+    /**
+     * 旧的薪水
+     */
+    private String oldPrice;
 }

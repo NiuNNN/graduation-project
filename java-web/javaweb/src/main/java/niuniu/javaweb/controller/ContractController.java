@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * @author NiuNiu666
@@ -52,7 +53,7 @@ public class ContractController {
     }
 
     /**
-     * 填写合同
+     * 填写租赁合同
      *
      * @param rentContractVo
      * @return
@@ -60,6 +61,17 @@ public class ContractController {
     @PostMapping("/writeRentContract")
     public CommonResult writeRentContract(RentContractVo rentContractVo) throws IOException {
         return contractService.writeRentContract(rentContractVo);
+    }
+
+    /**
+     * 填写劳动合同
+     *
+     * @param rentContractVo
+     * @return
+     */
+    @PostMapping("/writeWorkContract")
+    public CommonResult writeWorkContract(RentContractVo rentContractVo) throws ParseException, IOException {
+        return contractService.writeWorkContract(rentContractVo);
     }
 
     /**
@@ -71,11 +83,27 @@ public class ContractController {
      * @return
      * @throws IOException
      */
-    @PostMapping("/writeSign")
-    public CommonResult writeSign(@RequestParam("file") MultipartFile file, @RequestParam("param") String rentContractVoStr, @RequestParam("url") String url) throws
+    @PostMapping("/writeRentSign")
+    public CommonResult writeRentSign(@RequestParam("file") MultipartFile file, @RequestParam("param") String rentContractVoStr, @RequestParam("url") String url) throws
 
             IOException {
-        return contractService.writeSign(file, rentContractVoStr, url);
+        return contractService.writeRentSign(file, rentContractVoStr, url);
+    }
+
+    /**
+     * 生成合同
+     *
+     * @param file
+     * @param rentContractVoStr
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/writeWorkSign")
+    public CommonResult writeWorkSign(@RequestParam("file") MultipartFile file, @RequestParam("param") String rentContractVoStr, @RequestParam("url") String url) throws
+
+            IOException, ParseException {
+        return contractService.writeWorkSign(file, rentContractVoStr, url);
     }
 
     /**

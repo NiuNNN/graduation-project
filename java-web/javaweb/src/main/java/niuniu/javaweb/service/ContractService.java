@@ -8,6 +8,7 @@ import niuniu.javaweb.vo.RentContractVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * @author NiuNiu666
@@ -34,7 +35,7 @@ public interface ContractService {
     IPage<Style> selectContract(int currentPage, int pageSize, Contract contract);
 
     /**
-     * 填写合同
+     * 填写租赁合同
      *
      * @param rentContractVo
      * @return
@@ -50,7 +51,18 @@ public interface ContractService {
      * @return
      * @throws IOException
      */
-    CommonResult writeSign(MultipartFile file, String rentContractVoStr, String url) throws IOException;
+    CommonResult writeRentSign(MultipartFile file, String rentContractVoStr, String url) throws IOException;
+
+    /**
+     * 插入签名
+     *
+     * @param file
+     * @param rentContractVoStr
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    CommonResult writeWorkSign(MultipartFile file, String rentContractVoStr, String url) throws IOException, ParseException;
 
     /**
      * 修改原来的合同状态
@@ -67,4 +79,12 @@ public interface ContractService {
      * @return
      */
     CommonResult getContractByUserId(Integer userId);
+
+    /**
+     * 填写劳动合同
+     *
+     * @param rentContractVo
+     * @return
+     */
+    CommonResult writeWorkContract(RentContractVo rentContractVo) throws ParseException, IOException;
 }

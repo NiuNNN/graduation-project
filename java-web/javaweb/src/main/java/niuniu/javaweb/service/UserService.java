@@ -65,11 +65,9 @@ public interface UserService {
      *
      * @param font
      * @param back
-     * @param username
-     * @param phone
      * @return
      */
-    CommonResult confirmMsg(MultipartFile font, MultipartFile back, String username, String phone) throws URISyntaxException, IOException;
+    CommonResult confirmMsg(MultipartFile font, MultipartFile back) throws URISyntaxException, IOException;
 
     /**
      * 创建用户
@@ -77,9 +75,10 @@ public interface UserService {
      * @param font
      * @param back
      * @param jsonUser
+     * @param roleId
      * @return
      */
-    CommonResult insertUser(MultipartFile font, MultipartFile back, String jsonUser);
+    CommonResult insertUser(MultipartFile font, MultipartFile back, String jsonUser, Integer roleId);
 
     /**
      * 按需查询全部用户信息

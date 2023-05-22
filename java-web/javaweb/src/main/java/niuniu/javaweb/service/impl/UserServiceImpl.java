@@ -187,19 +187,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      *
      * @param font
      * @param back
-     * @param username
-     * @param phone
      * @return
      */
     @Override
-    public CommonResult confirmMsg(MultipartFile font, MultipartFile back, String username, String phone) throws URISyntaxException, IOException {
+    public CommonResult confirmMsg(MultipartFile font, MultipartFile back) throws URISyntaxException, IOException {
         String s = UUIDUtils.generateShortUuid();
         String pathFont = FileUtil.uploadIDCard(font, "validate" + "_" + s, 1);
         String pathBack = FileUtil.uploadIDCard(back, "validate" + "_" + s, 0);
         User user = mergeUser(pathFont, pathBack);
-        user.setUsername(username);
-        user.setRoleId(1);
-        user.setPhone(phone);
         new File(pathFont).delete();
         new File(pathBack).delete();
         return CommonResult.success(user);
@@ -209,16 +204,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 创建用户
      *
+     * @param font
+     * @param back
      * @param jsonUser
+     * @param roleId
      * @return
      */
     @Override
     @Transactional
-    @CacheEvict(cacheNames = "newUserName", key = "1")
-    public CommonResult insertUser(MultipartFile font, MultipartFile back, String jsonUser) {
+    @CacheEvict(cacheNames = "newUserName", key = "#roleId")
+    public CommonResult insertUser(MultipartFile font, MultipartFile back, String jsonUser, Integer roleId) {
         User user = JSONObject.parseObject(jsonUser, User.class);
-//        System.out.println(user);
-        user.setRoleId(1);
+        System.out.println(user);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         user.setPassword(bCryptPasswordEncoder.encode("88888888"));
         userMapper.createUser(user);

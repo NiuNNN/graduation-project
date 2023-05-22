@@ -86,15 +86,13 @@ public class UserController {
      *
      * @param font
      * @param back
-     * @param username
-     * @param phone
      * @return
      * @throws URISyntaxException
      * @throws IOException
      */
     @PostMapping("/confirmMsg")
-    public CommonResult confirmMsg(@RequestParam("back") MultipartFile font, @RequestParam("font") MultipartFile back, String username, String phone) throws URISyntaxException, IOException {
-        return userService.confirmMsg(font, back, username, phone);
+    public CommonResult confirmMsg(@RequestParam("back") MultipartFile font, @RequestParam("font") MultipartFile back) throws URISyntaxException, IOException {
+        return userService.confirmMsg(font, back);
     }
 
     /**
@@ -103,11 +101,13 @@ public class UserController {
      * @param font
      * @param back
      * @param user
+     * @param roleId
      * @return
      */
     @PostMapping("/insertUser")
-    public CommonResult insertUser(@RequestParam("back") MultipartFile font, @RequestParam("font") MultipartFile back, String user) {
-        return userService.insertUser(font, back, user);
+    public CommonResult insertUser(@RequestParam("back") MultipartFile font, @RequestParam("font") MultipartFile back, @RequestParam("user") String user, @RequestParam("roleId") Integer roleId) {
+        System.out.println(roleId);
+        return userService.insertUser(font, back, user, roleId);
     }
 
     /**

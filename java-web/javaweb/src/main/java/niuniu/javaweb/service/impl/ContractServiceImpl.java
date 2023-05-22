@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.ContractMapper;
+import niuniu.javaweb.mapper.RoleMapper;
 import niuniu.javaweb.pojo.Contract;
+import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.pojo.Style;
 import niuniu.javaweb.service.ContractService;
 import niuniu.javaweb.utils.CapitalNumber;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
@@ -47,6 +50,9 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
 
     @Autowired
     ContractMapper contractMapper;
+
+    @Autowired
+    RoleMapper roleMapper;
 
 
     /**
@@ -86,11 +92,24 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
     @Override
     public CommonResult writeRentContract(RentContractVo rentContractVo) throws IOException {
 //        System.out.println(rentContractVo);
-        ZonedDateTime now = ZonedDateTime.now();
         HashMap<String, String> map = putRentMap(rentContractVo);
         String s = UUIDUtils.generateShortUuid();
         map.put("Text1", "【" + "    " + "】");
         return CommonResult.success(PdfTempPrintUtil.generateContract("租赁合同模板.pdf", "draft" + "_" + s, map, null));
+    }
+
+    /**
+     * 填写劳动合同
+     *
+     * @param rentContractVo
+     * @return
+     */
+    @Override
+    public CommonResult writeWorkContract(RentContractVo rentContractVo) throws ParseException, IOException {
+        HashMap<String, String> map = putWorkMap(rentContractVo);
+        String s = UUIDUtils.generateShortUuid();
+        map.put("fill_1", "【" + "    " + "】");
+        return CommonResult.success(PdfTempPrintUtil.generateContract("劳动合同模板.pdf", "draft" + "_" + s, map, null));
     }
 
     /**
@@ -104,7 +123,7 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
      */
     @Override
     @Transactional
-    public CommonResult writeSign(MultipartFile file, String rentContractVoStr, String url) throws IOException {
+    public CommonResult writeRentSign(MultipartFile file, String rentContractVoStr, String url) throws IOException {
 //        System.out.println(fileFullPath);
         RentContractVo rentContractVo = JSON.parseObject(rentContractVoStr, RentContractVo.class);
 //        System.out.println(rentContractVo);
@@ -121,6 +140,36 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
 
         //存入合同信息
         contractMapper.insertContract(new Contract(null, 1, rentContractVo.getUserId(), null, null, path));
+        return CommonResult.success(path);
+    }
+
+    /**
+     * 插入签名
+     *
+     * @param file
+     * @param rentContractVoStr
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public CommonResult writeWorkSign(MultipartFile file, String rentContractVoStr, String url) throws IOException, ParseException {
+        //        System.out.println(fileFullPath);
+        RentContractVo rentContractVo = JSON.parseObject(rentContractVoStr, RentContractVo.class);
+//        System.out.println(rentContractVo);
+        String s = UUIDUtils.generateShortUuid();
+        HashMap<String, String> map = putWorkMap(rentContractVo);
+        map.put("fill_1", "【" + s + "】");
+        url = DEST_PATH + "\\" + url;
+        CommonResult commonResult = FileUtil.uploadFile(file);
+        Object fileFullPath = commonResult.getData();
+        String path = PdfTempPrintUtil.generateContract("劳动合同模板.pdf", DateUtil.getCurrentTime() + "_" + rentContractVo.getUsername() + "_" + rentContractVo.getName(), map, (String) fileFullPath);
+//        System.out.println(file);
+        FileUtil.deleteFile(new File(url));
+        FileUtil.deleteFile((new File((String) fileFullPath)));
+
+        //存入合同信息
+        contractMapper.insertContract(new Contract(null, 2, rentContractVo.getUserId(), null, null, path));
         return CommonResult.success(path);
     }
 
@@ -154,6 +203,36 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
         map.put("Text21", String.valueOf(now.getDayOfMonth()));
         return map;
     }
+
+    private HashMap<String, String> putWorkMap(RentContractVo rentContractVo) throws ParseException {
+        HashMap<String, String> map = new HashMap<>();
+        ZonedDateTime now = ZonedDateTime.now();
+        Role role = roleMapper.selectById(rentContractVo.getRoleId());
+        map.put("fill_2", rentContractVo.getName());
+        map.put("fill_3", String.valueOf(now.getYear()));
+        map.put("fill_4", String.valueOf(now.getMonthValue()));
+        map.put("fill_5", String.valueOf(now.getDayOfMonth()));
+        map.put("fill_6", String.valueOf(now.getYear() + 1));
+        map.put("fill_7", String.valueOf(now.getMonthValue()));
+        map.put("fill_8", String.valueOf(now.getDayOfMonth()));
+        String[] mon = DateUtil.getMon(DateUtil.getNowTime(), 6);
+        map.put("fill_9", mon[0]);
+        map.put("fill_10", mon[1]);
+        map.put("fill_11", mon[2]);
+        map.put("fill_12", role.getRoleName());
+        map.put("fill_13", role.getRemark());
+        map.put("fill_14", rentContractVo.getPrice());
+        map.put("fill_15", rentContractVo.getPriceElse());
+        map.put("fill_17", rentContractVo.getName());
+        map.put("fill_18", rentContractVo.getIdcard());
+        map.put("fill_19", rentContractVo.getAddress());
+        map.put("fill_20", rentContractVo.getPhone());
+        map.put("fill_21", String.valueOf(now.getYear()));
+        map.put("fill_22", String.valueOf(now.getMonthValue()));
+        map.put("fill_23", String.valueOf(now.getDayOfMonth()));
+        return map;
+    }
+
 
     /**
      * 修改原来的合同状态

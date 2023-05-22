@@ -11,7 +11,7 @@ export function loginAPI(data) {
 
 /**
  * 退出登录
- * @returns 
+ * @returns
  */
 export function logoutAPI() {
   return get('/staff/logout');
@@ -46,101 +46,105 @@ export function getMenuAPI(data) {
 
 /**
  * 创建新的用户账号
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function createUserName(param){
-  return get(`createUserName`,param)
+export function createUserName(param) {
+  return get(`createUserName`, param);
 }
 
 /**
  * 校验身份证
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function validateIDCard(param){
-  return postFile(`/validateIDCard`,param)
+export function validateIDCard(param) {
+  return postFile(`/validateIDCard`, param);
 }
 
 /**
  * 确认信息
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function confirmMsg(param){
-  return postFile(`/confirmMsg`,param)
+export function confirmMsg(param) {
+  return postFile(`/confirmMsg`, param);
 }
 
 /**
  * 创建新用户
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function insertUser(param){
-  return postFile(`/insertUser`,param)
+export function insertUser(param) {
+  return postFile(`/insertUser`, param);
 }
 
 /**
  * 按需获取住户信息
- * @param {*} param 
- * @param {*} obj 
- * @returns 
+ * @param {*} param
+ * @param {*} obj
+ * @returns
  */
-export function getUserPage(param,obj){
-  return get(`getUserPage/${param}`,obj)
+export function getUserPage(param, obj) {
+  return get(`getUserPage/${param}`, obj);
 }
 
 /**
  * 按需获取没有房间的用户
- * @param {*} param 
- * @param {*} obj 
- * @returns 
+ * @param {*} param
+ * @param {*} obj
+ * @returns
  */
-export function getNoHouseUserPage(param,obj){
-  return get(`getNoHouseUserPage/${param}`,obj)
+export function getNoHouseUserPage(param, obj) {
+  return get(`getNoHouseUserPage/${param}`, obj);
 }
 
 /**
  * 修改租客信息
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function updateUserByIDCard(param){
-  return postFile(`updateUserByIDCard`,param)
+export function updateUserByIDCard(param) {
+  return postFile(`updateUserByIDCard`, param);
 }
 
 /**
  * 修改用户密码或手机
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function updateUser(param){
-  return post(`updateUser`,param);
+export function updateUser(param) {
+  return post(`updateUser`, param);
 }
 
 /**
  * 修改用户状态
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function changeUserState(param){
-  return get(`changeUserState`,param)
+export function changeUserState(param) {
+  return get(`changeUserState`, param);
 }
 
 /**
  * 校验密码
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function validatePassword(param){
-  return post(`validatePassword`,param)
+export function validatePassword(param) {
+  return post(`validatePassword`, param);
 }
 
 /**
  * 获取名称
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function getName(param){
-  return get(`getName/${param}`,{})
+export function getName(param) {
+  return get(`getName/${param}`, {});
 }
+
+/**
+ * staff
+ */

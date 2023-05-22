@@ -59,4 +59,19 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     List<Salary> getRoleSalary(Integer roleId);
+
+    /**
+     * 获取全部职位信息
+     *
+     * @return
+     */
+    List<Role> getRole();
+
+    /**
+     * 获取用户职位薪水
+     *
+     * @param roleId
+     * @return
+     */
+    List<RoleVO> getUserSalary(Integer roleId);
 }

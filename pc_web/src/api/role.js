@@ -2,6 +2,14 @@ import { post, get } from '@/utils/request';
 
 /**
  * 获取全部职位
+ * @returns
+ */
+export function getRole() {
+  return get(`/getRole`, {});
+}
+
+/**
+ * 获取全部职位 分页
  */
 export function getAllRole(param) {
   return get(`/getAllRole/${param}`, {});
@@ -78,4 +86,13 @@ export function updateRole(param) {
  */
 export function getRoleSalary(param) {
   return get(`getRoleSalary`, param);
+}
+
+/**
+ * 获取用户薪水
+ * @param {*} param
+ * @returns
+ */
+export function getUserSalary(param) {
+  return get(`getUserSalary`, param);
 }

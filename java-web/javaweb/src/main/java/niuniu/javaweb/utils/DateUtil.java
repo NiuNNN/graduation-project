@@ -138,4 +138,21 @@ public class DateUtil {
         return start <= 3 ? true : false;
     }
 
+    /**
+     * 获取指定月
+     *
+     * @param time
+     * @param mon
+     * @return
+     * @throws ParseException
+     */
+    public static String[] getMon(String time, int mon) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(sdf.parse(time));
+        calendar.add(Calendar.MONTH, mon);
+        String date = sdf.format(calendar.getTime());
+        return date.split("-");
+    }
+
 }
