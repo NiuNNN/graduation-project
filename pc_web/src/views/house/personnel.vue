@@ -166,11 +166,12 @@ export default {
       basicDrawer: false,
       addHouseDrawer: false,
       payDrawer: false,
-      order: {}
+      order: {},
+      obj: {}
     };
   },
-  created() {
-    this.getUserPage();
+  async created() {
+    await this.changeCurrent('in');
   },
   methods: {
     reset() {
@@ -190,21 +191,6 @@ export default {
       this.loading = true;
       this.isCurrent = name;
       this.reset();
-      if (name == `in`) {
-        const obj = { state: 1, orderState: '' };
-        await this.getUserPage(obj);
-      }
-      if (name == `out`) {
-        const obj = { state: 0, orderState: '' };
-        await this.getUserPage(obj);
-      }
-      if (name == `pay`) {
-        const obj = { state: 1, orderState: 0 };
-        await this.getUserPage(obj);
-      }
-      if (name == `house`) {
-        await this.getNoHouseUserPage();
-      }
     },
     //换页
     handleCurrentChange(currentPage) {
@@ -216,14 +202,13 @@ export default {
       }
     },
     //已入住、退房、缴纳押金用户
-    async getUserPage(obj) {
-      // console.log(obj);
+    async getUserPage() {
       try {
         this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getUserPage(param, {
           ...this.searchForm,
-          ...obj
+          ...this.obj
         });
         this.tableData = data.records;
         this.pagination.currentPage = data.current;
@@ -374,6 +359,28 @@ export default {
     closePayDrawer() {
       this.getUserPage();
       this.payDrawer = false;
+    }
+  },
+  watch: {
+    isCurrent: {
+      async handler(newVal, oldVal) {
+        if (newVal == `in`) {
+          this.obj = { state: 1, orderState: '' };
+          await this.getUserPage();
+        }
+        if (newVal == `out`) {
+          this.obj = { state: 0, orderState: '' };
+          await this.getUserPage();
+        }
+        if (newVal == `pay`) {
+          this.obj = { state: 1, orderState: 0 };
+          await this.getUserPage();
+        }
+        if (newVal == `house`) {
+          await this.getNoHouseUserPage();
+        }
+      },
+      immediate: true
     }
   },
   computed: {

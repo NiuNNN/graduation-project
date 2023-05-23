@@ -113,4 +113,26 @@
         set state = 0
         where user_id = #{userId}
     </update>
+    <select id="getStaffPage" resultType="niuniu.javaweb.vo.StaffVO">
+        select a.*, b.remark as role_remark, b.role_name
+        from user as a,
+        role as b
+        <where>
+            a.role_id = b.role_id
+            <if test="roleId!=null and roleId!=''">
+                and a.role_id = #{roleId}
+            </if>
+            <if test="roleId == null or roleId ==''">
+                and a.role_id>2
+            </if>
+            <if test="username!=null and username!=''">
+                and a.username = #{username}
+            </if>
+            <if test="name != null and name!= ''">
+                and a.name = #{name}
+            </if>
+            and a.state = #{state}
+        </where>
+        ${ew.customSqlSegment}
+    </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.vo.MenuListVO;
+import niuniu.javaweb.vo.StaffVO;
 import niuniu.javaweb.vo.UserVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -155,4 +156,17 @@ public interface UserService {
      * @return
      */
     CommonResult deleteUser(Integer userId);
+
+    /**
+     * 获取员工信息
+     *
+     * @param username
+     * @param name
+     * @param roleId
+     * @param state
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    IPage<StaffVO> getStaffPage(String username, String name, Integer roleId, Integer state, int currentPage, int pageSize);
 }

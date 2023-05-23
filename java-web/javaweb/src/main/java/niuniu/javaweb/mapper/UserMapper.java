@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import niuniu.javaweb.pojo.User;
+import niuniu.javaweb.vo.StaffVO;
 import niuniu.javaweb.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -108,4 +109,17 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     int deleteUser(Integer userId);
+
+    /**
+     * 获取员工信息
+     *
+     * @param username
+     * @param name
+     * @param state
+     * @param roleId
+     * @param page
+     * @param wrapper
+     * @return
+     */
+    IPage<StaffVO> getStaffPage(@Param("username") String username, @Param("name") String name, @Param("state") Integer state, @Param("roleId") Integer roleId, @Param("page") Page<StaffVO> page, @Param(Constants.WRAPPER) Wrapper<StaffVO> wrapper);
 }

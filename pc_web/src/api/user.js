@@ -148,3 +148,13 @@ export function getName(param) {
 /**
  * staff
  */
+
+/**
+ * 按需获取员工信息
+ * @param {*} param
+ * @param {*} obj
+ * @returns
+ */
+export function getStaffPage(param, obj) {
+  return get(`getStaffPage/${param}`, obj);
+}

@@ -18,6 +18,7 @@ import niuniu.javaweb.utils.ocr.OCRUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.utils.tools.SeqTools;
 import niuniu.javaweb.vo.MenuListVO;
+import niuniu.javaweb.vo.StaffVO;
 import niuniu.javaweb.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -387,5 +388,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public CommonResult deleteUser(Integer userId) {
         return userMapper.deleteUser(userId) > 0 ? CommonResult.success() : CommonResult.failed();
+    }
+
+    /**
+     * 获取员工信息
+     *
+     * @param username
+     * @param name
+     * @param state
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public IPage<StaffVO> getStaffPage(String username, String name, Integer roleId, Integer state, int currentPage, int pageSize) {
+        Page<StaffVO> page = new Page<>(currentPage, pageSize);
+        QueryWrapper<StaffVO> queryWrapper = new QueryWrapper<>();
+        return userMapper.getStaffPage(username, name, state, roleId, page, queryWrapper);
     }
 }

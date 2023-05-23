@@ -8,10 +8,8 @@
     </div>
     <div class="bg">
       <div class="navbar">
-        <span :class="{ current: isCurrent == `in` }" @click="changeCurrent(`in`)">已 入 住 用 户</span>
-        <span :class="{ current: isCurrent == `house` }" @click="changeCurrent(`house`)">待 添 加 房 间</span>
-        <span :class="{ current: isCurrent == `pay` }" @click="changeCurrent(`pay`)">待 缴 纳 押 金</span>
-        <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 退 房 用 户</span>
+        <span :class="{ current: isCurrent == `in` }" @click="changeCurrent(`in`)">已 入 职 员 工</span>
+        <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 离 职 用 户</span>
       </div>
       <div class="table" v-loading="loading">
         <div class="top">
@@ -22,8 +20,10 @@
             <el-form-item label="账号">
               <el-input v-model="searchForm.username" placeholder="请输入账号"></el-input>
             </el-form-item>
-            <el-form-item label="房号" v-if="isCurrent != `house`">
-              <el-input v-model="searchForm.houseName" placeholder="请输入房号"></el-input>
+            <el-form-item label="职位:" prop="roleId">
+              <el-select v-model="searchForm.roleId" placeholder="请选择职位">
+                <el-option v-for="(item, index) in roleList" :label="item.roleName" :value="item.roleId" :key="index"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="isGet" @click="search" style="height: 35px">查询</el-button>
@@ -39,25 +39,14 @@
             </el-table-column>
             <el-table-column prop="username" label="账号"> </el-table-column>
             <el-table-column prop="name" label="姓名" width="100"> </el-table-column>
-            <el-table-column prop="houseName" label="房号" width="100" v-if="isCurrent != `house`"> </el-table-column>
+            <el-table-column prop="roleName" label="职位" width="100"> </el-table-column>
             <el-table-column prop="phone" label="手机"> </el-table-column>
             <el-table-column prop="idcard" label="身份证"> </el-table-column>
             <el-table-column prop="addtime" label="添加时间"> </el-table-column>
             <el-table-column label="操作" width="180">
               <template slot-scope="scope">
-                <template v-if="isCurrent == `in`">
-                  <el-button @click="openDrawer(scope.row)" size="mini" :disabled="isGet" type="primary">查看</el-button>
-                </template>
-                <template v-if="isCurrent == `house`">
-                  <el-button @click="openAddHouseDrawer(scope.row)" size="mini" type="primary" :disabled="isAdd">添加</el-button>
-                  <el-button size="mini" type="danger" :disabled="isDel" @click="deleteUser(scope.row)" slot="reference">删除</el-button>
-                </template>
-                <template v-if="isCurrent == `pay`">
-                  <el-button @click="openPayDrawer(scope.row)" size="mini" :disabled="isAdd" type="primary">付款</el-button>
-                </template>
-                <template v-if="isCurrent == `out`">
-                  <el-button @click="openDrawer(scope.row)" size="mini" :disabled="isGet" type="primary">查看</el-button>
-                </template>
+                <el-button size="mini" :disabled="isGet" type="primary" @click="openDrawer(scope.row)">查看</el-button>
+                <el-button size="mini" :disabled="isDel" type="danger" v-if="scope.row.state == 1">离职</el-button>
               </template>
             </el-table-column>
             <template #empty>
@@ -68,45 +57,44 @@
           <div class="pagination">
             <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
           </div>
-
-          <!-- 入住用户、退房用户页 -->
-          <!-- 住客详细信息 -->
-          <div class="drawer">
-            <el-drawer title="住客详细信息" :visible.sync="drawer" :destroy-on-close="true" size="50%">
-              <drawer-user-detail :tableData="miscellaneousData" :user="user" :isDel="isDel" :isEdit="isEdit" :isOut="isOut" @updateIdcard="updateIdcard" @updateHouse="updateHouse" @updateBasic="updateBasic"></drawer-user-detail>
-            </el-drawer>
-          </div>
-          <!-- 修改详细信息 -->
-          <div class="drawer">
-            <el-drawer :wrapperClosable="false" :show-close="false" title="修改租客个人信息" :visible.sync="idcardDrawer" :destroy-on-close="true" size="50%">
-              <update-user :user="user" @updateUser="updateUser"></update-user>
-            </el-drawer>
-          </div>
-          <!-- 修改租房信息 -->
-          <div class="drawer">
-            <el-drawer :wrapperClosable="false" :show-close="false" title="修改租房信息" :visible.sync="houseDrawer" :destroy-on-close="true" size="50%">
-              <component :is="updateHouseComponent" @afterUpdateHouse="afterUpdateHouse" @changeUpdateHouseComponent="changeUpdateHouseComponent" :user="user" :house="houseData" :miscellaneous="miscellaneousData"></component>
-            </el-drawer>
-          </div>
-          <div class="drawer">
-            <el-drawer :wrapperClosable="false" :show-close="false" title="添加杂费信息" :visible.sync="basicDrawer" :destroy-on-close="true" size="50%">
-              <update-basic :table-data="miscellaneousData" :user="user" @deleteMiscellaneous="deleteMiscellaneous" @afterUpdateBasic="afterUpdateBasic" :isDel="isDel" :isAdd="isAdd"></update-basic>
-            </el-drawer>
-          </div>
-
-          <!-- 待添加房间 -->
-          <div class="drawer">
-            <el-drawer title="办理入住" :wrapperClosable="false" :show-close="false" :visible.sync="addHouseDrawer" :destroy-on-close="true" size="50%">
-              <login-house :user="user" @closeAddHouseDrawer="closeAddHouseDrawer"></login-house>
-            </el-drawer>
-          </div>
-
-          <!-- 待支付 -->
-          <div class="drawer">
-            <el-drawer title="缴纳押金" :visible.sync="payDrawer" :destroy-on-close="true" size="50%">
-              <pay :order="order" @closePayDrawer="closePayDrawer"></pay>
-            </el-drawer>
-          </div>
+        </div>
+        <div class="drawer">
+          <el-drawer title="员工详细信息" :visible.sync="drawer" :destroy-on-close="true" size="50%">
+            <div class="drawer-bg">
+              <div class="main">
+                <el-descriptions title=" 员工信息" :column="3">
+                  <template slot="extra">
+                    <el-button type="primary" size="small" :disabled="isEdit || isOut">操作</el-button>
+                  </template>
+                  <el-descriptions-item label="账号">{{ user.username }}</el-descriptions-item>
+                  <el-descriptions-item label="姓名">{{ user.name }}</el-descriptions-item>
+                  <el-descriptions-item label="性别">{{ user.sex }}</el-descriptions-item>
+                  <el-descriptions-item label="民族">{{ user.nation }}</el-descriptions-item>
+                  <el-descriptions-item label="生日">{{ user.birthday }}</el-descriptions-item>
+                  <el-descriptions-item label="身份证">{{ user.idcard }}</el-descriptions-item>
+                  <el-descriptions-item label="手机号">{{ user.phone }}</el-descriptions-item>
+                  <el-descriptions-item label="签订时间">{{ user.sign }}</el-descriptions-item>
+                  <el-descriptions-item label="过期时间">{{ user.lose }}</el-descriptions-item>
+                  <el-descriptions-item label="签订机构">{{ user.authority }}</el-descriptions-item>
+                  <el-descriptions-item label="地址">{{ user.address }}</el-descriptions-item>
+                </el-descriptions>
+              </div>
+            </div>
+            <div class="drawer-bg">
+              <div class="main">
+                <el-descriptions title=" 职务信息" :column="4">
+                  <template slot="extra">
+                    <el-button type="primary" size="small" :disabled="isEdit || isOut">操作</el-button>
+                  </template>
+                  <el-descriptions-item :span="4" label="职务">{{ user.roleName }}</el-descriptions-item>
+                  <el-descriptions-item :span="4" label="工作详情">{{ user.roleRemark }}</el-descriptions-item>
+                  <el-descriptions-item :span="2" label="入职时间">{{ user.addtime }}</el-descriptions-item>
+                  <el-descriptions-item :span="2" label="离职时间">{{ user.deltime }}</el-descriptions-item>
+                  <el-descriptions-item v-for="(item, index) in userSalary" :key="index" :label="item.salaryName">{{ item.price }}</el-descriptions-item>
+                </el-descriptions>
+              </div>
+            </div>
+          </el-drawer>
         </div>
       </div>
     </div>
@@ -114,30 +102,14 @@
 </template>
 
 <script>
-import { getUserPage, getNoHouseUserPage } from '@/api/user';
+import { getStaffPage } from '@/api/user';
 import CreateUser from '@/components/personal/CreateUser.vue';
 import * as permission from '@/utils/permission';
 import { targetUrl } from '@/targetUrl';
-import DrawerUserDetail from '@/components/house/DrawerUserDetail.vue';
-import { getBasicByUserId } from '@/api/basic';
-import { changeUserState } from '@/api/user';
-import { getOrderByRentId } from '@/api/order';
-import UpdateUser from '@/components/house/UpdateUser.vue';
-import UpdateHouse from '@/components/house/UpdateHouse.vue';
-import UpdateContract from '@/components/house/UpdateContract.vue';
-import UpdateBasic from '@/components/house/UpdateBasic.vue';
-import LoginHouse from '@/components/house/LoginHouse.vue';
-import Pay from '@/components/financial/Pay.vue';
+import { getRole, getUserSalary } from '@/api/role';
 export default {
   components: {
-    CreateUser,
-    DrawerUserDetail,
-    UpdateUser,
-    UpdateHouse,
-    UpdateContract,
-    UpdateBasic,
-    LoginHouse,
-    Pay
+    CreateUser
   },
   data() {
     return {
@@ -147,7 +119,7 @@ export default {
       searchForm: {
         name: '',
         username: '',
-        houseName: ''
+        roleId: ''
       },
       tableData: [],
       pagination: {
@@ -156,23 +128,29 @@ export default {
         total: 0
       },
       loading: true,
-      drawer: false,
-      miscellaneousData: [],
       user: {},
-      idcardDrawer: false,
-      houseDrawer: false,
-      updateHouseComponent: `UpdateHouse`,
-      houseData: [],
-      basicDrawer: false,
-      addHouseDrawer: false,
-      payDrawer: false,
-      order: {}
+      roleList: [],
+      obj: {},
+      drawer: false,
+      userSalary: []
     };
   },
-  created() {
-    this.getUserPage();
+  async created() {
+    await this.getRole();
+    await this.getStaffPage();
   },
   methods: {
+    async getRole() {
+      try {
+        this.loading = true;
+        const { data } = await getRole();
+        this.roleList = data;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.loading = false;
+      }
+    },
     reset() {
       this.pagination = {
         currentPage: 1, //当前页码
@@ -182,7 +160,7 @@ export default {
       this.searchForm = {
         name: '',
         username: '',
-        houseName: ''
+        roleId: ''
       };
     },
     //切换
@@ -190,40 +168,28 @@ export default {
       this.loading = true;
       this.isCurrent = name;
       this.reset();
-      if (name == `in`) {
-        const obj = { state: 1, orderState: '' };
-        await this.getUserPage(obj);
-      }
-      if (name == `out`) {
-        const obj = { state: 0, orderState: '' };
-        await this.getUserPage(obj);
-      }
-      if (name == `pay`) {
-        const obj = { state: 1, orderState: '1' };
-        await this.getUserPage(obj);
-      }
-      if (name == `house`) {
-        await this.getNoHouseUserPage();
-      }
     },
     //换页
-    handleCurrentChange(currentPage) {
+    async handleCurrentChange(currentPage) {
       this.pagination.currentPage = currentPage;
-      if (this.isCurrent == `house`) {
-        this.getNoHouseUserPage();
-      } else {
-        this.getUserPage();
-      }
+      await this.getStaffPage();
     },
-    //已入住、退房、缴纳押金用户
-    async getUserPage(obj) {
+    async search() {
+      await this.getStaffPage();
+      this.searchForm = {
+        name: '',
+        username: '',
+        roleId: ''
+      };
+    },
+    //按需查询用户信息
+    async getStaffPage() {
       try {
+        // console.log('被调用');
         this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
-        const { data } = await getUserPage(param, {
-          ...this.searchForm,
-          ...obj
-        });
+        // console.log({ ...this.searchForm, ...this.obj });
+        const { data } = await getStaffPage(param, { ...this.searchForm, ...this.obj });
         this.tableData = data.records;
         this.pagination.currentPage = data.current;
         this.pagination.total = data.total;
@@ -234,145 +200,17 @@ export default {
         this.loading = false;
       }
     },
-    //待添加房间用户
-    async getNoHouseUserPage() {
+    //打开抽屉
+    async openDrawer(row) {
       try {
-        this.loading = true;
-        const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
-        const { data } = await getNoHouseUserPage(param, this.searchForm);
-        this.tableData = data.records;
-        this.pagination.currentPage = data.current;
-        this.pagination.total = data.total;
-        this.pagination.pageSize = data.size;
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.loading = false;
-      }
-    },
-    //搜索
-    search() {
-      this.loading = true;
-      if (this.isCurrent == `in` || this.isCurrent == `out` || this.isCurrent == `pay`) {
-        this.getUserPage();
-      }
-      if (this.isCurrent == `house`) {
-        this.getNoHouseUserPage();
-      }
-    },
-    //打开详情侧边栏
-    openDrawer(row) {
-      // console.log(row);
-      this.user = row;
-      this.getBasicByUserId(row);
-      this.drawer = true;
-    },
-    //获取用户杂费
-    async getBasicByUserId(row) {
-      try {
-        const { data } = await getBasicByUserId({ userId: row.userId });
-        this.miscellaneousData = data;
+        // console.log(row);
+        this.user = row;
+        const { data } = await getUserSalary({ roleId: row.roleId });
+        this.userSalary = data;
+        this.drawer = true;
       } catch (error) {
         console.log(error);
       }
-    },
-    //删除杂费回调
-    deleteMiscellaneous() {
-      this.getBasicByUserId(this.user);
-    },
-    //更新身份信息
-    updateIdcard(e) {
-      // console.log(e);
-      this.user = e;
-      this.idcardDrawer = true;
-    },
-    //修改完身份信息回调
-    updateUser(e) {
-      // console.log(e);
-      this.user = e;
-      this.getUserPage();
-      this.idcardDrawer = false;
-    },
-    //修改住房信息
-    updateHouse(e) {
-      console.log(e);
-      this.user = e;
-      this.houseDrawer = true;
-    },
-    //修改房间回调
-    afterUpdateHouse(e) {
-      console.log(e);
-      this.updateHouseComponent = `UpdateHouse`;
-      this.houseData = {};
-      this.user = e;
-      this.getUserPage();
-      this.houseDrawer = false;
-    },
-    //改变组件并传值
-    changeUpdateHouseComponent(e) {
-      console.log(e);
-      this.updateHouseComponent = e.component;
-      this.houseData = e.houseData;
-    },
-    updateBasic(e) {
-      this.user = e;
-      this.basicDrawer = true;
-    },
-    //修改杂费信息回调
-    afterUpdateBasic(e) {
-      this.miscellaneousData = e;
-      this.basicDrawer = false;
-    },
-    //未添加房间页
-    deleteUser(row) {
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(async () => {
-          try {
-            console.log(row);
-            await changeUserState({ state: 2, userId: row.userId });
-            this.$message.success('删除成功');
-          } catch (error) {
-            console.log(error);
-          } finally {
-            this.getNoHouseUserPage();
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-    },
-    //打开添加房间页
-    openAddHouseDrawer(row) {
-      this.user = row;
-      this.addHouseDrawer = true;
-      // console.log(row);
-    },
-    //关闭弹窗
-    closeAddHouseDrawer() {
-      this.addHouseDrawer = false;
-      this.getNoHouseUserPage();
-    },
-    //支付
-    async openPayDrawer(row) {
-      try {
-        const { data } = await getOrderByRentId({ rentId: row.rentId });
-        this.order = data;
-        this.payDrawer = true;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    //关闭支付弹窗
-    closePayDrawer() {
-      this.getUserPage();
-      this.payDrawer = false;
     }
   },
   computed: {
@@ -396,6 +234,20 @@ export default {
     },
     isOut() {
       return this.isCurrent == `out` ? true : false;
+    }
+  },
+  watch: {
+    isCurrent: {
+      async handler(newVal, oldVal) {
+        if (newVal == `in`) {
+          this.obj = { state: 1 };
+        }
+        if (newVal == `out`) {
+          this.obj = { state: 0 };
+        }
+        await this.getStaffPage();
+      },
+      immediate: true
     }
   }
 };
@@ -478,6 +330,16 @@ export default {
         .pagination {
           margin-top: 15px;
         }
+      }
+    }
+  }
+  .drawer {
+    .drawer-bg {
+      width: 100%;
+      padding: 25px;
+      .main {
+        padding: 10px;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       }
     }
   }

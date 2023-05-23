@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.service.UserService;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.StaffVO;
 import niuniu.javaweb.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -131,6 +132,27 @@ public class UserController {
         //如果当前页码大于了总页码值，那么重新执行查询操作，使用最大页码值作为当前页码值
         if (currentPage > page.getPages()) {
             page = userService.getUserPage(username, name, houseName, (int) page.getPages(), pageSize, state, orderState);
+        }
+        return CommonResult.success(page);
+    }
+
+    /**
+     * 按需查询员工信息
+     *
+     * @param currentPage
+     * @param pageSize
+     * @param username
+     * @param name
+     * @param roleId
+     * @param state
+     * @return
+     */
+    @GetMapping("/getStaffPage/{currentPage}/{pageSize}")
+    public CommonResult getStaffPage(@PathVariable int currentPage, @PathVariable int pageSize, String username, String name, Integer roleId, Integer state) {
+        IPage<StaffVO> page = userService.getStaffPage(username, name, roleId, state, currentPage, pageSize);
+        //如果当前页码大于了总页码值，那么重新执行查询操作，使用最大页码值作为当前页码值
+        if (currentPage > page.getPages()) {
+            page = userService.getStaffPage(username, name, roleId, state, (int) page.getPages(), pageSize);
         }
         return CommonResult.success(page);
     }
