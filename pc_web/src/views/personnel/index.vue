@@ -46,7 +46,6 @@
             <el-table-column label="操作" width="180">
               <template slot-scope="scope">
                 <el-button size="mini" :disabled="isGet" type="primary" @click="openDrawer(scope.row)">查看</el-button>
-                <el-button size="mini" :disabled="isDel" type="danger" v-if="scope.row.state == 1">离职</el-button>
               </template>
             </el-table-column>
             <template #empty>
@@ -64,7 +63,7 @@
               <div class="main">
                 <el-descriptions title=" 员工信息" :column="3">
                   <template slot="extra">
-                    <el-button type="primary" size="small" :disabled="isEdit || isOut">操作</el-button>
+                    <el-button type="primary" size="small" :disabled="isEdit || isOut" @click="updateIdcard">操作</el-button>
                   </template>
                   <el-descriptions-item label="账号">{{ user.username }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ user.name }}</el-descriptions-item>
@@ -84,7 +83,7 @@
               <div class="main">
                 <el-descriptions title=" 职务信息" :column="4">
                   <template slot="extra">
-                    <el-button type="primary" size="small" :disabled="isEdit || isOut">操作</el-button>
+                    <el-button type="danger" size="small" :disabled="isDel || isOut" @click="leave">离职</el-button>
                   </template>
                   <el-descriptions-item :span="4" label="职务">{{ user.roleName }}</el-descriptions-item>
                   <el-descriptions-item :span="4" label="工作详情">{{ user.roleRemark }}</el-descriptions-item>
@@ -96,20 +95,28 @@
             </div>
           </el-drawer>
         </div>
+        <!-- 修改详细信息 -->
+        <div class="drawer">
+          <el-drawer :wrapperClosable="false" :show-close="false" title="修改员工信息" :visible.sync="idcardDrawer" :destroy-on-close="true" size="50%">
+            <update-user :user="user" @updateUser="updateUser"></update-user>
+          </el-drawer>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getStaffPage } from '@/api/user';
+import { getStaffPage, validatePassword } from '@/api/user';
 import CreateUser from '@/components/personal/CreateUser.vue';
 import * as permission from '@/utils/permission';
 import { targetUrl } from '@/targetUrl';
-import { getRole, getUserSalary } from '@/api/role';
+import { getRole, getUserSalary, leaveRole } from '@/api/role';
+import UpdateUser from '@/components/house/UpdateUser.vue';
 export default {
   components: {
-    CreateUser
+    CreateUser,
+    UpdateUser
   },
   data() {
     return {
@@ -132,7 +139,8 @@ export default {
       roleList: [],
       obj: {},
       drawer: false,
-      userSalary: []
+      userSalary: [],
+      idcardDrawer: false
     };
   },
   async created() {
@@ -182,6 +190,13 @@ export default {
         roleId: ''
       };
     },
+    //修改完身份信息回调
+    updateUser(e) {
+      // console.log(e);
+      this.user = e;
+      this.getStaffPage();
+      this.idcardDrawer = false;
+    },
     //按需查询用户信息
     async getStaffPage() {
       try {
@@ -211,6 +226,41 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    updateIdcard() {
+      this.idcardDrawer = true;
+    },
+    leave() {
+      this.$prompt('请输入密码', '员工离职', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password',
+        inputPattern: /^\w{5,12}$/,
+        inputErrorMessage: '密码格式不正确'
+      })
+        .then(async ({ value }) => {
+          try {
+            // console.log(value);
+            await validatePassword({
+              password: value,
+              username: this.$store.getters.username
+            });
+            await leaveRole(this.user);
+            // console.log(this.user);
+            this.$message.success('员工离职成功...');
+            this.drawer = false;
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.getStaffPage();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消编辑'
+          });
+        });
     }
   },
   computed: {

@@ -45,7 +45,8 @@
     </insert>
     <update id="updateRoleSalary">
         update salary_role
-        set state = #{state}
+        set state = #{state},
+            time  = current_timestamp
         where salary_id = #{salaryId}
           and role_id = #{roleId}
     </update>
@@ -54,5 +55,21 @@
         from salary_role
         where role_id = #{roleId}
           and salary_id = #{salaryId}
+    </select>
+    <select id="getUserSalary" resultType="niuniu.javaweb.pojo.Salary">
+        select a.*
+        from salary as a,
+             salary_role as b,
+             user as c
+        where c.role_id = b.role_id
+          and b.salary_id = a.salary_id
+          and c.user_id = #{userId}
+          and b.state in (1, 2)
+        order by a.state
+    </select>
+    <select id="getChangeSalary" resultType="niuniu.javaweb.vo.RoleVO">
+        select *
+        from salary_role
+        where state not in (0, 1)
     </select>
 </mapper>

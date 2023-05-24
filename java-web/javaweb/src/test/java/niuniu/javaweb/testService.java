@@ -7,6 +7,7 @@ import niuniu.javaweb.mapper.OrderMapper;
 import niuniu.javaweb.pojo.Basic;
 import niuniu.javaweb.service.CostService;
 import niuniu.javaweb.service.HouseService;
+import niuniu.javaweb.service.StaffPayService;
 import niuniu.javaweb.service.UserService;
 import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.DateUtil;
@@ -50,6 +51,9 @@ public class testService {
 
     @Autowired
     OrderMapper orderMapper;
+
+    @Autowired
+    StaffPayService staffPayService;
 
     @Test
     void testGetHouseNumber() {
@@ -271,5 +275,10 @@ public class testService {
     @Test
     void getUserChart() {
         System.out.println(costService.getUserChart(95));
+    }
+
+    @Test
+    void leaveSalary() throws ParseException {
+        staffPayService.leaveSalary(4);
     }
 }

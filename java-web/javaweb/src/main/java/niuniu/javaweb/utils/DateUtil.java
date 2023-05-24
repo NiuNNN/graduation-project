@@ -30,7 +30,7 @@ public class DateUtil {
     static String MONTH[] = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
 
     /**
-     * 转换当前日期 转换为 yyyy-MM-dd-HH-mm-ss
+     * 转换当前日期 转换为 yyyy-MM-dd HH:mm:ss
      *
      * @return
      */
@@ -155,4 +155,21 @@ public class DateUtil {
         return date.split("-");
     }
 
+    /**
+     * 求两个日期相差天数
+     *
+     * @param time
+     * @return
+     * @throws ParseException
+     */
+    public static Long differDay(String time) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowTime = getNowTime();
+        Date star = sdf.parse(time);//开始时间
+        Date endDay = sdf.parse(nowTime);//结束时间
+        Long starTime = star.getTime();
+        Long endTime = endDay.getTime();
+        Long num = endTime - starTime;//时间戳相差的毫秒数
+        return num / 24 / 60 / 60 / 1000;
+    }
 }

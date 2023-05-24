@@ -9,9 +9,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.MenuMapper;
 import niuniu.javaweb.mapper.RoleMapper;
 import niuniu.javaweb.mapper.SalaryMapper;
+import niuniu.javaweb.mapper.UserMapper;
 import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.pojo.Salary;
 import niuniu.javaweb.service.RoleService;
+import niuniu.javaweb.service.StaffPayService;
 import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.StringUtils;
 import niuniu.javaweb.utils.TransferUtil;
@@ -24,6 +26,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,6 +47,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Autowired
     SalaryMapper salaryMapper;
+
+    @Autowired
+    StaffPayService staffPayService;
+
+    @Autowired
+    UserMapper userMapper;
 
     /**
      * 获取全部职位
@@ -456,5 +465,21 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             }
         }
         return CommonResult.success(userSalary);
+    }
+
+    /**
+     * 员工离职处理
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public CommonResult leaveRole(Integer userId) throws ParseException {
+        /**
+         * 1. 生成员工薪水
+         * 2. 修改use表，把user state修改为0 并且填写离职时间
+         */
+        staffPayService.leaveSalary(userId);
+        return userMapper.deleteUser(userId) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 }

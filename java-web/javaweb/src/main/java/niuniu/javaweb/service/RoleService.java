@@ -5,6 +5,8 @@ import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.vo.RoleVO;
 
+import java.text.ParseException;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.service
@@ -106,4 +108,12 @@ public interface RoleService {
      * @return
      */
     CommonResult getUserSalary(Integer roleId);
+
+    /**
+     * 员工离职处理
+     *
+     * @param userId
+     * @return
+     */
+    CommonResult leaveRole(Integer userId) throws ParseException;
 }

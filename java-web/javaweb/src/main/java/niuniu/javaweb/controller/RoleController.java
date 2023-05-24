@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.controller
@@ -150,5 +152,16 @@ public class RoleController {
     @GetMapping("getUserSalary")
     public CommonResult getUserSalary(Integer roleId) {
         return roleService.getUserSalary(roleId);
+    }
+
+    /**
+     * 员工离职
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/leaveRole")
+    public CommonResult leaveRole(Integer userId) throws ParseException {
+        return roleService.leaveRole(userId);
     }
 }

@@ -96,3 +96,12 @@ export function getRoleSalary(param) {
 export function getUserSalary(param) {
   return get(`getUserSalary`, param);
 }
+
+/**
+ * 员工离职
+ * @param {*} param
+ * @returns
+ */
+export function leaveRole(param) {
+  return get(`leaveRole`, param);
+}

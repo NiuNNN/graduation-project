@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import niuniu.javaweb.pojo.Salary;
+import niuniu.javaweb.vo.RoleVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -95,4 +96,19 @@ public interface SalaryMapper extends BaseMapper<Salary> {
      * @return
      */
     int selectHasRoleSalary(Integer roleId, Integer salaryId);
+
+    /**
+     * 获取用户薪水
+     *
+     * @param userId
+     * @return
+     */
+    List<Salary> getUserSalary(Integer userId);
+
+    /**
+     * 获取待修改状态的员工薪水
+     *
+     * @return
+     */
+    List<RoleVO> getChangeSalary();
 }

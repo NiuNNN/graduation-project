@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.StaffPayMapper">
+    <select id="selectHasSalary" resultType="niuniu.javaweb.pojo.StaffPay">
+        select *
+        from staff_pay
+        where user_id = #{userId}
+        order by time desc limit 1
+    </select>
+    <insert id="insertStaffPay">
+        insert into staff_pay (user_id, out_trade_no, time, else_price, base_price, price)
+        values (#{userId}, #{outTradeNo}, current_timestamp, #{elsePrice}, #{basePrice}, #{price})
+    </insert>
+</mapper>

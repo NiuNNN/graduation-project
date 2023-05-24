@@ -110,7 +110,8 @@
     </select>
     <update id="deleteUser">
         update user
-        set state = 0
+        set state   = 0,
+            deltime = current_timestamp
         where user_id = #{userId}
     </update>
     <select id="getStaffPage" resultType="niuniu.javaweb.vo.StaffVO">
