@@ -1,4 +1,4 @@
-import { post, get } from '@/utils/request';
+import { post, get, getExcel } from '@/utils/request';
 
 /**
  * 获取全部薪水
@@ -43,4 +43,23 @@ export function deleteSalary(param) {
  */
 export function getSalaryMap(param) {
   return get(`getSalaryMap`, param);
+}
+
+/**
+ * 按需查询员工的薪水
+ * @param {*} param
+ * @param {*} obj
+ * @returns
+ */
+export function selectSalaryPay(param, obj) {
+  return get(`selectSalaryPay/${param}`, obj);
+}
+
+/**
+ * 导出员工信息
+ * @param {*} param
+ * @returns
+ */
+export function generateStaffSalary(param) {
+  return getExcel(`generateStaffSalary`, param);
 }

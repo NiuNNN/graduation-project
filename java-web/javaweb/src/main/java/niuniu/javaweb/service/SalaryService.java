@@ -50,4 +50,6 @@ public interface SalaryService {
      * @return
      */
     CommonResult getSalaryMap();
+    
+
 }

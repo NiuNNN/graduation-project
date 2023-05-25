@@ -104,4 +104,6 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
         map.put("elseSalary", salaryMapper.getSalaryByState(3));
         return CommonResult.success(map);
     }
+    
+
 }

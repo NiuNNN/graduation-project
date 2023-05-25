@@ -1,5 +1,6 @@
 package niuniu.javaweb.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -725,5 +726,17 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
         list.add(new ChartVO("用水量(方)", "line", "", true, waterList));
         list.add(new ChartVO("用电量(度)", "line", "", true, eleList));
         return CommonResult.success(list);
+    }
+
+    /**
+     * 导出选择的住房账单
+     *
+     * @param list
+     */
+    @Override
+    public void getAllCostExcel(String list) {
+        List<CostVo> costVos = JSON.parseArray(list, CostVo.class);
+//        System.out.println(costVos.size());
+        ExcelUtil.excelLockExport(CostVo.class, "租赁账单", costVos, "租赁账单");
     }
 }

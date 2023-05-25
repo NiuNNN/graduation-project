@@ -195,6 +195,17 @@ public class CostController {
     }
 
     /**
+     * 导出选择的住房账单
+     *
+     * @param list
+     */
+    @PostMapping("getAllCostExcel")
+    public void getAllCostExcel(String list) {
+//        System.out.println(list);
+        costService.getAllCostExcel(list);
+    }
+
+    /**
      * 判断是否满足条件一键生成
      *
      * @param time

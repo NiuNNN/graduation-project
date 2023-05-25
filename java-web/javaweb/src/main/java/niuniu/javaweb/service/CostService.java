@@ -158,4 +158,11 @@ public interface CostService {
      * @return
      */
     CommonResult getUserChart(Integer userId);
+
+    /**
+     * 导出选择的住房账单
+     *
+     * @param list
+     */
+    void getAllCostExcel(String list);
 }

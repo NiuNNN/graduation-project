@@ -8,7 +8,23 @@
         order by time desc limit 1
     </select>
     <insert id="insertStaffPay">
-        insert into staff_pay (user_id, out_trade_no, time, else_price, base_price, price)
-        values (#{userId}, #{outTradeNo}, current_timestamp, #{elsePrice}, #{basePrice}, #{price})
+        insert into staff_pay (user_id, out_trade_no, time, else_price, base_price, price, reark)
+        values (#{userId}, #{outTradeNo}, current_timestamp, #{elsePrice}, #{basePrice}, #{price}, #{remark})
     </insert>
+    <select id="selectSalaryPay" resultType="niuniu.javaweb.vo.StaffPayVO">
+        select a.*,b.name,b.username,c.role_name
+        from staff_pay as a,user as b,role as c
+        <where>
+            b.user_id = a.user_id
+            and b.role_id>1
+            and b.role_id = c.role_id
+            <if test="time!=''and time !=null">
+                and DATE_FORMAT(b.time
+                , '%Y-%m') = #{time}
+            </if>
+            <if test="name!='' and name!=null">
+                and name = #{name}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -1,6 +1,8 @@
 package niuniu.javaweb.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.StaffPayVO;
 
 import java.text.ParseException;
 
@@ -16,5 +18,22 @@ public interface StaffPayService {
      * @param userId
      */
     CommonResult leaveSalary(Integer userId) throws ParseException;
-    
+
+    /**
+     * 按需获取员工薪水信息
+     *
+     * @param time
+     * @param name
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    IPage<StaffPayVO> selectSalaryPay(String time, String name, int currentPage, int pageSize);
+
+    /**
+     * 导出员工薪水状况
+     *
+     * @param list
+     */
+    void generateStaffSalary(String list);
 }

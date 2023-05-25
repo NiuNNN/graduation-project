@@ -1,5 +1,9 @@
 package niuniu.javaweb.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.SalaryMapper;
 import niuniu.javaweb.mapper.StaffPayMapper;
@@ -9,9 +13,11 @@ import niuniu.javaweb.pojo.StaffPay;
 import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.service.StaffPayService;
 import niuniu.javaweb.utils.DateUtil;
+import niuniu.javaweb.utils.excel.ExcelUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.utils.tools.OrderUtil;
 import niuniu.javaweb.vo.RoleVO;
+import niuniu.javaweb.vo.StaffPayVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -171,5 +177,33 @@ public class StaffPayServiceImpl extends ServiceImpl<StaffPayMapper, StaffPay> i
                 }
             }
         }
+    }
+
+    /**
+     * 按需获取员工薪水信息
+     *
+     * @param time
+     * @param name
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public IPage<StaffPayVO> selectSalaryPay(String time, String name, int currentPage, int pageSize) {
+        Page<StaffPayVO> page = new Page<>(currentPage, pageSize);
+        QueryWrapper<StaffPayVO> queryWrapper = new QueryWrapper<>();
+        return staffPayMapper.selectSalaryPay(time, name, page, queryWrapper);
+    }
+
+    /**
+     * 导出员工薪水状况
+     *
+     * @param list
+     */
+    @Override
+    public void generateStaffSalary(String list) {
+        List<StaffPayVO> staffPayVOS = JSONObject.parseArray(list, StaffPayVO.class);
+        System.out.println(staffPayVOS.size());
+        ExcelUtil.excelLockExport(StaffPayVO.class, "员工薪水表", staffPayVOS, "薪水表");
     }
 }

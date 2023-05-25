@@ -10,21 +10,33 @@
             <el-form-item label="时间">
               <el-date-picker v-model="form.month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
             </el-form-item>
-            <el-button type="primary" style="height: 35px; line-height: 5px" @click="search">查询</el-button>
+            <el-button type="primary" style="height: 35px; line-height: 5px; margin-top: 2px" @click="search">查询</el-button>
           </el-form>
         </div>
         <div style="margin-right: 35px">
-          <el-button type="primary" style="height: 35px; line-height: 5px" @click="dialogVisible = true">一键报表</el-button>
+          <el-button style="height: 35px; line-height: 5px" @click="dialogVisible = true">生成账单</el-button>
+          <el-button style="height: 35px; line-height: 5px" @click="getAllCostExcel">一键导出</el-button>
         </div>
       </div>
       <div class="table">
-        <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }">
+        <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange" :row-key="getRowKey">
+          <el-table-column type="selection" width="55" :reserve-selection="true"> </el-table-column>
           <el-table-column prop="date" label="时间" sortable> </el-table-column>
           <el-table-column prop="houseName" label="房号"> </el-table-column>
           <el-table-column prop="numElectric" label="用电量(度)"> </el-table-column>
-          <el-table-column prop="costElectric" label="电费(元)"> </el-table-column>
+          <el-table-column prop="costElectric" label="电费(元)">
+            <template slot-scope="scope">
+              <span v-if="scope.row.numElectric != '待处理'">￥{{ scope.row.costElectric }}</span>
+              <span v-else>{{ scope.row.costElectric }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="numWater" label="用水量(方)"> </el-table-column>
-          <el-table-column prop="costWater" label="水费(元)"> </el-table-column>
+          <el-table-column prop="costWater" label="水费(元)">
+            <template slot-scope="scope">
+              <span v-if="scope.row.numWater != '待处理'">￥{{ scope.row.costWater }}</span>
+              <span v-else>{{ scope.row.costWater }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">报 表</el-button>
@@ -58,7 +70,7 @@
 
 <script>
 import * as permission from '@/utils/permission';
-import { getAllCost, deleteCost, generatePersonCost, generateAllCost, judgeCost } from '@/api/cost';
+import { getAllCost, deleteCost, generatePersonCost, generateAllCost, judgeCost, getAllCostExcel } from '@/api/cost';
 import { validatePassword } from '@/api/user';
 export default {
   data() {
@@ -84,13 +96,18 @@ export default {
       personData: [],
       generate: {
         month: ''
-      }
+      },
+      multipleSelection: []
     };
   },
   created() {
     this.getAll();
   },
   methods: {
+    getRowKey(row) {
+      return row.costId;
+    },
+    //生成全部账单
     async addAll() {
       this.$confirm(`此操作将生成住房账单, 是否继续?`, '提示', {
         confirmButtonText: '确定',
@@ -173,7 +190,7 @@ export default {
           type: 'warning'
         })
           .then(() => {
-            this.$prompt('请输入密码', '生成账单', {
+            this.$prompt('请输入密码', '导出账单', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               inputType: 'password',
@@ -233,6 +250,38 @@ export default {
             message: '取消删除'
           });
         });
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      console.log(this.multipleSelection);
+    },
+    getAllCostExcel() {
+      if (this.multipleSelection.length > 0) {
+        this.$prompt('请输入密码', '导出账单', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputType: 'password',
+          inputPattern: /^\w{5,12}$/,
+          inputErrorMessage: '密码格式不正确'
+        }).then(async ({ value }) => {
+          try {
+            // console.log(value);
+            await validatePassword({
+              password: value,
+              username: this.$store.getters.username
+            });
+            this.$message.info('正在生成中，请稍等...');
+            // console.log(row);
+            await getAllCostExcel({ list: JSON.stringify(this.multipleSelection) });
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.multipleSelection = [];
+          }
+        });
+      } else {
+        this.$message.info('请勾选后导出账单...');
+      }
     }
   },
   computed: {
