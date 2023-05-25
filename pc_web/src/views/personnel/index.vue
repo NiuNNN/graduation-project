@@ -9,7 +9,7 @@
     <div class="bg">
       <div class="navbar">
         <span :class="{ current: isCurrent == `in` }" @click="changeCurrent(`in`)">已 入 职 员 工</span>
-        <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 离 职 用 户</span>
+        <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 离 职 员 工</span>
       </div>
       <div class="table" v-loading="loading">
         <div class="top">
