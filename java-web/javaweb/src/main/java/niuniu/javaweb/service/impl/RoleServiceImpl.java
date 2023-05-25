@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import niuniu.javaweb.mapper.MenuMapper;
-import niuniu.javaweb.mapper.RoleMapper;
-import niuniu.javaweb.mapper.SalaryMapper;
-import niuniu.javaweb.mapper.UserMapper;
+import niuniu.javaweb.mapper.*;
 import niuniu.javaweb.pojo.Role;
 import niuniu.javaweb.pojo.Salary;
 import niuniu.javaweb.service.RoleService;
@@ -53,6 +50,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    ContractMapper contractMapper;
 
     /**
      * 获取全部职位
@@ -474,12 +474,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      * @return
      */
     @Override
+    @Transactional
     public CommonResult leaveRole(Integer userId) throws ParseException {
         /**
          * 1. 生成员工薪水
-         * 2. 修改use表，把user state修改为0 并且填写离职时间
+         * 2. 修改合同 报废合同
+         * 3. 修改use表，把user state修改为0 并且填写离职时间
          */
         staffPayService.leaveSalary(userId);
+        contractMapper.changeStateByUserId(userId);
         return userMapper.deleteUser(userId) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 }

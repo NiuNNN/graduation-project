@@ -168,6 +168,8 @@ public class CheckOutServiceImpl extends ServiceImpl<CheckOutMapper, CheckOut> i
         houseMapper.changeState(rent.getHouseId(), "空闲");
         //修改user表
         userMapper.changeUserState(rent.getUserId(), 0);
+        //修改contract表
+        contractMapper.changeStateByUserId(rent.getUserId());
     }
 
     /**

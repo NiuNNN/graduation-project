@@ -18,7 +18,8 @@
     </insert>
     <update id="changeStateByUserId">
         update contract
-        set state = 0
+        set state   = 0,
+            deltime = current_timestamp
         where user_id = #{userId}
           and state = 1
     </update>

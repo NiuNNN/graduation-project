@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.exception.ParamErrorException;
+import niuniu.javaweb.mapper.ContractMapper;
 import niuniu.javaweb.mapper.MenuMapper;
 import niuniu.javaweb.mapper.UserMapper;
 import niuniu.javaweb.pojo.User;
@@ -46,6 +47,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     MenuMapper menuMapper;
+
+    @Autowired
+    ContractMapper contractMapper;
 
     private static String UPLOAD_PATH;
 
