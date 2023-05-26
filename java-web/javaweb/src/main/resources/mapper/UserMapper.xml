@@ -136,4 +136,16 @@
         </where>
         ${ew.customSqlSegment}
     </select>
+    <select id="getStaff" resultType="niuniu.javaweb.vo.StaffVO">
+        select a.*,b.role_name
+        from user as a,role as b
+        <where>
+            a.state = 1
+            and a.role_id > 2
+            and a.role_id = b.role_id
+            <if test="userId !='' and userId!=null">
+                and user_id =#{userId}
+            </if>
+        </where>
+    </select>
 </mapper>

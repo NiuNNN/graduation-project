@@ -90,7 +90,13 @@ public class StaffPayVO implements Serializable {
     /**
      * 录入时间
      */
-    @ExcelProperty("发放时间")
+    @ExcelProperty("统计时间")
     private String time;
+
+    /**
+     * 状态
+     */
+    @ExcelIgnore
+    private Integer state;
 
 }

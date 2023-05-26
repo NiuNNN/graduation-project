@@ -112,9 +112,27 @@ public class SalaryController {
      * @param list
      * @throws ParseException
      */
-    @PostMapping("generateStaffSalary")
-    public void generateStaffSalary(String list) throws ParseException {
+    @PostMapping("generateStaffExcel")
+    public void generateStaffExcel(String list) throws ParseException {
         System.out.println(list);
-        staffPayService.generateStaffSalary(list);
+        staffPayService.generateStaffExcel(list);
+    }
+
+    /**
+     * 生成全部员工薪水并导出
+     */
+    @PostMapping("generateStaffSalary")
+    public void generateStaffSalary() throws ParseException {
+        staffPayService.generateStaffSalary();
+    }
+
+    /**
+     * 判断是否有未生成的
+     *
+     * @return
+     */
+    @GetMapping("judgeGenerateStaff")
+    public CommonResult judgeGenerateStaff() {
+        return staffPayService.judgeGenerateStaff();
     }
 }

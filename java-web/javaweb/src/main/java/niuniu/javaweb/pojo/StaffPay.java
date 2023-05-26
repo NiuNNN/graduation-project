@@ -59,4 +59,9 @@ public class StaffPay implements Serializable {
      * 录入时间
      */
     private String time;
+
+    /**
+     * 状态
+     */
+    private Integer state;
 }

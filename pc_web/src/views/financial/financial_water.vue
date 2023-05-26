@@ -175,7 +175,6 @@ export default {
     //下载模板
     async download() {
       try {
-        this.$message.info('正在获取下载链接，请稍等...');
         await sheetWaterExcel();
       } catch (error) {
         console.log(error);

@@ -10,7 +10,6 @@ import niuniu.javaweb.mapper.StaffPayMapper;
 import niuniu.javaweb.mapper.UserMapper;
 import niuniu.javaweb.pojo.Salary;
 import niuniu.javaweb.pojo.StaffPay;
-import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.service.StaffPayService;
 import niuniu.javaweb.utils.DateUtil;
 import niuniu.javaweb.utils.excel.ExcelUtil;
@@ -18,11 +17,13 @@ import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.utils.tools.OrderUtil;
 import niuniu.javaweb.vo.RoleVO;
 import niuniu.javaweb.vo.StaffPayVO;
+import niuniu.javaweb.vo.StaffVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,24 +52,25 @@ public class StaffPayServiceImpl extends ServiceImpl<StaffPayMapper, StaffPay> i
     @Transactional
     public CommonResult leaveSalary(Integer userId) throws ParseException {
         changeSalaryState();
-        generateSalary(userId);
-        return CommonResult.success();
+        return CommonResult.success(generateSalary(userId, null));
     }
 
     /**
      * 生成员工薪水
      *
      * @param userId
+     * @param nowTime
      * @return
+     * @throws ParseException
      */
     @Transactional
-    public void generateSalary(Integer userId) throws ParseException {
+    public StaffPayVO generateSalary(Integer userId, String nowTime) throws ParseException {
         /**
          * 判断staff表中是否存在该员工薪水信息
          */
         StaffPay has = staffPayMapper.selectHasSalary(userId);
 //        System.out.println(staffPay);
-        User user = userMapper.selectById(userId);
+        StaffVO user = userMapper.getStaff(userId).get(0);
         String time = "";
         if (has != null) {
             time = has.getTime();
@@ -82,6 +84,9 @@ public class StaffPayServiceImpl extends ServiceImpl<StaffPayMapper, StaffPay> i
         Float elsePrice = 0.0f;
 
         String remark = "";
+
+        StaffPayVO staffPayVO = new StaffPayVO();
+
 
         /**
          * 判断相差天数
@@ -122,15 +127,19 @@ public class StaffPayServiceImpl extends ServiceImpl<StaffPayMapper, StaffPay> i
             /**
              * 存入数据库
              */
-            StaffPay staffPay = new StaffPay();
-            staffPay.setUserId(userId);
-            staffPay.setOutTradeNo(OrderUtil.getOrderNo());
-            staffPay.setPrice(String.valueOf(basePrice + elsePrice));
-            staffPay.setBasePrice(String.valueOf(basePrice));
-            staffPay.setElsePrice(String.valueOf(elsePrice));
-            staffPay.setRemark(remark);
-            staffPayMapper.insertStaffPay(staffPay);
+            staffPayVO.setUserId(userId);
+            staffPayVO.setOutTradeNo(OrderUtil.getOrderNo());
+            staffPayVO.setPrice(String.valueOf(basePrice + elsePrice));
+            staffPayVO.setBasePrice(String.valueOf(basePrice));
+            staffPayVO.setElsePrice(String.valueOf(elsePrice));
+            staffPayVO.setRemark(remark);
+            staffPayVO.setUsername(user.getUsername());
+            staffPayVO.setName(user.getName());
+            staffPayVO.setRoleName(user.getRoleName());
+            staffPayVO.setTime(nowTime);
+            staffPayMapper.insertStaffPay(staffPayVO);
         }
+        return staffPayVO;
     }
 
     /**
@@ -201,9 +210,39 @@ public class StaffPayServiceImpl extends ServiceImpl<StaffPayMapper, StaffPay> i
      * @param list
      */
     @Override
-    public void generateStaffSalary(String list) {
+    public void generateStaffExcel(String list) {
         List<StaffPayVO> staffPayVOS = JSONObject.parseArray(list, StaffPayVO.class);
         System.out.println(staffPayVOS.size());
         ExcelUtil.excelLockExport(StaffPayVO.class, "员工薪水表", staffPayVOS, "薪水表");
     }
+
+    /**
+     * 生成全部员工薪水并导出
+     */
+    @Override
+    public void generateStaffSalary() throws ParseException {
+        List<StaffVO> staff = userMapper.getStaff(null);
+        List<StaffPayVO> staffPayVOS = new ArrayList<>();
+        changeSalaryState();
+        if (!staff.isEmpty()) {
+            for (StaffVO user : staff) {
+                StaffPayVO staffPayVO = generateSalary(user.getUserId(), DateUtil.getNowTime());
+                if (staffPayVO != null) {
+                    staffPayVOS.add(staffPayVO);
+                }
+            }
+        }
+        ExcelUtil.excelLockExport(StaffPayVO.class, "员工薪水表", staffPayVOS, "薪水表");
+    }
+
+    /**
+     * 判断是否有未生成的员工薪水
+     *
+     * @return
+     */
+    @Override
+    public CommonResult judgeGenerateStaff() {
+        return userMapper.getStaff(null).size() > staffPayMapper.judgeGenerateStaff() ? CommonResult.success() : CommonResult.failed("没有待生成薪水的员工...");
+    }
+
 }

@@ -8,14 +8,14 @@
               <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
             <el-form-item label="时间">
-              <el-date-picker v-model="form.month" type="time" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
+              <el-date-picker v-model="form.time" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
             </el-form-item>
             <el-button type="primary" style="height: 35px; line-height: 5px; margin-top: 2px" @click="search">查询</el-button>
           </el-form>
         </div>
         <div style="margin-right: 35px">
-          <el-button style="height: 35px; line-height: 5px" @click="dialogVisible = true">生成账单</el-button>
-          <el-button style="height: 35px; line-height: 5px" @click="generateStaffSalary(`all`)">一键导出</el-button>
+          <el-button style="height: 35px; line-height: 5px" @click="generateStaffSalary">生成账单</el-button>
+          <el-button style="height: 35px; line-height: 5px" @click="generateStaffExcel(`all`)">一键导出</el-button>
         </div>
       </div>
       <div class="table">
@@ -42,7 +42,7 @@
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" :disabled="isEdit" @click="generateStaffSalary(`single`, scope.row)">报 表</el-button>
+              <el-button type="primary" size="small" :disabled="isEdit" @click="generateStaffExcel(`single`, scope.row)">报 表</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -60,7 +60,7 @@
 <script>
 import * as permission from '@/utils/permission';
 import { validatePassword } from '@/api/user';
-import { selectSalaryPay, generateStaffSalary } from '@/api/salary';
+import { selectSalaryPay, generateStaffExcel, generateStaffSalary, judgeGenerateStaff } from '@/api/salary';
 export default {
   data() {
     return {
@@ -89,11 +89,10 @@ export default {
     this.getAll();
   },
   methods: {
-    generateRent(row) {},
     getRowKey(row) {
       return row.id;
     },
-    //生成新的薪水
+    //获取全部人工薪水
     async getAll() {
       try {
         this.loading = true;
@@ -134,17 +133,29 @@ export default {
       console.log(this.multipleSelection);
     },
     //按需导出
-    async generateStaffSalary(style, row) {
+    async generateStaffExcel(style, row) {
       if (style == `all`) {
         if (this.multipleSelection.length > 0) {
-          try {
-            this.$message.info('正在获取下载链接，请稍等...');
-            await generateStaffSalary({ list: JSON.stringify(this.multipleSelection) });
-          } catch (error) {
-            console.log(error);
-          } finally {
-            this.multipleSelection = [];
-          }
+          this.$prompt('请输入密码', '导出账单', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputType: 'password',
+            inputPattern: /^\w{5,12}$/,
+            inputErrorMessage: '密码格式不正确'
+          }).then(async ({ value }) => {
+            try {
+              // console.log(value);
+              await validatePassword({
+                password: value,
+                username: this.$store.getters.username
+              });
+              await generateStaffExcel({ list: JSON.stringify(this.multipleSelection) });
+            } catch (error) {
+              console.log(error);
+            } finally {
+              this.multipleSelection = [];
+            }
+          });
         } else {
           this.$message.info('请勾选后导出账单...');
         }
@@ -152,12 +163,48 @@ export default {
         try {
           let arr = [];
           arr.push(row);
-          this.$message.info('正在获取下载链接，请稍等...');
-          await generateStaffSalary({ list: JSON.stringify(arr) });
+          await generateStaffExcel({ list: JSON.stringify(arr) });
         } catch (error) {
           console.log(error);
         }
       }
+    },
+    //生成全部员工薪水并导出
+    generateStaffSalary() {
+      this.$confirm(`此操作将生成全部员工薪水账单, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$prompt('请输入密码', '导出账单', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputType: 'password',
+            inputPattern: /^\w{5,12}$/,
+            inputErrorMessage: '密码格式不正确'
+          }).then(async ({ value }) => {
+            try {
+              await judgeGenerateStaff();
+              // console.log(value);
+              await validatePassword({
+                password: value,
+                username: this.$store.getters.username
+              });
+              await generateStaffSalary();
+            } catch (error) {
+              console.log(error);
+            } finally {
+              this.getAll();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消生成'
+          });
+        });
     }
   },
   computed: {

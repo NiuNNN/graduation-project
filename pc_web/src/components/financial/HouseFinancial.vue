@@ -128,7 +128,6 @@ export default {
                 username: this.$store.getters.username
               });
               await judgeCost({ time: this.generate.month });
-              this.$message.info('正在生成中，请稍等...');
               await generateAllCost({ time: this.generate.month });
             } catch (error) {
               console.log(error);
@@ -152,7 +151,7 @@ export default {
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllCost(param, {
           houseName: this.form.houseName,
-          time: this.form.month
+          date: this.form.month
         });
         // console.log(data);
         this.tableData = data.records;
@@ -203,7 +202,6 @@ export default {
                   password: value,
                   username: this.$store.getters.username
                 });
-                this.$message.info('正在生成中，请稍等...');
                 // console.log(row);
                 await generatePersonCost(row);
               } catch (error) {
@@ -255,6 +253,7 @@ export default {
       this.multipleSelection = val;
       console.log(this.multipleSelection);
     },
+    //按需导出
     getAllCostExcel() {
       if (this.multipleSelection.length > 0) {
         this.$prompt('请输入密码', '导出账单', {
@@ -270,7 +269,6 @@ export default {
               password: value,
               username: this.$store.getters.username
             });
-            this.$message.info('正在生成中，请稍等...');
             // console.log(row);
             await getAllCostExcel({ list: JSON.stringify(this.multipleSelection) });
           } catch (error) {

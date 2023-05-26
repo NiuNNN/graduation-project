@@ -11,6 +11,8 @@ import niuniu.javaweb.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.mapper
@@ -122,4 +124,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     IPage<StaffVO> getStaffPage(@Param("username") String username, @Param("name") String name, @Param("state") Integer state, @Param("roleId") Integer roleId, @Param("page") Page<StaffVO> page, @Param(Constants.WRAPPER) Wrapper<StaffVO> wrapper);
+
+    /**
+     * 获取除管理员以外的在职员工
+     *
+     * @param userId
+     * @return
+     */
+    List<StaffVO> getStaff(Integer userId);
 }

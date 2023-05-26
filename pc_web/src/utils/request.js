@@ -3,8 +3,7 @@ import store from '@/store';
 import { Message } from 'element-ui';
 import router from '@/router';
 import { getTimeStamp } from '@/utils/auth';
-import FileSaver from "file-saver";
-
+import FileSaver from 'file-saver';
 
 const TimeOut = 86400; // 定义超时时间
 
@@ -37,18 +36,17 @@ axios.interceptors.request.use(
 );
 
 // 响应拦截器
-axios.interceptors.response
-  .use
-  (response => {
+axios.interceptors.response.use(
+  response => {
     // console.log(response);
-    if(response.data instanceof Blob) {
+    if (response.data instanceof Blob) {
       //直接拦截blob文件进行下载
-      let patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
-      let contentDisposition = decodeURI(response.headers['content-disposition'])
-      let result = patt.exec(contentDisposition)
-      FileSaver.saveAs(response.data,result[1]);
-      Message.success("正在为你下载...")
-      return Promise.resolve(response)
+      let patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*');
+      let contentDisposition = decodeURI(response.headers['content-disposition']);
+      let result = patt.exec(contentDisposition);
+      FileSaver.saveAs(response.data, result[1]);
+      Message.info('正在获取下载连接...');
+      return Promise.resolve(response);
     }
     if (response.data.code === 200) {
       return Promise.resolve(response);
@@ -79,7 +77,8 @@ axios.interceptors.response
   async error => {
     router.push('/404');
     return Promise.reject(error);
-  })
+  }
+);
 
 // 检查token是否过期
 function CheckIsTimeOut() {
@@ -143,7 +142,7 @@ export function postFile(url, param) {
 }
 export function getExcel(url, param) {
   const config = {
-    responseType:'blob'
+    responseType: 'blob'
   };
   return new Promise((resolve, reject) => {
     axios
@@ -156,4 +155,3 @@ export function getExcel(url, param) {
       });
   });
 }
-

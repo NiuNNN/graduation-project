@@ -60,6 +60,22 @@ export function selectSalaryPay(param, obj) {
  * @param {*} param
  * @returns
  */
-export function generateStaffSalary(param) {
-  return getExcel(`generateStaffSalary`, param);
+export function generateStaffExcel(param) {
+  return getExcel(`generateStaffExcel`, param);
+}
+
+/**
+ * 生成全部员工薪水并导出
+ * @returns
+ */
+export function generateStaffSalary() {
+  return getExcel(`generateStaffSalary`, {});
+}
+
+/**
+ * 判断是否有未处理的员工
+ * @returns
+ */
+export function judgeGenerateStaff() {
+  return get(`judgeGenerateStaff`, {});
 }

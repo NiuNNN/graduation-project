@@ -35,5 +35,17 @@ public interface StaffPayService {
      *
      * @param list
      */
-    void generateStaffSalary(String list);
+    void generateStaffExcel(String list);
+
+    /**
+     * 生成全部员工薪水并导出
+     */
+    void generateStaffSalary() throws ParseException;
+
+    /**
+     * 判断是否有未生成的员工薪水
+     *
+     * @return
+     */
+    CommonResult judgeGenerateStaff();
 }

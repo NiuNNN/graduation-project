@@ -28,10 +28,10 @@ public interface StaffPayMapper extends BaseMapper<StaffPay> {
     /**
      * 存入员工工资信息
      *
-     * @param staffPay
+     * @param staffPayVO
      * @return
      */
-    int insertStaffPay(StaffPay staffPay);
+    int insertStaffPay(StaffPayVO staffPayVO);
 
     /**
      * 按需获取员工薪水信息
@@ -43,4 +43,11 @@ public interface StaffPayMapper extends BaseMapper<StaffPay> {
      * @return
      */
     IPage<StaffPayVO> selectSalaryPay(@Param("time") String time, @Param("name") String name, @Param("page") Page<StaffPayVO> page, @Param(Constants.WRAPPER) Wrapper<StaffPayVO> wrapper);
+
+    /**
+     * 获取今天和昨天的插入数据
+     *
+     * @return
+     */
+    int judgeGenerateStaff();
 }
