@@ -59,4 +59,11 @@
         </if>
         where DATE_FORMAT(date, '%Y-%m') = #{date}
     </update>
+    <select id="getFinancialChart" resultType="niuniu.javaweb.pojo.Financial">
+        select
+            date, IFNULL(out_water, "0") as out_water, IFNULL(out_electric, "0") as out_electric, IFNULL(in_water, "0") as in_water, IFNULL(in_electric, "0") as in_electric, IFNULL(out_mis, "0") as out_mis, IFNULL(out_salary, "0") as out_salary, IFNULL(in_mis, "0") as in_mis, IFNULL(in_rent, "0") as in_rent
+        from financial
+        where YEAR (date)= YEAR (NOW())
+        order by date
+    </select>
 </mapper>

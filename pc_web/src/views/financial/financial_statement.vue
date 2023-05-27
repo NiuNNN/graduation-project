@@ -5,7 +5,7 @@
     </div>
     <div class="table-container">
       <div class="navbar">
-        <span :class="{ current: isCurrent == `all` }" @click="changeCurrent(`all`)">财 务 信 息</span>
+        <span :class="{ current: isCurrent == `AllFinancial` }" @click="changeCurrent(`AllFinancial`)">财 务 信 息</span>
         <span :class="{ current: isCurrent == `HouseFinancial` }" @click="changeCurrent(`HouseFinancial`)">住 房 信 息</span>
         <span :class="{ current: isCurrent == `StaffFinancial` }" @click="changeCurrent(`StaffFinancial`)">员 工 信 息</span>
       </div>
@@ -18,14 +18,16 @@
 <script>
 import HouseFinancial from '@/components/financial/HouseFinancial.vue';
 import StaffFinancial from '@/components/financial/StaffFinancial.vue';
+import AllFinancial from '@/components/financial/AllFinancial.vue';
 export default {
   components: {
     HouseFinancial,
-    StaffFinancial
+    StaffFinancial,
+    AllFinancial
   },
   data() {
     return {
-      isCurrent: 'HouseFinancial'
+      isCurrent: 'AllFinancial'
     };
   },
   methods: {
@@ -55,7 +57,7 @@ export default {
     margin-top: 25px;
     background-color: #fff;
     border-radius: 8px;
-    padding: 25px;
+    padding: 0 25px 25px;
     .navbar {
       height: 70px;
       width: 100%;

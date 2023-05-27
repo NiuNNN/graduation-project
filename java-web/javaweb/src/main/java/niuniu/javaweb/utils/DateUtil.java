@@ -24,10 +24,22 @@ public class DateUtil {
 
     static String DEFAULT_FORMAT_MONTH = "yyyy-MM";
 
+    static String DEFAULT_FORMAT_YEAR = "yyyy";
+
     static String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 
-    static String MONTH[] = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
+    static String MONTH[] = new String[]{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+
+    /**
+     * 返回月
+     *
+     * @param i
+     * @return
+     */
+    public static String getMonth(int i) {
+        return MONTH[i];
+    }
 
     /**
      * 转换当前日期 转换为 yyyy-MM-dd HH:mm:ss
@@ -37,6 +49,16 @@ public class DateUtil {
     public static String getNowTime() {
         DateTime now = new DateTime();
         return now.toString(DEFAULT_FORMAT);
+    }
+
+    /**
+     * 获取当前年
+     *
+     * @return
+     */
+    public static String getYear() {
+        DateTime now = new DateTime();
+        return now.toString(DEFAULT_FORMAT_YEAR);
     }
 
     /**
@@ -108,6 +130,19 @@ public class DateUtil {
     public static boolean compareMonth(String baseMonth, String nowMonth) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
         return getYearMonth(df.parse(baseMonth)) >= getYearMonth(df.parse(nowMonth)) ? true : false;
+    }
+
+    /**
+     * 比较是否相同
+     *
+     * @param baseMonth
+     * @param nowMonth
+     * @return
+     * @throws ParseException
+     */
+    public static boolean compareMonth1(String baseMonth, String nowMonth) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        return getYearMonth(df.parse(baseMonth)) == getYearMonth(df.parse(nowMonth)) ? true : false;
     }
 
     /**

@@ -126,5 +126,8 @@ public class Financial implements Serializable {
     private String uploadTime;
 
     @ExcelIgnore
+    private String remark;
+
+    @ExcelIgnore
     private Integer state;
 }

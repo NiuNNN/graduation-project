@@ -3,6 +3,8 @@ package niuniu.javaweb.service;
 import niuniu.javaweb.pojo.Financial;
 import niuniu.javaweb.utils.result.CommonResult;
 
+import java.text.ParseException;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.service
@@ -24,4 +26,11 @@ public interface FinancialService {
      * @return
      */
     CommonResult updateHouseFinancial(Financial financial);
+
+    /**
+     * 获取财务图表信息
+     *
+     * @return
+     */
+    CommonResult getFinancialChart() throws ParseException;
 }

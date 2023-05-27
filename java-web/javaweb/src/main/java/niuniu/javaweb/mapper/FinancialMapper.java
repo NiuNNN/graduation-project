@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import niuniu.javaweb.pojo.Financial;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.mapper
@@ -34,4 +36,11 @@ public interface FinancialMapper extends BaseMapper<Financial> {
      * @return
      */
     int updateFinancial(Financial financial);
+
+    /**
+     * 获取当年财务信息
+     *
+     * @return
+     */
+    List<Financial> getFinancialChart();
 }
