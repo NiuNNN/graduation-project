@@ -20,12 +20,12 @@
             <el-table-column align="right">
               <template slot="header" slot-scope="scope">
                 <el-date-picker size="mini" v-model="month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
-                <el-button size="mini" type="primary" style="margin-left: 5px" icon="el-icon-search"></el-button>
-                <el-button size="mini" type="primary" style="margin-left: 5px" icon="el-icon-download"></el-button>
+                <el-button size="mini" type="primary" style="margin-left: 5px" icon="el-icon-search" @click="search"></el-button>
+                <el-button size="mini" type="primary" style="margin-left: 5px" icon="el-icon-download" @click="download(`all`)"></el-button>
               </template>
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查 看</el-button>
-                <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">导 出</el-button>
+                <el-button type="primary" size="mini" @click="download(`single`, scope.row)">导 出</el-button>
               </template>
             </el-table-column>
             <template #empty>
@@ -40,7 +40,8 @@
 
 <script>
 import FinancialChart from '../echart/FinancialChart.vue';
-import { getAllFinancial } from '@/api/financial';
+import { getAllFinancial, getFinancialExcel } from '@/api/financial';
+import { validatePassword } from '@/api/user';
 export default {
   components: {
     FinancialChart
@@ -61,15 +62,72 @@ export default {
     };
   },
   methods: {
+    //改变复选框
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+    //获取全部财务信息
     async getAllFinancial() {
       try {
-        const { data } = await getAllFinancial({ month: this.month });
+        const { data } = await getAllFinancial({ date: this.month });
         this.tableData = data;
       } catch (error) {
         console.log(error);
+      }
+    },
+    //查询
+    async search() {
+      await this.getAllFinancial();
+      this.month = '';
+    },
+    //导出
+    download(type, row) {
+      if (type == `all`) {
+        if (this.multipleSelection.length > 0) {
+          this.$prompt('请输入密码', '导出账单', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputType: 'password',
+            inputPattern: /^\w{5,12}$/,
+            inputErrorMessage: '密码格式不正确'
+          }).then(async ({ value }) => {
+            try {
+              // console.log(value);
+              await validatePassword({
+                password: value,
+                username: this.$store.getters.username
+              });
+              await getFinancialExcel({ list: JSON.stringify(this.multipleSelection) });
+            } catch (error) {
+              console.log(error);
+            } finally {
+              this.multipleSelection = [];
+            }
+          });
+        } else {
+          this.$message.info('请勾选后导出账单...');
+        }
+      } else if (type == `single`) {
+        this.$prompt('请输入密码', '导出账单', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputType: 'password',
+          inputPattern: /^\w{5,12}$/,
+          inputErrorMessage: '密码格式不正确'
+        }).then(async ({ value }) => {
+          try {
+            // console.log(value);
+            await validatePassword({
+              password: value,
+              username: this.$store.getters.username
+            });
+            let arr = [];
+            arr.push(row);
+            await getFinancialExcel({ list: JSON.stringify(arr) });
+          } catch (error) {
+            console.log(error);
+          }
+        });
       }
     }
   }

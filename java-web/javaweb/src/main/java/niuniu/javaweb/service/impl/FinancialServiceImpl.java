@@ -1,11 +1,13 @@
 package niuniu.javaweb.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.BasicMapper;
 import niuniu.javaweb.mapper.FinancialMapper;
 import niuniu.javaweb.pojo.Financial;
 import niuniu.javaweb.service.FinancialService;
 import niuniu.javaweb.utils.DateUtil;
+import niuniu.javaweb.utils.excel.ExcelUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -165,5 +167,16 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
     @Override
     public CommonResult getAllFinancial(String date) {
         return CommonResult.success(financialMapper.getAllFinancial(date));
+    }
+
+    /**
+     * 导出excel表
+     *
+     * @param list
+     */
+    @Override
+    public void getFinancialExcel(String list) {
+        List<Financial> financials = JSON.parseArray(list, Financial.class);
+        ExcelUtil.excelLockExport(Financial.class, "财务账单", financials, "财务账单");
     }
 }

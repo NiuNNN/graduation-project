@@ -160,13 +160,25 @@ export default {
           this.$message.info('请勾选后导出账单...');
         }
       } else if (style == `single`) {
-        try {
-          let arr = [];
-          arr.push(row);
-          await generateStaffExcel({ list: JSON.stringify(arr) });
-        } catch (error) {
-          console.log(error);
-        }
+        this.$prompt('请输入密码', '导出账单', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputType: 'password',
+          inputPattern: /^\w{5,12}$/,
+          inputErrorMessage: '密码格式不正确'
+        }).then(async ({ value }) => {
+          try {
+            await validatePassword({
+              password: value,
+              username: this.$store.getters.username
+            });
+            let arr = [];
+            arr.push(row);
+            await generateStaffExcel({ list: JSON.stringify(arr) });
+          } catch (error) {
+            console.log(error);
+          }
+        });
       }
     },
     //生成全部员工薪水并导出

@@ -41,4 +41,12 @@ public interface FinancialService {
      * @return
      */
     CommonResult getAllFinancial(String date);
+
+
+    /**
+     * 导出excel表
+     *
+     * @param list
+     */
+    void getFinancialExcel(String list);
 }

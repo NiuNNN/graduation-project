@@ -4,6 +4,7 @@ import niuniu.javaweb.service.FinancialService;
 import niuniu.javaweb.utils.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
@@ -37,5 +38,15 @@ public class FinancialController {
     @GetMapping("getAllFinancial")
     public CommonResult getAllFinancial(String date) {
         return financialService.getAllFinancial(date);
+    }
+
+    /**
+     * 导出财务execl
+     *
+     * @param list
+     */
+    @PostMapping("getFinancialExcel")
+    public void getFinancialExcel(String list) {
+        financialService.getFinancialExcel(list);
     }
 }

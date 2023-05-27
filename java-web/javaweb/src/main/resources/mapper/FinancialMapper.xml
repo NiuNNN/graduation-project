@@ -67,8 +67,24 @@
         order by date
     </select>
     <select id="getAllFinancial" resultType="niuniu.javaweb.pojo.Financial">
-        select financial_id,DATE_FORMAT(date,'%Y-%m') as
-        date,out_water,out_electric,in_water,in_electric,pro_water,pro_electric,out_salary,out_mis,in_mis,in_rent,advance_total,real_total,final_total,upload_time,remark,state
+        select financial_id,
+        DATE_FORMAT(date,'%Y-%m') as date,
+        IFNULL(out_water, "待处理") as out_water,
+        IFNULL(out_electric, "待处理") as out_electric,
+        IFNULL(in_water, "待处理") as in_water,
+        IFNULL(in_electric, "待处理") as in_electric,
+        IFNULL(pro_water, "待处理") as pro_water,
+        IFNULL(pro_electric, "待处理") as pro_electric,
+        IFNULL(out_salary, "待处理") as out_salary,
+        IFNULL(out_mis, "待处理") as out_mis,
+        IFNULL(in_mis, "待处理") as in_mis,
+        IFNULL(in_rent, "待处理") as in_rent,
+        IFNULL(advance_total, "待处理") as advance_total,
+        IFNULL(real_total, "待处理") as real_total,
+        IFNULL(final_total, "待处理") as final_total,
+        upload_time,
+        remark,
+        state
         from financial
         <if test="date !=null and date !=''">
             where DATE_FORMAT(date

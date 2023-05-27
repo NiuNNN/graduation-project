@@ -16,3 +16,12 @@ export function getFinancialChart() {
 export function getAllFinancial(param) {
   return get(`getAllFinancial`, param);
 }
+
+/**
+ * 按需导出
+ * @param {*} param
+ * @returns
+ */
+export function getFinancialExcel(param) {
+  return getExcel(`getFinancialExcel`, param);
+}
