@@ -124,6 +124,27 @@
           and b.house_id = c.house_id
           and DATE_FORMAT(date, '%Y-%m') = #{time}
     </select>
+    <select id="getCostVOByCostId" resultType="niuniu.javaweb.vo.CostVo">
+        select a.cost_id,
+               a.rent_id,
+               a.date,
+               a.num_water,
+               a.cost_water,
+               a.num_electric,
+               a.cost_electric,
+               a.mis,
+               a.total,
+               a.upload_electric,
+               a.upload_water,
+               a.state,
+               c.house_name
+        from cost as a,
+             rent as b,
+             house as c
+        where a.rent_id = b.rent_id
+          and b.house_id = c.house_id
+          and a.cost_id = #{costId}
+    </select>
     <select id="getCostByRentId" resultType="niuniu.javaweb.pojo.Cost">
         select *
         from cost

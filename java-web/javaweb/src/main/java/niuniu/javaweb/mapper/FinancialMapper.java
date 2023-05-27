@@ -43,4 +43,12 @@ public interface FinancialMapper extends BaseMapper<Financial> {
      * @return
      */
     List<Financial> getFinancialChart();
+
+    /**
+     * 获取全部财务信息
+     *
+     * @param date
+     * @return
+     */
+    List<Financial> getAllFinancial(String date);
 }

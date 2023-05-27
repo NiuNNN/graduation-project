@@ -27,4 +27,15 @@ public class FinancialController {
     public CommonResult getFinancialChart() throws ParseException {
         return financialService.getFinancialChart();
     }
+
+    /**
+     * 获取全部财务信息
+     *
+     * @param date
+     * @return
+     */
+    @GetMapping("getAllFinancial")
+    public CommonResult getAllFinancial(String date) {
+        return financialService.getAllFinancial(date);
+    }
 }

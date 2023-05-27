@@ -517,7 +517,7 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
      */
     @Override
     public void generatePersonCost(CostVo costVo) throws ParseException {
-//        System.out.println(costVo);
+        System.out.println(costVo);
         List<CostVo> costVos = new ArrayList<>();
         if (costVo.getState() == 0) {
 
@@ -537,7 +537,9 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
                 return null;
             });
         } else {
-            costVos.add(costVo);
+            CostVo costVOByCostId = costMapper.getCostVOByCostId(costVo);
+            costVOByCostId.setHousePrice(houseMapper.getHousePriceByCostId(costVo.getCostId()).replaceAll(",", ""));
+            costVos.add(costVOByCostId);
         }
 
         /**
@@ -736,7 +738,13 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
     @Override
     public void getAllCostExcel(String list) {
         List<CostVo> costVos = JSON.parseArray(list, CostVo.class);
+        List<CostVo> costVoList = new ArrayList<>();
 //        System.out.println(costVos.size());
-        ExcelUtil.excelLockExport(CostVo.class, "租赁账单", costVos, "租赁账单");
+        for (CostVo costVo : costVos) {
+            CostVo costVOByCostId = costMapper.getCostVOByCostId(costVo);
+            costVOByCostId.setHousePrice(houseMapper.getHousePriceByCostId(costVo.getCostId()).replaceAll(",", ""));
+            costVoList.add(costVOByCostId);
+        }
+        ExcelUtil.excelLockExport(CostVo.class, "租赁账单", costVoList, "租赁账单");
     }
 }

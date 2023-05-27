@@ -33,4 +33,12 @@ public interface FinancialService {
      * @return
      */
     CommonResult getFinancialChart() throws ParseException;
+
+    /**
+     * 获取全部财务信息
+     *
+     * @param date
+     * @return
+     */
+    CommonResult getAllFinancial(String date);
 }

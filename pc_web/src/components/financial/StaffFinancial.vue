@@ -42,7 +42,7 @@
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" :disabled="isEdit" @click="generateStaffExcel(`single`, scope.row)">报 表</el-button>
+              <el-button type="primary" size="small" :disabled="isEdit" @click="generateStaffExcel(`single`, scope.row)">导 出</el-button>
             </template>
           </el-table-column>
           <template #empty>

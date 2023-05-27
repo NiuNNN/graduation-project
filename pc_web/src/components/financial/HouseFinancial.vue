@@ -20,7 +20,7 @@
       </div>
       <div class="table">
         <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange" :row-key="getRowKey">
-          <el-table-column type="selection" width="55" :reserve-selection="true"> </el-table-column>
+          <el-table-column type="selection" width="55" :selectable="selectInit"> </el-table-column>
           <el-table-column prop="date" label="时间" sortable> </el-table-column>
           <el-table-column prop="houseName" label="房号"> </el-table-column>
           <el-table-column prop="numElectric" label="用电量(度)"> </el-table-column>
@@ -39,7 +39,8 @@
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">报 表</el-button>
+              <el-button v-if="scope.row.state == 1" type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">导 出</el-button>
+              <el-button v-else type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">报 表</el-button>
               <el-button type="danger" size="small" :disabled="isDel || scope.row.state != `0`" @click="deleteCost(scope.row)">删 除</el-button>
             </template>
           </el-table-column>
@@ -104,6 +105,15 @@ export default {
     this.getAll();
   },
   methods: {
+    //实现部分禁止一键导出
+    selectInit(row, index) {
+      if (row.state == 0) {
+        return false; //不可勾选
+      } else {
+        return true; //可勾选
+      }
+    },
+    //防止分页丢失选择
     getRowKey(row) {
       return row.costId;
     },
@@ -202,7 +212,7 @@ export default {
                   password: value,
                   username: this.$store.getters.username
                 });
-                // console.log(row);
+                console.log(row);
                 await generatePersonCost(row);
               } catch (error) {
                 console.log(error);

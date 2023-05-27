@@ -155,4 +155,15 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
  */
         return CommonResult.success(strings);
     }
+
+    /**
+     * 获取全部财务信息
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public CommonResult getAllFinancial(String date) {
+        return CommonResult.success(financialMapper.getAllFinancial(date));
+    }
 }

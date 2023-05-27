@@ -30,7 +30,7 @@ export default {
       // 基于准备好的dom，初始化echarts实例  这个和上面的main对应
       // console.log(this.$echarts);
       await this.getFinancialChart();
-      console.log(this.source);
+      // console.log(this.source);
       let myChart = this.$echarts.init(document.getElementById('chart-main'));
       // 指定图表的配置项和数据
       let option = {

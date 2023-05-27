@@ -10,11 +10,18 @@
         <div class="table">
           <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" height="615" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"> </el-table-column>
-            <el-table-column prop="date" label="时间" sortable width="120"> </el-table-column>
-            <el-table-column prop="state" label="状态" width="80"> </el-table-column>
-            <el-table-column>
+            <el-table-column prop="date" label="时间" sortable width="80"> </el-table-column>
+            <el-table-column label="状态" width="75">
+              <template slot-scope="scope">
+                <span v-if="scope.row.state == 0">未审批</span>
+                <span v-else>已审批</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="right">
               <template slot="header" slot-scope="scope">
                 <el-date-picker size="mini" v-model="month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
+                <el-button size="mini" type="primary" style="margin-left: 5px" icon="el-icon-search"></el-button>
+                <el-button size="mini" type="primary" style="margin-left: 5px" icon="el-icon-download"></el-button>
               </template>
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查 看</el-button>
@@ -33,9 +40,13 @@
 
 <script>
 import FinancialChart from '../echart/FinancialChart.vue';
+import { getAllFinancial } from '@/api/financial';
 export default {
   components: {
     FinancialChart
+  },
+  async created() {
+    await this.getAllFinancial();
   },
   data() {
     return {
@@ -52,6 +63,14 @@ export default {
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    async getAllFinancial() {
+      try {
+        const { data } = await getAllFinancial({ month: this.month });
+        this.tableData = data;
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
@@ -68,7 +87,7 @@ export default {
     padding: 0 25px;
     display: flex;
     .left {
-      width: 60%;
+      width: 55%;
       .bg {
         width: 98%;
         margin-bottom: 15px;
@@ -77,7 +96,7 @@ export default {
       }
     }
     .right {
-      width: 40%;
+      width: 45%;
       .table {
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       }

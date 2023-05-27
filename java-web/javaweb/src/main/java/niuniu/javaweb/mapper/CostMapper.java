@@ -142,4 +142,12 @@ public interface CostMapper extends BaseMapper<Cost> {
      * @return
      */
     List<Cost> getUserChart(Integer userId);
+
+    /**
+     * 根据id获取用户使用信息
+     *
+     * @param costVo
+     * @return
+     */
+    CostVo getCostVOByCostId(CostVo costVo);
 }
