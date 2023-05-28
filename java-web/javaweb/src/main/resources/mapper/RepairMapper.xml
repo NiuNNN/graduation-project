@@ -74,4 +74,10 @@
             state   = 1
         where repair_id = #{repairId}
     </update>
+    <select id="selectRepairPrice" resultType="niuniu.javaweb.pojo.Repair">
+        select *
+        from repair
+        where DATE_FORMAT(fix, '%Y-%m') = #{time}
+          and price > 0
+    </select>
 </mapper>

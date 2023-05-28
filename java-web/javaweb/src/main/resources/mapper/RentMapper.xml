@@ -34,4 +34,9 @@
           and a.state = 1
           and b.house_name = #{houseName}
     </select>
+    <select id="selectRentCount" resultType="int">
+        select count(*)
+        from rent
+        where state = 1
+    </select>
 </mapper>

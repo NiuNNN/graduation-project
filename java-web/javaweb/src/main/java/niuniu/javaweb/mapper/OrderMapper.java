@@ -128,4 +128,20 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @return
      */
     boolean checkOrder(Integer rentId, String time);
+
+    /**
+     * 获取退房押金
+     *
+     * @param time
+     * @return
+     */
+    List<Order> selectCheckOut(String time);
+
+    /**
+     * 判断是否有未缴费的用户
+     *
+     * @param time
+     * @return
+     */
+    int selectOrderCount(String time);
 }

@@ -94,9 +94,8 @@
     <select id="judgeHasNum" resultType="int">
         select count(*)
         from cost
-        where DATE_FORMAT(date, '%Y-%m') = '2023-04'
+        where DATE_FORMAT(date, '%Y-%m') = #{time}
           and (ISNULL(num_water) or ISNULL(num_electric))
-
     </select>
     <select id="judgeHasCost" resultType="int">
         select count(*)

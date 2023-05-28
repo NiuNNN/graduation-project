@@ -38,49 +38,49 @@ public class Financial implements Serializable {
     /**
      * 年月
      */
-    @ExcelProperty("月份")
+    @ExcelProperty("年月")
     private String date;
 
     /**
      * 支出水费
      */
-    @ExcelProperty("支出总水费")
+    @ExcelProperty("水费总支出")
     private String outWater;
 
     /**
      * 支出电费
      */
-    @ExcelProperty("支出总电费")
+    @ExcelProperty("电费总支出")
     private String outElectric;
 
     /**
      * 收入水费
      */
-    @ExcelProperty("收入总水费")
+    @ExcelProperty("水费总收入")
     private String inWater;
 
     /**
      * 收入电费
      */
-    @ExcelProperty("收入总电费")
+    @ExcelProperty("电费总收入")
     private String inElectric;
 
     /**
      * 盈利水费
      */
-    @ExcelProperty("盈利总水费")
+    @ExcelProperty("水费总盈利")
     private String proWater;
 
     /**
      * 盈利电费
      */
-    @ExcelProperty("盈利总电费")
+    @ExcelProperty("电费总盈利")
     private String proElectric;
 
     /**
      * 支出人工
      */
-    @ExcelProperty("人工总支出")
+    @ExcelProperty("薪水总支出")
     private String outSalary;
 
     /**

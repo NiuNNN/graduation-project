@@ -26,10 +26,22 @@
                 and b.name = #{name}
             </if>
         </where>
+        ${ew.customSqlSegment}
     </select>
     <select id="judgeGenerateStaff" resultType="int">
         select count(*)
         from staff_pay
         where date (time) = curdate()
+    </select>
+    <select id="selectSalaryPayByTime" resultType="niuniu.javaweb.vo.StaffPayVO">
+        select a.*, b.name, b.username, c.role_name
+        from staff_pay as a,
+             user as b,
+             role as c
+        where b.user_id = a.user_id
+          and b.role_id > 1
+          and b.role_id = c.role_id
+          and DATE_FORMAT(time
+                  , '%Y-%m') = #{time}
     </select>
 </mapper>

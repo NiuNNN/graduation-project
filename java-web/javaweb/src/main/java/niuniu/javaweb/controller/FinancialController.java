@@ -49,4 +49,39 @@ public class FinancialController {
     public void getFinancialExcel(String list) {
         financialService.getFinancialExcel(list);
     }
+
+    /**
+     * 获取财务详情信息
+     *
+     * @param date
+     * @return
+     */
+    @GetMapping("getFinancialDetail")
+    public CommonResult getFinancialDetail(String date) {
+        return financialService.getFinancialDetail(date);
+    }
+
+    /**
+     * 判断是否给予生成报表
+     *
+     * @param date
+     * @return
+     */
+    @GetMapping("judgeGenerateFinancial")
+    public CommonResult judgeGenerateFinancial(String date) {
+        return financialService.judgeGenerateFinancial(date);
+    }
+
+    /**
+     * 生成财务信息
+     *
+     * @param date
+     * @param water
+     * @param electric
+     * @return
+     */
+    @PostMapping("generateFinancial")
+    public CommonResult generateFinancial(String date, String water, String electric) {
+        return financialService.generateFinancial(date, water, electric);
+    }
 }

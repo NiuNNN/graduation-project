@@ -14,8 +14,8 @@
           </el-form>
         </div>
         <div style="margin-right: 35px">
-          <el-button style="height: 35px; line-height: 5px" @click="dialogVisible = true">生成账单</el-button>
-          <el-button style="height: 35px; line-height: 5px" @click="getAllCostExcel">一键导出</el-button>
+          <el-button style="height: 35px; line-height: 5px" @click="dialogVisible = true" :disabled="isGet">生成账单</el-button>
+          <el-button style="height: 35px; line-height: 5px" @click="getAllCostExcel" :disabled="isGet">一键导出</el-button>
         </div>
       </div>
       <div class="table">
@@ -39,7 +39,7 @@
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button v-if="scope.row.state == 1" type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">导 出</el-button>
+              <el-button v-if="scope.row.state == 1" type="primary" size="small" :disabled="isGet" @click="generateRent(scope.row)">导 出</el-button>
               <el-button v-else type="primary" size="small" :disabled="isEdit" @click="generateRent(scope.row)">报 表</el-button>
               <el-button type="danger" size="small" :disabled="isDel || scope.row.state != `0`" @click="deleteCost(scope.row)">删 除</el-button>
             </template>

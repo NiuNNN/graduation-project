@@ -49,4 +49,30 @@ public interface FinancialService {
      * @param list
      */
     void getFinancialExcel(String list);
+
+    /**
+     * 返回财务信息
+     *
+     * @param date
+     * @return
+     */
+    CommonResult getFinancialDetail(String date);
+
+    /**
+     * 判断是否给予生成报表
+     *
+     * @param date
+     * @return
+     */
+    CommonResult judgeGenerateFinancial(String date);
+
+    /**
+     * 生成财务信息
+     *
+     * @param date
+     * @param water
+     * @param electric
+     * @return
+     */
+    CommonResult generateFinancial(String date, String water, String electric);
 }

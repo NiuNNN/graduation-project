@@ -2,19 +2,25 @@ package niuniu.javaweb.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import niuniu.javaweb.mapper.BasicMapper;
-import niuniu.javaweb.mapper.FinancialMapper;
+import niuniu.javaweb.mapper.*;
 import niuniu.javaweb.pojo.Financial;
+import niuniu.javaweb.pojo.Order;
+import niuniu.javaweb.pojo.Repair;
 import niuniu.javaweb.service.FinancialService;
 import niuniu.javaweb.utils.DateUtil;
 import niuniu.javaweb.utils.excel.ExcelUtil;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.CostVo;
+import niuniu.javaweb.vo.StaffPayVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,6 +35,24 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
 
     @Autowired
     BasicMapper basicMapper;
+
+    @Autowired
+    CostMapper costMapper;
+
+    @Autowired
+    HouseMapper houseMapper;
+
+    @Autowired
+    StaffPayMapper staffPayMapper;
+
+    @Autowired
+    RepairMapper repairMapper;
+
+    @Autowired
+    OrderMapper orderMapper;
+
+    @Autowired
+    RentMapper rentMapper;
 
     /**
      * 判断是否有该月信息
@@ -178,5 +202,85 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
     public void getFinancialExcel(String list) {
         List<Financial> financials = JSON.parseArray(list, Financial.class);
         ExcelUtil.excelLockExport(Financial.class, "财务账单", financials, "财务账单");
+    }
+
+    /**
+     * 返回财务信息
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public CommonResult getFinancialDetail(String date) {
+        //房间收入
+        List<CostVo> costVos = costMapper.getCostVOByTime(date);
+        List<CostVo> costVoList = new ArrayList<>();
+        HashMap<String, List<Object>> hashMap = new HashMap<>();
+//        System.out.println(costVos.size());
+        for (CostVo costVo : costVos) {
+            CostVo costVOByCostId = costMapper.getCostVOByCostId(costVo);
+            costVOByCostId.setHousePrice(houseMapper.getHousePriceByCostId(costVo.getCostId()).replaceAll(",", ""));
+            costVoList.add(costVOByCostId);
+        }
+        //薪水支出
+        List<StaffPayVO> staffPays = staffPayMapper.selectSalaryPayByTime(date);
+        //其他支出
+        //维修支出
+        List<Repair> repairList = repairMapper.selectRepairPrice(date);
+        //退款押金
+        List<Order> orders = orderMapper.selectCheckOut(date);
+        List<Order> orderList = new ArrayList<>();
+        if (repairList.size() > 0) {
+            Order order = new Order();
+            for (Repair repair : repairList) {
+                order.setType("维修");
+                order.setTotal(repair.getPrice());
+                order.setTime(repair.getFix());
+            }
+            orderList.add(order);
+        }
+        if (orders.size() > 0) {
+            for (Order order : orders) {
+                orderList.add(order);
+            }
+        }
+        hashMap.put("houseTable", Collections.singletonList(costVoList));
+        hashMap.put("salaryTable", Collections.singletonList(staffPays));
+        hashMap.put("misTable", Collections.singletonList(orderList));
+        return CommonResult.success(hashMap);
+    }
+
+    /**
+     * 判断是否给予生成报表
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public CommonResult judgeGenerateFinancial(String date) {
+        //先判断是否有未录入的信息
+        if (costMapper.judgeHasCost(date) < rentMapper.selectRentCount())
+            return CommonResult.failed("存在未录入的房间信息，请上传信息后报表...");
+            //判断是否有未缴费的住户
+        else if (costMapper.judgeHasNum(date) > 0) {
+            return CommonResult.failed("存在未处理的房间信息，请完善信息后报表...");
+        } else if (orderMapper.selectOrderCount(date) > 0) return CommonResult.failed("存在未缴费用户，请督促后报表...");
+        else {
+            return CommonResult.success();
+        }
+    }
+
+    /**
+     * 生成财务信息
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public CommonResult generateFinancial(String date, String water, String electric) {
+        //获取薪水信息
+        //获取退回押金信息
+        //获取维修信息
+        return null;
     }
 }

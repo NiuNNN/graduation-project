@@ -117,4 +117,17 @@
           and type = "租金"
           and (DATE_FORMAT(time, '%Y%m') = DATE_FORMAT(#{time}, '%Y%m'))
     </select>
+    <select id="selectCheckOut" resultType="niuniu.javaweb.pojo.Order">
+        select *
+        from order_pay
+        where DATE_FORMAT(pay_time, '%Y-%m') = #{time}
+          and type = "退款"
+    </select>
+    <select id="selectOrderCount" resultType="int">
+        select count(*)
+        from order_pay
+        where DATE_FORMAT(time, '%Y-%m') = "2023-05"
+          and type = "租金"
+          and state = 0
+    </select>
 </mapper>

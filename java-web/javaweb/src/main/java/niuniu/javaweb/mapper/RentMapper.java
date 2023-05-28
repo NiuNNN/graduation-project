@@ -44,5 +44,18 @@ public interface RentMapper extends BaseMapper<Rent> {
      */
     int logout(Integer rentId);
 
+    /**
+     * 获取id通过房号
+     *
+     * @param houseName
+     * @return
+     */
     Integer getRentIdByHouseName(String houseName);
+
+    /**
+     * 获取住户数量
+     *
+     * @return
+     */
+    int selectRentCount();
 }

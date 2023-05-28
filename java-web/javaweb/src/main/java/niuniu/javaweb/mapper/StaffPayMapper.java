@@ -10,6 +10,8 @@ import niuniu.javaweb.vo.StaffPayVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.mapper
@@ -50,4 +52,12 @@ public interface StaffPayMapper extends BaseMapper<StaffPay> {
      * @return
      */
     int judgeGenerateStaff();
+
+    /**
+     * 获取该月薪水信息
+     *
+     * @param time
+     * @return
+     */
+    List<StaffPayVO> selectSalaryPayByTime(String time);
 }
