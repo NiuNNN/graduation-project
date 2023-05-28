@@ -43,3 +43,12 @@ export function getFinancialDetail(param) {
 export function judgeGenerateFinancial(param) {
   return get(`judgeGenerateFinancial`, param);
 }
+
+/**
+ * 生成财务信息
+ * @param {*} param
+ * @returns
+ */
+export function generateFinancial(param) {
+  return post(`generateFinancial`, param);
+}

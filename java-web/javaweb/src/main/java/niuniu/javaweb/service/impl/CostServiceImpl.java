@@ -10,7 +10,6 @@ import niuniu.javaweb.exception.ParamErrorException;
 import niuniu.javaweb.mapper.*;
 import niuniu.javaweb.pojo.Basic;
 import niuniu.javaweb.pojo.Cost;
-import niuniu.javaweb.pojo.Financial;
 import niuniu.javaweb.pojo.Order;
 import niuniu.javaweb.service.BasicService;
 import niuniu.javaweb.service.CostService;
@@ -633,7 +632,7 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
              * 先判断是否可以插入 插入financial表
              */
             if (financialMapper.judgeFinancialByDate(last.getDate(), "0") == 0) {
-                Financial financial = new Financial();
+                FinancialVO financial = new FinancialVO();
                 financial.setDate(last.getDate());
                 financial.setInWater(last.getCostWater());
                 financial.setInElectric(last.getCostElectric());

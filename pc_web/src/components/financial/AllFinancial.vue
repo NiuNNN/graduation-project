@@ -3,7 +3,7 @@
     <div class="table-container">
       <div class="left">
         <div class="bg">
-          <financial-chart></financial-chart>
+          <financial-chart :key="datekey"></financial-chart>
         </div>
       </div>
       <div class="right">
@@ -11,12 +11,7 @@
           <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" height="615" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column prop="date" label="时间" sortable width="80"> </el-table-column>
-            <el-table-column label="状态" width="75">
-              <template slot-scope="scope">
-                <span v-if="scope.row.state == 0">未审批</span>
-                <span v-else>已审批</span>
-              </template>
-            </el-table-column>
+            <el-table-column prop="status" label="状态" width="75"> </el-table-column>
             <el-table-column align="right">
               <template slot="header" slot-scope="scope">
                 <el-date-picker size="mini" v-model="month" type="month" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM"> </el-date-picker>
@@ -41,12 +36,12 @@
             <div class="main">
               <el-descriptions title=" 审核信息" :column="3" size="mini">
                 <template slot="extra">
-                  <el-button type="primary" size="small" @click="judgeGenerateFinancial">操作</el-button>
+                  <el-button type="primary" size="small" @click="judgeGenerateFinancial" :disabled="this.financial.state == 1">操作</el-button>
                 </template>
                 <el-descriptions-item label="年月">{{ financial.date }}</el-descriptions-item>
-                <el-descriptions-item label="审核状态">{{ financial.state }}</el-descriptions-item>
-                <el-descriptions-item label="审核人">{{}}</el-descriptions-item>
-                <el-descriptions-item label="审核时间">{{}}</el-descriptions-item>
+                <el-descriptions-item label="审核状态">{{ financial.status }}</el-descriptions-item>
+                <el-descriptions-item label="审核人">{{ financial.name }}</el-descriptions-item>
+                <el-descriptions-item label="审核时间">{{ financial.time }}</el-descriptions-item>
                 <el-descriptions-item label="水费总支出">{{ financial.outWater }}</el-descriptions-item>
                 <el-descriptions-item label="电费总支出">{{ financial.outElectric }}</el-descriptions-item>
                 <el-descriptions-item label="薪水总支出">{{ financial.outSalary }}</el-descriptions-item>
@@ -168,7 +163,7 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="genreateFinancial">确 定</el-button>
+            <el-button type="primary" @click="generateFinancial">确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -179,7 +174,7 @@
 <script>
 import * as permission from '@/utils/permission';
 import FinancialChart from '../echart/FinancialChart.vue';
-import { getAllFinancial, getFinancialExcel, getFinancialDetail, judgeGenerateFinancial } from '@/api/financial';
+import { getAllFinancial, getFinancialExcel, getFinancialDetail, judgeGenerateFinancial, generateFinancial } from '@/api/financial';
 import { validatePassword } from '@/api/user';
 import { validNumber } from '@/utils/validate';
 export default {
@@ -199,6 +194,7 @@ export default {
           return time.getTime() > Date.now();
         }
       },
+      datekey: Date.now(),
       dialogFormVisible: false,
       month: '',
       tableData: [],
@@ -252,7 +248,6 @@ export default {
           });
           await judgeGenerateFinancial({ date: this.financial.date });
           this.dialogFormVisible = true;
-          // this.$message.success(`${this.title} 财务信息生成成功...`);
         } catch (error) {
           console.log(error);
         } finally {
@@ -342,6 +337,28 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    //生成财务信息
+    generateFinancial() {
+      this.$confirm('请确认输入的标准水电金额是否正确?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          try {
+            await generateFinancial({ userId: this.$store.getters.userId, date: this.financial.date, ...this.form });
+            this.$message.success(`${this.title} 财务信息生成成功...`);
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.getAllFinancial();
+            this.datekey = Date.now();
+            this.dialogFormVisible = false;
+            this.drawer = false;
+          }
+        })
+        .catch(() => {});
     }
   },
   computed: {

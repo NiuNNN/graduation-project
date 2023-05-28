@@ -2,6 +2,7 @@ package niuniu.javaweb.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import niuniu.javaweb.pojo.Financial;
+import niuniu.javaweb.vo.FinancialVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -32,10 +33,10 @@ public interface FinancialMapper extends BaseMapper<Financial> {
     /**
      * 更新财务数据
      *
-     * @param financial
+     * @param financialVO
      * @return
      */
-    int updateFinancial(Financial financial);
+    int updateFinancial(FinancialVO financialVO);
 
     /**
      * 获取当年财务信息
@@ -50,5 +51,6 @@ public interface FinancialMapper extends BaseMapper<Financial> {
      * @param date
      * @return
      */
-    List<Financial> getAllFinancial(String date);
+    List<FinancialVO> getAllFinancial(String date);
+
 }

@@ -109,12 +109,12 @@ export default {
               focus: 'self'
             },
             label: {
-              formatter: '{b}: {@1} ({d}%)'
+              formatter: '{b}: {@4} ({d}%)'
             },
             encode: {
               itemName: 'Financial',
-              value: '1',
-              tooltip: '1'
+              value: '4',
+              tooltip: '4'
             }
           }
         ]

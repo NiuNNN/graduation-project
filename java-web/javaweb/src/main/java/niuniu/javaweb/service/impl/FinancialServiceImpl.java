@@ -3,14 +3,13 @@ package niuniu.javaweb.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import niuniu.javaweb.mapper.*;
-import niuniu.javaweb.pojo.Financial;
-import niuniu.javaweb.pojo.Order;
-import niuniu.javaweb.pojo.Repair;
+import niuniu.javaweb.pojo.*;
 import niuniu.javaweb.service.FinancialService;
 import niuniu.javaweb.utils.DateUtil;
 import niuniu.javaweb.utils.excel.ExcelUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.vo.CostVo;
+import niuniu.javaweb.vo.FinancialVO;
 import niuniu.javaweb.vo.StaffPayVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -54,6 +53,9 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
     @Autowired
     RentMapper rentMapper;
 
+    @Autowired
+    UserMapper userMapper;
+
     /**
      * 判断是否有该月信息
      *
@@ -74,8 +76,8 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "getFinancialChart", beforeInvocation = true)
-    public CommonResult updateHouseFinancial(Financial financial) {
+    @CacheEvict(cacheNames = "getFinancialChart", allEntries = true)
+    public CommonResult updateHouseFinancial(FinancialVO financial) {
         System.out.println("进入到updateHouseFinancial");
         CommonResult commonResult = judgeFinancialByDate(financial.getDate());
         System.out.println("【commonResult.getCode()】" + commonResult.getCode());
@@ -190,7 +192,18 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
      */
     @Override
     public CommonResult getAllFinancial(String date) {
-        return CommonResult.success(financialMapper.getAllFinancial(date));
+        List<FinancialVO> allFinancial = financialMapper.getAllFinancial(date);
+        for (FinancialVO financialVO : allFinancial) {
+            if (financialVO.getState() == 0) {
+                financialVO.setStatus("待审核");
+            } else {
+                String[] split = financialVO.getRemark().split(",");
+                financialVO.setName(split[0]);
+                financialVO.setTime(split[1]);
+                financialVO.setStatus("已审核");
+            }
+        }
+        return CommonResult.success(allFinancial);
     }
 
     /**
@@ -200,8 +213,8 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
      */
     @Override
     public void getFinancialExcel(String list) {
-        List<Financial> financials = JSON.parseArray(list, Financial.class);
-        ExcelUtil.excelLockExport(Financial.class, "财务账单", financials, "财务账单");
+        List<FinancialVO> financials = JSON.parseArray(list, FinancialVO.class);
+        ExcelUtil.excelLockExport(FinancialVO.class, "财务账单", financials, "财务账单");
     }
 
     /**
@@ -274,13 +287,61 @@ public class FinancialServiceImpl extends ServiceImpl<FinancialMapper, Financial
      * 生成财务信息
      *
      * @param date
+     * @param water
+     * @param electric
+     * @param userId
      * @return
      */
     @Override
-    public CommonResult generateFinancial(String date, String water, String electric) {
+    @CacheEvict(cacheNames = "getFinancialChart", allEntries = true)
+    public CommonResult generateFinancial(String date, String water, String electric, Integer userId) {
+        Float outSalary = 0.0f;
+        Float outMis = 0.0f;
+        //获取该月财务信息 进行计算
+        FinancialVO financial = financialMapper.getAllFinancial(date).get(0);
+
+        //获取水电支出信息
+        Cost sumCost = costMapper.getSumCost(date);
+        Float outWater = Float.valueOf(sumCost.getNumWater()) * Float.valueOf(water);
+        Float outElectric = Float.valueOf(sumCost.getNumElectric()) * Float.valueOf(electric);
+
+        //盈利
+        Float proWater = Float.valueOf(financial.getInWater()) - outWater;
+        Float proElectric = Float.valueOf(financial.getInElectric()) - outElectric;
+
+        financial.setOutWater(String.valueOf(outWater));
+        financial.setOutElectric(String.valueOf(outElectric));
+        financial.setProWater(String.valueOf(proWater));
+        financial.setProElectric(String.valueOf(proElectric));
+
         //获取薪水信息
+        List<StaffPayVO> staffPays = staffPayMapper.selectSalaryPayByTime(date);
+        for (StaffPayVO staffPayVO : staffPays) {
+            outSalary += Float.valueOf(staffPayVO.getPrice());
+        }
+        financial.setOutSalary(String.valueOf(outSalary));
+
         //获取退回押金信息
+        List<Order> orders = orderMapper.selectCheckOut(date);
+        for (Order order : orders) {
+            outMis += Float.valueOf(order.getTotal());
+        }
         //获取维修信息
-        return null;
+        List<Repair> repairList = repairMapper.selectRepairPrice(date);
+        for (Repair repair : repairList) {
+            outMis += Float.valueOf(repair.getPrice());
+        }
+        financial.setOutMis(String.valueOf(outMis));
+
+        User user = userMapper.selectById(userId);
+
+        financial.setRemark(user.getName() + "," + DateUtil.getNowTime());
+        Float realTotal = outWater + outElectric + outSalary + outMis;
+        Float finalTotal = Float.valueOf(financial.getAdvanceTotal()) - realTotal;
+        financial.setRealTotal(String.valueOf(realTotal));
+        financial.setFinalTotal(String.valueOf(finalTotal));
+        financial.setState(1);
+        System.out.println(financial);
+        return financialMapper.updateFinancial(financial) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 }

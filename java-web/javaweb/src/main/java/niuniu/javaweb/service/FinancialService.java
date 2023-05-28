@@ -1,7 +1,7 @@
 package niuniu.javaweb.service;
 
-import niuniu.javaweb.pojo.Financial;
 import niuniu.javaweb.utils.result.CommonResult;
+import niuniu.javaweb.vo.FinancialVO;
 
 import java.text.ParseException;
 
@@ -25,7 +25,7 @@ public interface FinancialService {
      * @param financial
      * @return
      */
-    CommonResult updateHouseFinancial(Financial financial);
+    CommonResult updateHouseFinancial(FinancialVO financial);
 
     /**
      * 获取财务图表信息
@@ -72,7 +72,8 @@ public interface FinancialService {
      * @param date
      * @param water
      * @param electric
+     * @param userId
      * @return
      */
-    CommonResult generateFinancial(String date, String water, String electric);
+    CommonResult generateFinancial(String date, String water, String electric, Integer userId);
 }

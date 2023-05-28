@@ -78,10 +78,11 @@ public class FinancialController {
      * @param date
      * @param water
      * @param electric
+     * @param userId
      * @return
      */
     @PostMapping("generateFinancial")
-    public CommonResult generateFinancial(String date, String water, String electric) {
-        return financialService.generateFinancial(date, water, electric);
+    public CommonResult generateFinancial(String date, String water, String electric, Integer userId) {
+        return financialService.generateFinancial(date, water, electric, userId);
     }
 }

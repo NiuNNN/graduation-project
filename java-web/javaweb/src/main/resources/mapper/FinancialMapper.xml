@@ -57,6 +57,12 @@
         <if test="finalTotal!=null and finalTotal != ''">
             ,final_total = #{finalTotal}
         </if>
+        <if test="remark!=null and remark != ''">
+            ,remark = #{remark}
+        </if>
+        <if test="state!=null and state != ''">
+            ,state = #{state}
+        </if>
         where DATE_FORMAT(date, '%Y-%m') = #{date}
     </update>
     <select id="getFinancialChart" resultType="niuniu.javaweb.pojo.Financial">
@@ -66,7 +72,7 @@
         where YEAR (date)= YEAR (NOW())
         order by date
     </select>
-    <select id="getAllFinancial" resultType="niuniu.javaweb.pojo.Financial">
+    <select id="getAllFinancial" resultType="niuniu.javaweb.vo.FinancialVO">
         select financial_id,
         DATE_FORMAT(date,'%Y-%m') as date,
         IFNULL(out_water, "待处理") as out_water,

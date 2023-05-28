@@ -150,4 +150,12 @@ public interface CostMapper extends BaseMapper<Cost> {
      * @return
      */
     CostVo getCostVOByCostId(CostVo costVo);
+
+    /**
+     * 计算使用水和电的总和
+     *
+     * @param date
+     * @return
+     */
+    Cost getSumCost(String date);
 }

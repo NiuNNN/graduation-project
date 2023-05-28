@@ -2,12 +2,12 @@ package niuniu.javaweb;
 
 import niuniu.javaweb.mapper.*;
 import niuniu.javaweb.pojo.Contract;
-import niuniu.javaweb.pojo.Financial;
 import niuniu.javaweb.pojo.Report;
 import niuniu.javaweb.service.UserService;
 import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.MenuUtils;
 import niuniu.javaweb.utils.StringUtils;
+import niuniu.javaweb.vo.FinancialVO;
 import niuniu.javaweb.vo.TransferVO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,7 +134,7 @@ public class testMapper {
 
     @Test
     void testUpdateFinancial() {
-        Financial financial = new Financial();
+        FinancialVO financial = new FinancialVO();
         financial.setDate("2023-04");
         financial.setInWater("123.00");
         financial.setInElectric("123.00");
