@@ -20,4 +20,11 @@ public interface IpMapper extends BaseMapper<Basic> {
      * @return
      */
     int insertIp(Ip ip);
+
+    /**
+     * 获取今天访问量
+     *
+     * @return
+     */
+    int getNum();
 }

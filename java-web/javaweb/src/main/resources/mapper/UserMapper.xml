@@ -155,4 +155,10 @@
           and phone = #{phone}
           and name = #{name}
     </select>
+    <select id="getNum" resultType="int">
+        select count(*)
+        from user
+        where state = 1
+          and role_id = 1
+    </select>
 </mapper>

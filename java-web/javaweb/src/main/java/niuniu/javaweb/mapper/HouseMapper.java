@@ -89,5 +89,12 @@ public interface HouseMapper extends BaseMapper<House> {
      * @return
      */
     int judgeHouseState(String houseName);
+
+    /**
+     * 获取房间数量
+     *
+     * @return
+     */
+    int getNum();
 }
 

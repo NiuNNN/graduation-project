@@ -5,12 +5,16 @@
         insert into feedback (message, user_id, time, state)
         values (#{message}, #{userId}, current_timestamp, 0)
     </insert>
-    <select id="getFeedBack" resultType="niuniu.javaweb.vo.FeedBackVO">
-        select a.feedbackId, a.message, a.user_id, a.time, a.state, b.name
-        from feedback as a,
-             user as b
-        where a.user_id = b.user_id
-            ${ew.customSqlSegment}
+    <select id="getFeedBack" resultType="niuniu.javaweb.pojo.FeedBack">
+        select feedback_id,
+               message,
+               state,
+               user_id,
+               DATE_FORMAT(time
+                   , '%Y-%m-%d')as time
+        from feedback
+        where state = 0
+        order by time DESC
     </select>
     <update id="checkFeedBack">
         update feedback

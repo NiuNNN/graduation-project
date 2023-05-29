@@ -140,4 +140,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     int forgetPassword(User user);
+
+    /**
+     * 获取住户数量
+     *
+     * @return
+     */
+    int getNum();
 }

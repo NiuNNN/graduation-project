@@ -32,6 +32,7 @@ axios.interceptors.request.use(
     return config;
   },
   async error => {
+    tryHideFullScreenLoading();
     router.push('/login');
     return Promise.error(error);
   }
@@ -78,6 +79,7 @@ axios.interceptors.response.use(
   },
   // 服务器状态码不是200的情况
   async error => {
+    tryHideFullScreenLoading();
     router.push('/404');
     return Promise.reject(error);
   }

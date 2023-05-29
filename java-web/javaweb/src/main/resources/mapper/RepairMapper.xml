@@ -80,4 +80,9 @@
         where DATE_FORMAT(fix, '%Y-%m') = #{time}
           and price > 0
     </select>
+    <select id="getNum" resultType="int">
+        select count(*)
+        from repair
+        where state = 0
+    </select>
 </mapper>

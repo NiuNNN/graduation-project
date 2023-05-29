@@ -5,4 +5,9 @@
         insert into ip (user_id, ip, ip_possession, ip_city, time)
         values (#{userId}, #{ip}, #{ipPossession}, #{ipCity}, current_timestamp)
     </insert>
+    <select id="getNum" resultType="int">
+        select count(*)
+        from ip
+        where DATE (time) = CURDATE();
+    </select>
 </mapper>

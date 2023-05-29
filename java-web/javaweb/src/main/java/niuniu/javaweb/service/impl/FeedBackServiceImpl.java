@@ -1,17 +1,14 @@
 package niuniu.javaweb.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import niuniu.javaweb.mapper.FeedBackMapper;
+import niuniu.javaweb.mapper.*;
 import niuniu.javaweb.pojo.FeedBack;
 import niuniu.javaweb.service.FeedBackService;
 import niuniu.javaweb.utils.result.CommonResult;
-import niuniu.javaweb.vo.FeedBackVO;
-import niuniu.javaweb.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 /**
  * @author NiuNiu666
@@ -22,6 +19,21 @@ import org.springframework.stereotype.Service;
 public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> implements FeedBackService {
     @Autowired
     FeedBackMapper feedBackMapper;
+
+    @Autowired
+    HouseMapper houseMapper;
+
+    @Autowired
+    UserMapper userMapper;
+
+    @Autowired
+    RepairMapper repairMapper;
+
+    @Autowired
+    CheckOutMapper checkOutMapper;
+
+    @Autowired
+    IpMapper ipMapper;
 
     /**
      * 存入用户反馈
@@ -37,15 +49,11 @@ public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> i
     /**
      * 获取用户反馈
      *
-     * @param currentPage
-     * @param pageSize
      * @return
      */
     @Override
-    public IPage<FeedBackVO> getFeedBack(int currentPage, int pageSize) {
-        Page<FeedBackVO> page = new Page<>(currentPage, pageSize);
-        QueryWrapper<UserVO> queryWrapper = new QueryWrapper<>();
-        return feedBackMapper.getFeedBack(page, queryWrapper);
+    public CommonResult getFeedBack() {
+        return CommonResult.success(feedBackMapper.getFeedBack());
     }
 
     /**
@@ -57,5 +65,26 @@ public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> i
     @Override
     public CommonResult checkFeedBack(Integer feedbackId) {
         return feedBackMapper.checkFeedBack(feedbackId) > 0 ? CommonResult.success() : CommonResult.failed();
+    }
+
+    /**
+     * 获取数值
+     *
+     * @return
+     */
+    @Override
+    public CommonResult getNum() {
+        HashMap<String, Integer> map = new HashMap<>();
+        //房间数量
+        map.put("houseNum", houseMapper.getNum());
+        //住户数量
+        map.put("userNum", userMapper.getNum());
+        //退房数量
+        map.put("outNum", checkOutMapper.getNum());
+        //维修数量
+        map.put("repairNum", repairMapper.getNum());
+        //获取今天访问量
+        map.put("ipNum", ipMapper.getNum());
+        return CommonResult.success(map);
     }
 }

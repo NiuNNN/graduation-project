@@ -78,4 +78,9 @@ public interface RepairMapper extends BaseMapper<Repair> {
      * @return
      */
     List<Repair> selectRepairPrice(String time);
+
+    /**
+     * 获取维修申请数量
+     */
+    int getNum();
 }

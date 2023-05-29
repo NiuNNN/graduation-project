@@ -1,15 +1,10 @@
 package niuniu.javaweb.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import niuniu.javaweb.pojo.FeedBack;
-import niuniu.javaweb.vo.FeedBackVO;
-import niuniu.javaweb.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author NiuNiu666
@@ -29,11 +24,9 @@ public interface FeedBackMapper extends BaseMapper<FeedBack> {
     /**
      * 获取用户反馈
      *
-     * @param page
-     * @param wrapper
      * @return
      */
-    IPage<FeedBackVO> getFeedBack(@Param("page") Page<FeedBackVO> page, @Param(Constants.WRAPPER) Wrapper<UserVO> wrapper);
+    List<FeedBack> getFeedBack();
 
     /**
      * 已阅

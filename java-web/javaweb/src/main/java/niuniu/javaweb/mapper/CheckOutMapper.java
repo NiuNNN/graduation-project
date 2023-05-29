@@ -78,4 +78,11 @@ public interface CheckOutMapper extends BaseMapper<CheckOut> {
      * @return
      */
     List<CheckOut> judgeHasCheckOut(String houseName);
+
+    /**
+     * 获取申请退房数量
+     *
+     * @return
+     */
+    int getNum();
 }

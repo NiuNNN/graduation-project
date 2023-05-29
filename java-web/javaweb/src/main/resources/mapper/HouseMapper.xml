@@ -88,4 +88,9 @@
         where house_name = #{houseName}
           and state = "已租"
     </select>
+    <select id="getNum" resultType="int">
+        select count(*)
+        from house
+        where state !="删除"
+    </select>
 </mapper>

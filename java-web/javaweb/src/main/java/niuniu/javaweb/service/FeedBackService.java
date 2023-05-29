@@ -1,9 +1,7 @@
 package niuniu.javaweb.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import niuniu.javaweb.pojo.FeedBack;
 import niuniu.javaweb.utils.result.CommonResult;
-import niuniu.javaweb.vo.FeedBackVO;
 
 /**
  * @author NiuNiu666
@@ -22,11 +20,9 @@ public interface FeedBackService {
     /**
      * 获取用户反馈
      *
-     * @param currentPage
-     * @param pageSize
      * @return
      */
-    IPage<FeedBackVO> getFeedBack(int currentPage, int pageSize);
+    CommonResult getFeedBack();
 
     /**
      * 已读反馈
@@ -35,4 +31,11 @@ public interface FeedBackService {
      * @return
      */
     CommonResult checkFeedBack(Integer feedbackId);
+
+    /**
+     * 获取数值
+     *
+     * @return
+     */
+    CommonResult getNum();
 }
