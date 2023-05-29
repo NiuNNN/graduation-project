@@ -52,8 +52,8 @@ export default {
     // 登出action
     async logout(context) {
       // await logoutAPI();
-      logout();
       router.push('/login'); // 跳到登录
+      logout();
     }
   }
 };

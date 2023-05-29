@@ -1,15 +1,8 @@
 <template>
   <div class="navbar-container">
-    <div class="logo">
-      <img src="@/assets/logo.png" alt="" /><span>PRHMS</span>
-    </div>
+    <div class="logo" @click="goBack"><img src="@/assets/logo.png" alt="" /><span>PRHMS</span></div>
     <div class="right">
-      <el-avatar
-        :size="40"
-        :src="avatar"
-        shape="square"
-        v-imageerror="defaultImg"
-      ></el-avatar>
+      <el-avatar :size="40" :src="avatar" shape="square" v-imageerror="defaultImg"></el-avatar>
       <p>{{ name }}</p>
       <el-dropdown @command="dropDownClick">
         <span class="el-dropdown-link">
@@ -25,17 +18,20 @@
 
 <script>
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   methods: {
     dropDownClick(val) {
       switch (val) {
-        case "logout":
+        case 'logout':
           {
-            this.$store.dispatch("user/logout");
+            this.$store.dispatch('user/logout');
           }
           break;
       }
     },
+    goBack() {
+      this.$router.push('/');
+    }
   },
   computed: {
     name() {
@@ -43,21 +39,22 @@ export default {
     },
     avatar() {
       return this.$store.getters.avatar;
-    },
+    }
   },
   data() {
     return {
-      defaultImg: require("@/assets/image/avatar_default.png"),
+      defaultImg: require('@/assets/image/avatar_default.png')
     };
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/navbar.scss";
+@import '@/styles/navbar.scss';
 .logo {
   display: flex;
   align-items: center;
+  cursor: pointer;
   img {
     margin: 0 10px 0 15px;
     height: 48px;

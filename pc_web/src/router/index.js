@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Layout from '@/layout/index.vue';
+import Index from '@/views/index.vue';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,7 @@ export const constantRoutes = [
     path: '/layout',
     component: Layout,
     children: [
+      { path: '/', component: Index },
       {
         path: 'user',
         component: () => import('@/views/user/index')
@@ -32,14 +34,13 @@ export const constantRoutes = [
   {
     path: '/200',
     component: () => import('@/views/200.vue')
-  },
+  }
 ];
 
-
-const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location){
-  return originalPush.call(this,location).catch(err=>err)
-}
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+};
 
 const createRouter = () =>
   new VueRouter({

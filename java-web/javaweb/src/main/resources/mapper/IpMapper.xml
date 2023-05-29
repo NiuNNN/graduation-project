@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="niuniu.javaweb.mapper.IpMapper">
+    <insert id="insertIp">
+        insert into ip (user_id, ip, ip_possession, ip_city, time)
+        values (#{userId}, #{ip}, #{ipPossession}, #{ipCity}, current_timestamp)
+    </insert>
+</mapper>

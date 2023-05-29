@@ -1,10 +1,13 @@
 package niuniu.javaweb.service.impl;
 
 import niuniu.javaweb.config.redis.RedisCache;
+import niuniu.javaweb.mapper.IpMapper;
+import niuniu.javaweb.pojo.Ip;
 import niuniu.javaweb.pojo.Login;
 import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.service.LoginService;
 import niuniu.javaweb.utils.FileUtil;
+import niuniu.javaweb.utils.IpUtil;
 import niuniu.javaweb.utils.jwt.JWTUtil;
 import niuniu.javaweb.utils.result.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +38,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    IpMapper ipMapper;
 
     private static String DEST_PATH;
 
@@ -85,7 +92,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
 //    @CacheEvict(cacheNames = "Login", key = "#user.username", beforeInvocation = true)
-    public CommonResult UserLogin(User user) {
+    public CommonResult UserLogin(User user, HttpServletRequest httpServletRequest) throws Exception {
         redisCache.deleteObject("Login:" + user.getUsername());
         System.out.println("运行到此处");
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
@@ -109,7 +116,13 @@ public class LoginServiceImpl implements LoginService {
             Map<String, Object> map = new HashMap<>();
             map.put("token", jwt);
             map.put("menu", login);
-
+            String ipAddr = IpUtil.getIpAddr(httpServletRequest);
+            Ip ip = new Ip();
+            ip.setIp(ipAddr);
+            ip.setIpCity(IpUtil.getCityInfo(ipAddr));
+            ip.setIpPossession(IpUtil.getIpPossession(ipAddr));
+            System.out.println(ip);
+            ipMapper.insertIp(ip);
             /**
              * 设置缓存时间为 3600s
              */

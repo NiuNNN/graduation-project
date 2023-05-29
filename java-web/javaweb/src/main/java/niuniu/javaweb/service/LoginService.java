@@ -3,6 +3,8 @@ package niuniu.javaweb.service;
 import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.utils.result.CommonResult;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.service
@@ -21,7 +23,7 @@ public interface LoginService {
     /**
      * 用户登录
      */
-    CommonResult UserLogin(User user);
+    CommonResult UserLogin(User user, HttpServletRequest httpServletRequest) throws Exception;
 
     /**
      * 用户登出

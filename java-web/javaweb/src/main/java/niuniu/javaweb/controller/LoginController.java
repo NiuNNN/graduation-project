@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.controller
@@ -48,9 +50,10 @@ public class LoginController {
      * @return
      */
     @PostMapping("/user/login")
-    public CommonResult loginUser(User user) {
+    public CommonResult loginUser(User user, HttpServletRequest httpServletRequest) throws Exception {
         System.out.println(user);
-        return loginService.UserLogin(user);
+        System.out.println(httpServletRequest);
+        return loginService.UserLogin(user, httpServletRequest);
     }
 
     /**

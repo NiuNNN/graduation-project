@@ -83,12 +83,14 @@ import {
   Descriptions,
   DescriptionsItem,
   Result,
+  Statistic
 } from 'element-ui';
 
-Vue.use(Result)
-Vue.use(DescriptionsItem)
-Vue.use(Descriptions)
-Vue.use(Empty)
+Vue.use(Statistic);
+Vue.use(Result);
+Vue.use(DescriptionsItem);
+Vue.use(Descriptions);
+Vue.use(Empty);
 Vue.use(Drawer);
 Vue.use(Avatar);
 Vue.use(Pagination);

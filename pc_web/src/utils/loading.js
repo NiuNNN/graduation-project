@@ -8,7 +8,8 @@ let loading;
 
 function startLoading() {
   loading = Loading.service({
-    lock: true
+    lock: true,
+    background: 'rgba(0, 0, 0, 0)'
   });
 }
 

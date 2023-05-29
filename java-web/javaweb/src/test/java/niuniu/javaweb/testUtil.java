@@ -127,4 +127,15 @@ public class testUtil {
     void testCheckOrderTime() {
         System.out.println(DateUtil.checkOrderTime("2023-04-01 20:37:54"));
     }
+
+    @Test
+    void testIpUtil() throws Exception {
+        //国内ip
+        String ip1 = "220.248.12.158";
+
+        String cityInfo1 = IpUtil.getCityInfo(ip1);
+        System.out.println(cityInfo1);
+        String address1 = IpUtil.getIpPossession(ip1);
+        System.out.println(address1);
+    }
 }

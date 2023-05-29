@@ -3,7 +3,6 @@
     <Container>
       <template #navbar> <Navbar></Navbar> </template>
       <template #sidebar><Sidebar></Sidebar> </template>
-      <template #appmain></template>
     </Container>
   </div>
 </template>
