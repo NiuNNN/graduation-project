@@ -169,4 +169,12 @@ public interface UserService {
      * @return
      */
     IPage<StaffVO> getStaffPage(String username, String name, Integer roleId, Integer state, int currentPage, int pageSize);
+
+    /**
+     * 忘记密码
+     *
+     * @param user
+     * @return
+     */
+    CommonResult forgetPassword(User user);
 }

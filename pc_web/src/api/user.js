@@ -146,6 +146,15 @@ export function getName(param) {
 }
 
 /**
+ * 忘记密码 修改密码
+ * @param {*} param
+ * @returns
+ */
+export function forgetPassword(param) {
+  return post(`forgetPassword`, param);
+}
+
+/**
  * staff
  */
 

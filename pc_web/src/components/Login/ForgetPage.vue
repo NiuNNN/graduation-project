@@ -27,22 +27,23 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="New Password" prop="pass" class="gap">
-            <el-input v-model="ForgetForm.pass" placeholder="New Password"></el-input>
+            <el-input v-model="ForgetForm.pass" placeholder="New Password" type="password" show-password></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="Confirm Password" prop="checkPass" class="gap" style="float: right">
-            <el-input v-model="ForgetForm.checkPass" placeholder="Confirm Password"></el-input>
+          <el-form-item label="Confirm Password" prop="password" class="gap" style="float: right">
+            <el-input v-model="ForgetForm.password" placeholder="Confirm Password" type="password" show-password></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <p class="back" @click="change">Back to Register?</p>
-    <el-button type="info" round @click="handleConfirm" :loading="loading">Confirm</el-button>
+    <el-button type="primary" round @click="handleConfirm" :loading="loading">Confirm</el-button>
   </div>
 </template>
 
 <script>
+import { forgetPassword } from '@/api/user';
 import { validMobile } from '@/utils/validate';
 export default {
   data() {
@@ -50,8 +51,8 @@ export default {
       validMobile(value) ? callback() : callback(new Error('Please enter the correct phone number'));
     };
     const validatePass = (rule, value, callback) => {
-      if (this.checkPass !== '') {
-        this.$refs.ForgetForm.validateField('checkPass');
+      if (this.password !== '') {
+        this.$refs.ForgetForm.validateField('password');
       }
       callback();
     };
@@ -63,7 +64,7 @@ export default {
         username: '',
         name: '',
         pass: '',
-        checkPass: '',
+        password: '',
         phone: ''
       },
       rules: {
@@ -78,7 +79,7 @@ export default {
           { required: true, trigger: 'blur', message: 'Please enter your new password' },
           { validator: validatePass, trigger: 'blur' }
         ],
-        checkPass: [
+        password: [
           { required: true, trigger: 'blur', message: 'Please confimr your new password' },
           { validator: validatePass2, trigger: 'blur' }
         ],
@@ -97,6 +98,18 @@ export default {
     },
     handleConfirm() {
       this.loading = true;
+      this.$refs.ForgetForm.validate(async isOK => {
+        if (isOK) {
+          try {
+            await forgetPassword(this.ForgetForm);
+            this.$message.success('密码修改成功...');
+            this.change();
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        this.loading = false;
+      });
     }
   }
 };

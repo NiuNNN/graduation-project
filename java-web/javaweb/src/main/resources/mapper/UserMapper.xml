@@ -148,4 +148,11 @@
             </if>
         </where>
     </select>
+    <select id="forgetPassword" resultType="int">
+        select count(*)
+        from user
+        where username = #{username}
+          and phone = #{phone}
+          and name = #{name}
+    </select>
 </mapper>

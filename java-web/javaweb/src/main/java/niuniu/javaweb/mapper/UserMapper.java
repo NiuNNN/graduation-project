@@ -132,4 +132,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     List<StaffVO> getStaff(Integer userId);
+
+    /**
+     * 忘记密码
+     *
+     * @param user
+     * @return
+     */
+    int forgetPassword(User user);
 }

@@ -320,8 +320,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-        if (userMapper.updateUser(user) <= 0) return CommonResult.failed();
-        return CommonResult.success();
+        return userMapper.updateUser(user) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 
     /**
@@ -411,5 +410,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Page<StaffVO> page = new Page<>(currentPage, pageSize);
         QueryWrapper<StaffVO> queryWrapper = new QueryWrapper<>();
         return userMapper.getStaffPage(username, name, state, roleId, page, queryWrapper);
+    }
+
+    /**
+     * 忘记密码
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    @Cacheable(cacheNames = "userInfo", key = "#user.username")
+    public CommonResult forgetPassword(User user) {
+        System.out.println(user);
+        if (userMapper.forgetPassword(user) > 0) {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            return userMapper.updateUser(user) > 0 ? CommonResult.success() : CommonResult.failed();
+        }
+        return CommonResult.failed("信息填写有误，请重新填写后修改...");
     }
 }

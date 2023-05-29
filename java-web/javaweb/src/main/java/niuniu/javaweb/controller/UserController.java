@@ -249,4 +249,15 @@ public class UserController {
     public CommonResult deleteUser(@PathVariable("userId") Integer userId) {
         return userService.deleteUser(userId);
     }
+
+    /**
+     * 忘记密码
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping("forgetPassword")
+    public CommonResult forgetPassword(User user) {
+        return userService.forgetPassword(user);
+    }
 }
