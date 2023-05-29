@@ -2,7 +2,7 @@
   <div class="container" v-loading="loading">
     <h3>账号:{{ user.username }}</h3>
     <el-form :inline="true" :model="userForm" class="demo-form-inline" size="small" ref="userForm" :rules="rules">
-      <el-form-item label="住户电话:" prop="phone">
+      <el-form-item label="用户电话:" prop="phone">
         <el-input v-model="userForm.phone" placeholder="请输入新的电话号码"></el-input>
       </el-form-item>
       <el-form-item label="密码:" prop="password">
@@ -199,6 +199,8 @@ export default {
           }
           this.loading = false;
           this.$emit('updateUser', this.newUser);
+        } else {
+          this.loading = false;
         }
       });
     },

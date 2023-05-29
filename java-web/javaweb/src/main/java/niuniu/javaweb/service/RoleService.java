@@ -116,4 +116,13 @@ public interface RoleService {
      * @return
      */
     CommonResult leaveRole(Integer userId) throws ParseException;
+
+
+    /**
+     * 获取职位名称
+     *
+     * @param userId
+     * @return
+     */
+    CommonResult getUserRole(Integer userId);
 }

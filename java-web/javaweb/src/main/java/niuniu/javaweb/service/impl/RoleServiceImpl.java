@@ -485,4 +485,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         contractMapper.changeStateByUserId(userId);
         return userMapper.deleteUser(userId) > 0 ? CommonResult.success() : CommonResult.failed();
     }
+
+    /**
+     * 获取职位名称
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public CommonResult getUserRole(Integer userId) {
+        return CommonResult.success(roleMapper.getUserRole(userId));
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,6 +105,30 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
         map.put("elseSalary", salaryMapper.getSalaryByState(3));
         return CommonResult.success(map);
     }
-    
 
+    /**
+     * 获取员工薪水信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public CommonResult getUserSalary(Integer userId) {
+        List<Salary> userSalary = salaryMapper.getUserSalary(userId);
+        HashMap<String, List<Salary>> map = new HashMap<>();
+        List<Salary> baseSalary = new ArrayList<>();
+        List<Salary> probationSalary = new ArrayList<>();
+        List<Salary> elseSalary = new ArrayList<>();
+        if (userSalary.size() > 0) {
+            baseSalary.add(userSalary.get(0));
+            probationSalary.add(userSalary.get(1));
+            for (int i = 2; i < userSalary.size(); i++) {
+                elseSalary.add(userSalary.get(i));
+            }
+        }
+        map.put("baseSalary", baseSalary);
+        map.put("probationSalary", probationSalary);
+        map.put("elseSalary", elseSalary);
+        return CommonResult.success(map);
+    }
 }

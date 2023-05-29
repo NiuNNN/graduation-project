@@ -164,4 +164,15 @@ public class RoleController {
     public CommonResult leaveRole(Integer userId) throws ParseException {
         return roleService.leaveRole(userId);
     }
+
+    /**
+     * 获取职位名称
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("getUserRole")
+    public CommonResult getUserRole(Integer userId) {
+        return roleService.getUserRole(userId);
+    }
 }

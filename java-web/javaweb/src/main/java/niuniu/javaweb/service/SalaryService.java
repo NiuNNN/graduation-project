@@ -50,6 +50,12 @@ public interface SalaryService {
      * @return
      */
     CommonResult getSalaryMap();
-    
 
+    /**
+     * 获取员工薪水信息
+     *
+     * @param userId
+     * @return
+     */
+    CommonResult getUserSalary(Integer userId);
 }

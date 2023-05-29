@@ -1,8 +1,7 @@
 <template>
-  <div class="container">
+  <div class="table-container">
     <div class="btn">
-      <el-button class="cancel">取 消</el-button>
-      <el-button class="save" @click="updateHandle">更 新</el-button>
+      <el-button class="save" @click="idcardDrawer = true">更 新</el-button>
     </div>
     <div class="bg">
       <span class="header">个 人 信 息</span>
@@ -55,29 +54,45 @@
         </el-row>
       </div>
     </div>
+    <!-- 修改详细信息 -->
+    <div class="drawer">
+      <div class="drawer">
+        <el-drawer :wrapperClosable="false" :show-close="false" title="修改员工信息" :visible.sync="idcardDrawer" :destroy-on-close="true" size="50%">
+          <update-user :user="user" @updateUser="updateUser"></update-user>
+        </el-drawer>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import ProfileDetail from '@/components/utils/ProfileDetail.vue';
+import UpdateUser from '../house/UpdateUser.vue';
 export default {
   components: {
-    ProfileDetail
+    ProfileDetail,
+    UpdateUser
   },
-  computed: {
-    user() {
-      return this.$store.getters.user;
-    }
+  data() {
+    return {
+      idcardDrawer: false,
+      user: this.$store.getters.user
+    };
   },
   methods: {
-    updateHandle() {}
-    //获取user数据
+    //修改完身份信息回调
+    async updateUser(e) {
+      // console.log(e);
+      this.user = e;
+      await this.$store.dispatch('user/getUser');
+      this.idcardDrawer = false;
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
+.table-container {
   width: 100%;
   height: 100%;
   .btn {

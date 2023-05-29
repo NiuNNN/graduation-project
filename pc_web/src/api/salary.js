@@ -79,3 +79,12 @@ export function generateStaffSalary() {
 export function judgeGenerateStaff() {
   return get(`judgeGenerateStaff`, {});
 }
+
+/**
+ * 获取用户薪水
+ * @param {*} param
+ * @returns
+ */
+export function getUserSalaryByUserId(param) {
+  return get(`getUserSalaryByUserId`, param);
+}

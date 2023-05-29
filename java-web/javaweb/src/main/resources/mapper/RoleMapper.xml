@@ -52,4 +52,11 @@
           and b.state not in (0, 2)
         order by a.state
     </select>
+    <select id="getUserRole" resultType="niuniu.javaweb.pojo.Role">
+        select a.*
+        from role as a,
+             user as b
+        where b.user_id = #{userId}
+          and a.role_id = b.role_id
+    </select>
 </mapper>

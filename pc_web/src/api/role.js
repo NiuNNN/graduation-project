@@ -105,3 +105,12 @@ export function getUserSalary(param) {
 export function leaveRole(param) {
   return get(`leaveRole`, param);
 }
+
+/**
+ * 获取用户职位名称
+ * @param {*} param
+ * @returns
+ */
+export function getUserRole(param) {
+  return get(`getUserRole`, param);
+}

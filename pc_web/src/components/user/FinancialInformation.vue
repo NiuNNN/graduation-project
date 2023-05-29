@@ -6,10 +6,18 @@
         <div class="financial">
           <el-row>
             <el-col :span="12">
-              <profile-detail :label="`职业`" :value="`管理员`"></profile-detail>
+              <profile-detail :label="`职位`" :value="role.roleName"></profile-detail>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <profile-detail label="基础工资" :value="base"></profile-detail>
             </el-col>
             <el-col :span="12">
-              <profile-detail :label="`薪水`" :value="`￥123456`"></profile-detail>
+              <profile-detail label="实习工资" :value="probation"></profile-detail>
+            </el-col>
+            <el-col :span="12" v-for="(item, index) in elseSalary" :key="index">
+              <profile-detail :label="item.salaryName" :value="item.price"></profile-detail>
             </el-col>
           </el-row>
         </div>
@@ -20,9 +28,43 @@
 
 <script>
 import ProfileDetail from '@/components/utils/ProfileDetail.vue';
+import { getUserSalaryByUserId } from '@/api/salary';
+import { getUserRole } from '@/api/role';
 export default {
   components: {
     ProfileDetail
+  },
+  data() {
+    return {
+      role: {},
+      baseSalary: [],
+      probationSalary: [],
+      elseSalary: [],
+      base: '0.00',
+      probation: '0.00'
+    };
+  },
+  created() {
+    this.getAll();
+  },
+  methods: {
+    async getAll() {
+      try {
+        const { data } = await getUserSalaryByUserId({ userId: this.$store.getters.userId });
+        // console.log(data);
+        this.baseSalary = data.baseSalary;
+        this.probationSalary = data.probationSalary;
+        this.elseSalary = data.elseSalary;
+        if (this.baseSalary.length > 0) {
+          this.base = this.baseSalary[0].price;
+          this.probation = this.probationSalary[0].price;
+        }
+        const { data: role } = await getUserRole({ userId: this.$store.getters.userId });
+        this.role = role;
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 };
 </script>

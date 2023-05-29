@@ -135,4 +135,15 @@ public class SalaryController {
     public CommonResult judgeGenerateStaff() {
         return staffPayService.judgeGenerateStaff();
     }
+
+    /**
+     * 获取用户
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("getUserSalaryByUserId")
+    public CommonResult getUserSalary(Integer userId) {
+        return salaryService.getUserSalary(userId);
+    }
 }

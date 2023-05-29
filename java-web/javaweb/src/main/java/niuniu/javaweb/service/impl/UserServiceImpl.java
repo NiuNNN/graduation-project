@@ -291,6 +291,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @throws IOException
      */
     @Override
+    @CacheEvict(cacheNames = "userInfo", key = "#username")
     public CommonResult updateUserByIDCard(MultipartFile font, MultipartFile back, String username) throws URISyntaxException, IOException {
         String pathFont = FileUtil.uploadIDCard(font, "validate", 0);
         String pathBack = FileUtil.uploadIDCard(back, "validate", 1);
@@ -313,6 +314,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "userInfo", key = "#user.username")
     public CommonResult updateUser(User user) {
         if (!StringUtils.isEmpty(user.getPassword())) {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
