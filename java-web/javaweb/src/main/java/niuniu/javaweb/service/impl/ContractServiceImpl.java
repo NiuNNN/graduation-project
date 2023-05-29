@@ -174,7 +174,7 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
     }
 
     /**
-     * 把信息存入map中
+     * 把住户信息存入map中
      *
      * @param rentContractVo
      * @return
@@ -204,6 +204,13 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
         return map;
     }
 
+    /**
+     * 存入员工信息
+     *
+     * @param rentContractVo
+     * @return
+     * @throws ParseException
+     */
     private HashMap<String, String> putWorkMap(RentContractVo rentContractVo) throws ParseException {
         HashMap<String, String> map = new HashMap<>();
         ZonedDateTime now = ZonedDateTime.now();

@@ -52,6 +52,7 @@ export default {
       loading: false,
       newUser: {},
       newCheckList: [],
+      localSrc: '',
       innerDrawer: false
     };
   },

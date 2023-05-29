@@ -46,7 +46,7 @@ export function changeContractStateByUserId(param) {
 }
 
 /**
- * 签署劳动合同
+ * 生成劳动合同
  * @param {*} param
  * @returns
  */
@@ -54,6 +54,20 @@ export function writeWorkContract(param) {
   return post(`writeWorkContract`, param);
 }
 
+/**
+ * 签署劳动合同
+ * @param {*} param
+ * @returns
+ */
 export function writeWorkSign(param) {
   return postFile(`writeWorkSign`, param);
+}
+
+/**
+ * 获取员工合同信息
+ * @param {*} param
+ * @returns
+ */
+export function getContractByUserId(param) {
+  return get(`getContractByUserId`, param);
 }
