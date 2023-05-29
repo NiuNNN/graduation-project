@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
     <span class="back" @click="change">Forgot Password?</span>
-    <el-button type="primary" round @click.native.prevent="handleLogin" :loading="loading">Sign in</el-button>
+    <el-button type="primary" round @click.native.prevent="handleLogin">Sign in</el-button>
   </div>
 </template>
 
@@ -23,7 +23,6 @@ export default {
         username: '',
         password: ''
       },
-      loading: false,
       rules: {
         username: [
           {
@@ -57,15 +56,11 @@ export default {
     handleLogin() {
       this.$refs.LoginForm.validate(async isOK => {
         if (isOK) {
-          this.loading = true;
           try {
             const res = await this.$store.dispatch('user/login', this.user);
-            // console.log(res);
             this.$router.push('/');
           } catch (error) {
             console.log(error);
-          } finally {
-            this.loading = false;
           }
         } else {
           this.$message.error('Please enter the correct information!');

@@ -38,7 +38,7 @@
       </el-row>
     </el-form>
     <p class="back" @click="change">Back to Register?</p>
-    <el-button type="primary" round @click="handleConfirm" :loading="loading">Confirm</el-button>
+    <el-button type="primary" round @click="handleConfirm">Confirm</el-button>
   </div>
 </template>
 
@@ -88,8 +88,7 @@ export default {
           { min: 8, max: 16, message: 'Please enter the correct account', trigger: 'blur' }
         ],
         name: [{ required: true, message: 'Please enter your name', trigger: 'blur' }]
-      },
-      loading: false
+      }
     };
   },
   methods: {
@@ -97,7 +96,6 @@ export default {
       this.$store.dispatch('setting/changeLogin', 'Login');
     },
     handleConfirm() {
-      this.loading = true;
       this.$refs.ForgetForm.validate(async isOK => {
         if (isOK) {
           try {
@@ -108,7 +106,6 @@ export default {
             console.log(error);
           }
         }
-        this.loading = false;
       });
     }
   }
