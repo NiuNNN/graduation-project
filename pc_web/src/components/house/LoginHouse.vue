@@ -27,7 +27,7 @@
           </el-row>
         </el-form>
       </div>
-      <div class="table" v-loading="loading">
+      <div class="table">
         <p style="color: #303133; font-size: 14px">请选择房间：</p>
         <el-table :data="tableData" style="width: 100%" @row-click="singleElection" highlight-current-row height="450" size="mini" border>
           <el-table-column width="55" label="选择">
@@ -91,7 +91,7 @@
     </div>
     <div v-if="active == 3">
       <p style="color: #303133; font-size: 14px">请签署合同：</p>
-      <iframe frameborder="0" style="width: 100%; height: 500px" :src="pdfSrc" v-loading="loading"></iframe>
+      <iframe frameborder="0" style="width: 100%; height: 500px" :src="pdfSrc"></iframe>
       <div class="btn">
         <el-button type="primary" @click="innerDrawer = true">确 定</el-button>
         <el-button @click="close">取 消</el-button>
@@ -149,7 +149,6 @@ export default {
       checkList: [],
       floorList: [],
       styleList: [],
-      loading: true,
       active: 0,
       baseData: [],
       multipleSelection: [],
@@ -165,7 +164,6 @@ export default {
   methods: {
     async getAll() {
       try {
-        this.loading = true;
         const { data: floor } = await getFloor();
         this.floorList = floor;
         const { data: style } = await getAllStyleName();
@@ -173,22 +171,17 @@ export default {
         this.getHouse();
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //按需获取房间
     async getHouse() {
       try {
-        this.loading = true;
         // console.log(this.houseForm);
         const { data } = await getHouse(this.houseForm);
         this.tableData = data;
         this.resetHouse();
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //重置下拉框
@@ -248,7 +241,6 @@ export default {
     async writeRentContract() {
       try {
         this.$message.info('正在生成合同，请稍等...');
-        this.loading = true;
         let param = {
           name: this.user.name,
           area: this.checkList[0].area,
@@ -266,8 +258,6 @@ export default {
         console.log(data);
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //返回合同

@@ -19,7 +19,7 @@ module.exports = defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        // target: `http://localhost:80`, // 要代理的目标地址
+        // target: `http://192.168.31.75:80`, // 要代理的目标地址
         target: `http://niuniu6.natapp1.cc`, // 要代理的目标地址
         changeOrigin: true, // 是否跨域
         pathRewrite: {
@@ -39,8 +39,7 @@ module.exports = defineConfig({
     externals: {
       vue: 'Vue',
       echarts: 'echarts',
-      axios: 'axios',
-      'element-ui': 'ELEMENT'
+      axios: 'axios'
     }
   }
 });

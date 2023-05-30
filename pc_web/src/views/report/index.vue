@@ -12,7 +12,7 @@
         <span :class="{ current: isCurrent == `del` }" @click="changeCurrent(`del`)">回 收 站</span>
       </div>
       <div>
-        <div class="table" v-loading="loading">
+        <div class="table">
           <el-table :data="tables[0].slice((pagination.currentPage - 1) * pagination.pageSize, pagination.currentPage * pagination.pageSize)" style="width: 100%">
             <el-table-column label="编 号" prop="reportId" width="80"> </el-table-column>
             <el-table-column label="标 题" prop="stem"> </el-table-column>
@@ -85,7 +85,6 @@ export default {
   inject: ['reload'],
   data() {
     return {
-      loading: true,
       isCurrent: 'news',
       tableData: [],
       search: '',
@@ -113,14 +112,10 @@ export default {
   created() {
     this.getNewAllReport();
   },
-  beforeUpdate() {
-    this.loading = false;
-  },
   methods: {
     //改变navbar选择
     async changeCurrent(name) {
       this.isCurrent = name;
-      this.loading = true;
       if (name === 'news') {
         await this.getNewAllReport();
       }
@@ -133,7 +128,6 @@ export default {
       if (name === 'del') {
         await this.getDelReport();
       }
-      this.loading = false;
     },
     //分页器改变页面大小
     handleSizeChange(val) {

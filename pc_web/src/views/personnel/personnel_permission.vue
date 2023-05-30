@@ -6,7 +6,7 @@
     </div>
     <div class="table-container">
       <div class="table">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
+        <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="id" label="编号" width="80"> </el-table-column>
           <el-table-column prop="roleName" label="职位" width="80"> </el-table-column>
           <el-table-column label="主要职务">
@@ -29,7 +29,7 @@
         </el-table>
       </div>
       <div class="dialog">
-        <el-dialog title="权限管理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" v-loading="dialogLoading">
+        <el-dialog title="权限管理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
           <tree-transfer ref="transfer" :title="title" :from_data="fromData" :to_data="toData" :defaultProps="{ label: 'label' }" @add-btn="add" @remove-btn="remove" :mode="mode" height="400px" :transferOpenNode="false"> </tree-transfer>
           <span slot="footer" class="dialog-footer">
             <el-button @click="close">确定</el-button>
@@ -90,9 +90,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
       drawer: false,
-      dialogLoading: true,
       tableData: [],
       dialogVisible: false,
       title: ['源权限', '已有权限'],
@@ -149,7 +147,6 @@ export default {
     //打开弹窗
     authorise(row) {
       this.isCurrent = row.roleId;
-      this.dialogLoading = true;
       this.dialogVisible = true;
 
       // console.log(this.$refs.transfer);
@@ -157,11 +154,9 @@ export default {
       // console.log(row);
       this.selectPermsByRoleId(row.roleId);
       this.selectElsePermsByRoleId(row.roleId);
-      this.dialogLoading = false;
     },
     //获取全部职位
     async getAllRole() {
-      this.loading = true;
       try {
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllRole(param);
@@ -170,7 +165,6 @@ export default {
         this.pagination.currentPage = data.current;
         this.pagination.total = data.total;
         this.pagination.pageSize = data.size;
-        this.loading = false;
       } catch (error) {
         console.log(error);
       }
@@ -309,7 +303,6 @@ export default {
         //修改
         this.$refs.roleForm.validate(async isOK => {
           if (isOK) {
-            this.loading = true;
             try {
               await updateRole({ ...this.form, base: this.form.baseSalary, probation: this.form.probationSalary, arrList: JSON.stringify(this.form.elseSalary) });
               this.$message.success('修改成功');
@@ -317,8 +310,6 @@ export default {
               this.drawer = false;
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           } else {
             this.$message.error('请正确输入职位信息');
@@ -328,7 +319,6 @@ export default {
         //添加
         this.$refs.roleForm.validate(async isOK => {
           if (isOK) {
-            this.loading = true;
             try {
               // console.log(this.form);
               let arrList = [this.form.baseSalary, this.form.probationSalary, ...this.form.elseSalary];
@@ -339,8 +329,6 @@ export default {
               this.drawer = false;
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           } else {
             this.$message.error('请正确输入职位信息');
@@ -349,10 +337,8 @@ export default {
       }
     },
     handleCurrentChange(currentPage) {
-      this.loading = true;
       this.pagination.currentPage = currentPage;
       this.getAllRole();
-      this.loading = false;
     }
   }
 };

@@ -221,6 +221,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public CommonResult insertUser(MultipartFile font, MultipartFile back, String jsonUser, Integer roleId) {
         User user = JSONObject.parseObject(jsonUser, User.class);
         System.out.println(user);
+        user.setRoleId(roleId);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         user.setPassword(bCryptPasswordEncoder.encode("88888888"));
         userMapper.createUser(user);

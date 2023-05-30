@@ -6,7 +6,7 @@
     </div>
     <div class="table-container">
       <div class="table">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
+        <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="salaryName" label="薪水名称" width="120"> </el-table-column>
           <el-table-column prop="price" label="薪水(元)" width="120"> </el-table-column>
           <el-table-column prop="remark" label="详情"> </el-table-column>
@@ -89,7 +89,6 @@ export default {
         operation: '0',
         state: '1'
       },
-      loading: true,
       rules: {
         salaryName: [{ required: true, message: '请输入收费名称', trigger: 'blur' }],
         price: [
@@ -111,7 +110,6 @@ export default {
   },
   methods: {
     async getAllSalary() {
-      this.loading = true;
       try {
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllSalary(param);
@@ -119,7 +117,6 @@ export default {
         this.pagination.currentPage = data.current;
         this.pagination.total = data.total;
         this.pagination.pageSize = data.size;
-        this.loading = false;
       } catch (error) {
         console.log(error);
       }

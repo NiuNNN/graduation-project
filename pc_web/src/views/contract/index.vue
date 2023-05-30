@@ -29,7 +29,7 @@
         <span :class="{ current: isCurrent == `work` }" @click="change(`work`)">劳 动 合 同</span>
         <span :class="{ current: isCurrent == `lose` }" @click="change(`lose`)">失 效 合 同</span>
       </div>
-      <div class="bg-container" style="height: 520px" v-loading="loading">
+      <div class="bg-container" style="height: 520px">
         <template v-if="Data.length > 0">
           <el-row :gutter="20">
             <el-col type="flex" justify="space-around" :span="3" style="margin-bottom: 20px" v-for="(item, index) in Data" :key="index">
@@ -69,8 +69,7 @@ export default {
         currentPage: 1, //当前页码
         pageSize: 16, //每页显示的记录数
         total: 0
-      },
-      loading: false
+      }
     };
   },
   components: {
@@ -113,7 +112,6 @@ export default {
     },
     async getAllContract() {
       try {
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         // console.log(this.state);
         // console.log(this.kindId);
@@ -129,7 +127,6 @@ export default {
       } catch (error) {
         console.log(error);
       } finally {
-        this.loading = false;
       }
     }
   },

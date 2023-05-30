@@ -119,6 +119,7 @@ public class LoginServiceImpl implements LoginService {
             String ipAddr = IpUtil.getIpAddr(httpServletRequest);
             Ip ip = new Ip();
             ip.setIp(ipAddr);
+            ip.setUserId(login.getUser().getUserId());
             ip.setIpCity(IpUtil.getCityInfo(ipAddr));
             ip.setIpPossession(IpUtil.getIpPossession(ipAddr));
             System.out.println(ip);

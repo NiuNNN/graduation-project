@@ -13,7 +13,7 @@
         <span :class="{ current: isCurrent == `pay` }" @click="changeCurrent(`pay`)">待 缴 纳 押 金</span>
         <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 退 房 用 户</span>
       </div>
-      <div class="table" v-loading="loading">
+      <div class="table">
         <div class="top">
           <el-form :inline="true" :model="searchForm" class="demo-form-inline" label-width="50px">
             <el-form-item label="姓名">
@@ -155,7 +155,6 @@ export default {
         pageSize: 6, //每页显示的记录数
         total: 0
       },
-      loading: true,
       drawer: false,
       miscellaneousData: [],
       user: {},
@@ -188,7 +187,6 @@ export default {
     },
     //切换
     async changeCurrent(name) {
-      this.loading = true;
       this.isCurrent = name;
       this.reset();
     },
@@ -204,7 +202,6 @@ export default {
     //已入住、退房、缴纳押金用户
     async getUserPage() {
       try {
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getUserPage(param, {
           ...this.searchForm,
@@ -216,14 +213,11 @@ export default {
         this.pagination.pageSize = data.size;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //待添加房间用户
     async getNoHouseUserPage() {
       try {
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getNoHouseUserPage(param, this.searchForm);
         this.tableData = data.records;
@@ -233,12 +227,10 @@ export default {
       } catch (error) {
         console.log(error);
       } finally {
-        this.loading = false;
       }
     },
     //搜索
     search() {
-      this.loading = true;
       if (this.isCurrent == `in` || this.isCurrent == `out` || this.isCurrent == `pay`) {
         this.getUserPage();
       }

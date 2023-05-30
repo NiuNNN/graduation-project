@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-loading="loading">
+  <div class="container">
     <h3>账号:{{ user.username }}</h3>
     <el-form :inline="true" :model="userForm" class="demo-form-inline" size="small" ref="userForm" :rules="rules">
       <el-form-item label="用户电话:" prop="phone">
@@ -78,7 +78,6 @@ export default {
       isfont: false,
       isback: false,
       userForm: { phone: '', password: '' },
-      loading: false,
       newUser: {}
     };
   },
@@ -99,7 +98,6 @@ export default {
      * 通过转换为Base64进行回显
      */
     onFileChange(e, direction) {
-      this.loading = true;
       const files = e.target.files;
       if (files.length === 0) {
         return; // 说明文件选择的窗口打开了，但是它一个文件都没选择就点击了确定关闭了选择弹框
@@ -137,8 +135,6 @@ export default {
               this.$message.success(`校验通过`);
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           };
         }
@@ -159,7 +155,6 @@ export default {
     },
     //提交
     submit() {
-      this.loading = true;
       this.newUser = this.user;
       this.$refs.userForm.validate(async isOK => {
         if (isOK) {
@@ -175,13 +170,10 @@ export default {
               this.$message.success('修改成功');
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           }
           if (!isEmpty(this.userForm.password) || !isEmpty(this.userForm.phone)) {
             try {
-              this.loading = true;
               await updateUser({
                 ...this.userForm,
                 username: this.user.username
@@ -193,14 +185,9 @@ export default {
               this.$message.success('修改成功');
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           }
-          this.loading = false;
           this.$emit('updateUser', this.newUser);
-        } else {
-          this.loading = false;
         }
       });
     },

@@ -26,7 +26,7 @@
         </el-row>
       </el-form>
     </div>
-    <div class="table" v-loading="loading">
+    <div class="table">
       <p style="color: #303133; font-size: 14px">请选择房间：</p>
       <el-table :data="tableData" style="width: 100%" @row-click="singleElection" highlight-current-row height="450" size="mini" border>
         <el-table-column width="55" label="选择">
@@ -79,7 +79,6 @@ export default {
       checkList: [],
       floorList: [],
       styleList: [],
-      loading: true,
       newUser: {}
     };
   },
@@ -89,7 +88,6 @@ export default {
   methods: {
     async getAll() {
       try {
-        this.loading = true;
         const { data: floor } = await getFloor();
         this.floorList = floor;
         const { data: style } = await getAllStyleName();
@@ -97,22 +95,17 @@ export default {
         this.getHouse();
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //按需获取房间
     async getHouse() {
       try {
-        this.loading = true;
         // console.log(this.houseForm);
         const { data } = await getHouse(this.houseForm);
         this.tableData = data;
         this.resetHouse();
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //重置下拉框

@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="table">
-        <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange" :row-key="getRowKey">
+        <el-table :data="tableData" stripe style="width: 100%" height="454" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange" :row-key="getRowKey">
           <el-table-column type="selection" width="55" :selectable="selectInit"> </el-table-column>
           <el-table-column prop="date" label="时间" sortable> </el-table-column>
           <el-table-column prop="houseName" label="房号"> </el-table-column>
@@ -92,7 +92,6 @@ export default {
         pageSize: 7, //每页显示的记录数
         total: 0
       },
-      loading: false,
       password: '',
       personData: [],
       generate: {
@@ -157,7 +156,6 @@ export default {
     },
     async getAll() {
       try {
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllCost(param, {
           houseName: this.form.houseName,
@@ -170,15 +168,11 @@ export default {
         this.pagination.pageSize = data.size;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     handleCurrentChange(currentPage) {
-      this.loading = true;
       this.pagination.currentPage = currentPage;
       this.getAll();
-      this.loading = false;
     },
     //查找
     search() {

@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <div class="collapse-container">
-      <el-collapse v-model="activeName" accordion style="border-top: none" @change="createUserName" v-loading="loading">
+      <el-collapse v-model="activeName" accordion style="border-top: none" @change="createUserName">
         <el-collapse-item name="1">
           <template #title>
             <div class="collapse-title">
@@ -52,7 +52,7 @@
                   </div>
                 </div>
                 <div class="bottom" style="margin-top: 60px">
-                  <el-button type="primary" :disabled="isAdd" @click="firstStep" :loading="firstStepBtn">下一步</el-button>
+                  <el-button type="primary" :disabled="isAdd" @click="firstStep">下一步</el-button>
                   <el-button @click="close">取 消</el-button>
                 </div>
               </div>
@@ -209,7 +209,7 @@
                 </div>
               </div>
               <div v-if="active === 8">
-                <el-result icon="success" title="支付成功" subTitle="租客录入成功，3秒后刷新页面">
+                <el-result icon="success" title="信息录入成功" subTitle="租客录入成功，3秒后刷新页面">
                   <template slot="extra">
                     <el-button type="primary" size="medium" @click="flash">确定</el-button>
                   </template>
@@ -247,7 +247,6 @@ export default {
       validMobile(value) ? callback() : callback(new Error('请输入正确的手机号'));
     };
     return {
-      loading: false,
       activeName: '',
       active: 0,
       //第一步
@@ -328,7 +327,6 @@ export default {
      */
     async createUserName() {
       try {
-        this.loading = true;
         const { data } = await createUserName({ roleId: 1 });
         this.username = data;
         const { data: floor } = await getFloor();
@@ -337,8 +335,6 @@ export default {
         this.styleList = style;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     /**
@@ -357,7 +353,6 @@ export default {
      * 通过转换为Base64进行回显
      */
     onFileChange(e, direction) {
-      this.loading = true;
       const files = e.target.files;
       if (files.length === 0) {
         return; // 说明文件选择的窗口打开了，但是它一个文件都没选择就点击了确定关闭了选择弹框
@@ -395,8 +390,6 @@ export default {
               this.$message.success(`校验通过`);
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           };
         }
@@ -466,7 +459,7 @@ export default {
         form.append(`font`, this.fontFile);
         form.append(`back`, this.backFile);
         form.append(`user`, JSON.stringify(this.user));
-        form.append(`roleId`, JSON.stringify(1));
+        form.append(`roleId`, 1);
         // console.log(this.user);
         const { data } = await insertUser(form);
         this.user = data;
@@ -547,7 +540,6 @@ export default {
     async fithStep() {
       try {
         this.$message.info('正在生成合同，请稍等...');
-        this.loading = true;
         let param = {
           name: this.user.name,
           area: this.checkList[0].area,
@@ -563,7 +555,6 @@ export default {
         this.localSrc = data;
         // console.log(data);
         this.active++;
-        this.loading = false;
       } catch (error) {
         console.log(error);
       }
@@ -660,7 +651,6 @@ export default {
     },
     //判断是否支付
     async judgePay() {
-      this.loading = true;
       try {
         const { data } = await judgePay(this.order);
         if (data > 0) {
@@ -670,8 +660,6 @@ export default {
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //第七步

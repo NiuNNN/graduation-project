@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-loading="loading">
+  <div class="container">
     <p style="color: #303133; font-size: 14px">请签署合同：</p>
     <iframe frameborder="0" style="width: 100%; height: 500px" :src="pdfSrc"></iframe>
     <div class="btn">
@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       pdfSrc: '',
-      loading: false,
       newUser: {},
       newCheckList: [],
       localSrc: '',
@@ -71,7 +70,6 @@ export default {
         console.log(this.miscellaneous);
         console.log(this.user);
         console.log(this.house);
-        this.loading = true;
         this.newCheckList = getDeposit(this.miscellaneous, this.house);
         let param = {
           name: this.user.name,
@@ -90,8 +88,6 @@ export default {
         console.log(data);
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     backContract() {

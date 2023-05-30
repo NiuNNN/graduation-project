@@ -2,7 +2,7 @@
   <div class="container">
     <div class="table">
       <p style="color: #303133; font-size: 14px">已选择杂费：</p>
-      <el-table :data="tableData" stripe style="width: 100%" height="250" size="small" border v-loading="loading">
+      <el-table :data="tableData" stripe style="width: 100%" height="250" size="small" border>
         <el-table-column prop="baseName" label="收费名称" width="100"> </el-table-column>
         <el-table-column prop="price" label="价格(月/元)" width="100"> </el-table-column>
         <el-table-column prop="remark" label="收费详情"> </el-table-column>
@@ -19,7 +19,7 @@
     </div>
     <div class="table">
       <p style="color: #303133; font-size: 14px">待选择杂费:</p>
-      <el-table :data="noBasicData" stripe style="width: 100%" height="250" size="small" border v-loading="loading">
+      <el-table :data="noBasicData" stripe style="width: 100%" height="250" size="small" border>
         <el-table-column prop="baseName" label="收费名称" width="120"> </el-table-column>
         <el-table-column prop="price" label="价格(月/元)" width="120"> </el-table-column>
         <el-table-column prop="remark" label="收费详情"> </el-table-column>
@@ -70,22 +70,18 @@ export default {
   data() {
     return {
       newTableData: [],
-      noBasicData: [],
-      loading: true
+      noBasicData: []
     };
   },
   methods: {
     //获取未选择的杂费
     async getNoBasic() {
       try {
-        this.loading = true;
         const { data } = await getNoBasicByRentId({ rentId: this.user.rentId });
         console.log(data);
         this.noBasicData = data;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //删除
@@ -125,7 +121,6 @@ export default {
       })
         .then(async () => {
           try {
-            this.loading = true;
             await insertMiscellaneous({
               rentId: this.user.rentId,
               baseId: row.baseId
@@ -136,7 +131,6 @@ export default {
           } finally {
             this.$emit(`deleteMiscellaneous`);
             this.getNoBasic();
-            this.loading = false;
           }
         })
         .catch(() => {

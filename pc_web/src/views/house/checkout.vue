@@ -17,7 +17,7 @@
         </el-form>
       </div>
       <div class="table">
-        <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }">
+        <el-table :data="tableData" stripe style="width: 100%" height="454" :default-sort="{ prop: 'date', order: 'descending' }">
           <el-table-column prop="start" label="申请时间" sortable width="180"> </el-table-column>
           <el-table-column prop="end" label="处理时间" width="180"> </el-table-column>
           <el-table-column prop="houseName" label="房号" width="180"> </el-table-column>
@@ -94,7 +94,6 @@ export default {
         pageSize: 7, //每页显示的记录数
         total: 0
       },
-      loading: false,
       drawer: false,
       drawerType: '',
       checkout: {}
@@ -119,10 +118,8 @@ export default {
     },
     //换页
     handleCurrentChange(currentPage) {
-      this.loading = true;
       this.pagination.currentPage = currentPage;
       this.getAll();
-      this.loading = false;
     },
     //查询
     search() {

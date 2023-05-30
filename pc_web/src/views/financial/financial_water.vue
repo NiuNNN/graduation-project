@@ -21,7 +21,7 @@
         </el-form>
       </div>
       <div class="table">
-        <el-table :data="tableData" stripe style="width: 100%" height="454" v-loading="loading" :default-sort="{ prop: 'date', order: 'descending' }">
+        <el-table :data="tableData" stripe style="width: 100%" height="454" :default-sort="{ prop: 'date', order: 'descending' }">
           <el-table-column prop="date" label="时间" sortable width="180"> </el-table-column>
           <el-table-column prop="houseName" label="房号" width="180"> </el-table-column>
           <el-table-column prop="numWater" label="用水量(方)" width="180"> </el-table-column>
@@ -138,7 +138,6 @@ export default {
         pageSize: 7, //每页显示的记录数
         total: 0
       },
-      loading: false,
       password: '',
       drawer: false,
       hasData: [],
@@ -155,7 +154,6 @@ export default {
   methods: {
     async getAll() {
       try {
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllCost(param, {
           houseName: this.form.houseName,
@@ -168,8 +166,6 @@ export default {
         this.pagination.pageSize = data.size;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //下载模板
@@ -211,10 +207,8 @@ export default {
         });
     },
     handleCurrentChange(currentPage) {
-      this.loading = true;
       this.pagination.currentPage = currentPage;
       this.getAll();
-      this.loading = false;
     },
     //上传文件
     async onFileChange(e) {

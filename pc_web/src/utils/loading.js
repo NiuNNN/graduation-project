@@ -9,7 +9,7 @@ let loading;
 function startLoading() {
   loading = Loading.service({
     lock: true,
-    background: 'rgba(0, 0, 0, 0)'
+    background: 'rgba(0, 0, 0, 0.3)'
   });
 }
 

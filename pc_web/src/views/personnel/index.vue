@@ -11,7 +11,7 @@
         <span :class="{ current: isCurrent == `in` }" @click="changeCurrent(`in`)">已 入 职 员 工</span>
         <span :class="{ current: isCurrent == `out` }" @click="changeCurrent(`out`)">已 离 职 员 工</span>
       </div>
-      <div class="table" v-loading="loading">
+      <div class="table">
         <div class="top">
           <el-form :inline="true" :model="searchForm" class="demo-form-inline" label-width="50px">
             <el-form-item label="姓名">
@@ -134,7 +134,6 @@ export default {
         pageSize: 6, //每页显示的记录数
         total: 0
       },
-      loading: true,
       user: {},
       roleList: [],
       obj: {},
@@ -150,13 +149,10 @@ export default {
   methods: {
     async getRole() {
       try {
-        this.loading = true;
         const { data } = await getRole();
         this.roleList = data;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     reset() {
@@ -173,7 +169,6 @@ export default {
     },
     //切换
     async changeCurrent(name) {
-      this.loading = true;
       this.isCurrent = name;
       this.reset();
     },
@@ -201,7 +196,6 @@ export default {
     async getStaffPage() {
       try {
         // console.log('被调用');
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         // console.log({ ...this.searchForm, ...this.obj });
         const { data } = await getStaffPage(param, { ...this.searchForm, ...this.obj });
@@ -211,8 +205,6 @@ export default {
         this.pagination.pageSize = data.size;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //打开抽屉

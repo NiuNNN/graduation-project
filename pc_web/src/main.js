@@ -12,6 +12,7 @@ import '@/permission';
 // import * as echarts from 'echarts'; //引入echart
 
 Vue.prototype.$echarts = echarts;
+
 Vue.config.productionTip = false;
 
 /**

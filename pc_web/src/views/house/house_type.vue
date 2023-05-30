@@ -39,7 +39,7 @@
           </el-row>
         </el-form>
       </div>
-      <div class="table" v-loading="loading">
+      <div class="table">
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="styleId" label="编号" width="80"> </el-table-column>
           <el-table-column prop="styleName" label="房型名称" width="200"> </el-table-column>
@@ -121,7 +121,6 @@ export default {
       validNumber(value) ? callback() : callback(new Error('请输入数字'));
     };
     return {
-      loading: true,
       styleNameList: [],
       available: '',
       area: '',
@@ -183,9 +182,6 @@ export default {
     this.getStyleName();
     this.getArea();
   },
-  beforeUpdate() {
-    this.loading = false;
-  },
   methods: {
     cancel() {
       this.isShowDrawer = false;
@@ -214,7 +210,6 @@ export default {
     //获取全部房屋类型
     async getAllStyle() {
       try {
-        this.loading = true;
         const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
         const { data } = await getAllStyle(param);
         this.tableData = data.records;
@@ -225,7 +220,6 @@ export default {
       } catch (error) {
         console.log(error);
       } finally {
-        this.loading = false;
       }
       // console.log(data);
     },
@@ -270,11 +264,9 @@ export default {
       } finally {
         this.isShowDrawer = false;
         this.$refs.styleForm.resetFields();
-        this.loading = true;
         this.getStyleName();
         this.getAllStyle();
         this.getArea();
-        this.loading = false;
       }
     },
     //房型下架
@@ -319,10 +311,8 @@ export default {
     },
     //换页
     handleCurrentChange(currentPage) {
-      this.loading = true;
       this.pagination.currentPage = currentPage;
       this.getAllStyle();
-      this.loading = false;
     },
     //获取下拉框
     async getStyleName() {

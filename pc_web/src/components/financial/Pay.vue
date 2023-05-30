@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-if="active == 0" v-loading="loading">
+    <div v-if="active == 0">
       <p class="header">订单编号：{{ order.outTradeNo }}</p>
       <div class="pay">{{ payTitle }}</div>
       <p class="header">请选择支付方式：</p>
@@ -27,8 +27,7 @@ export default {
     return {
       active: 0,
       count: '', //倒计时时间
-      timer: '',
-      loading: false
+      timer: ''
     };
   },
   props: {
@@ -81,7 +80,6 @@ export default {
     },
     //判断是否支付
     async judgePay() {
-      this.loading = true;
       try {
         const { data } = await judgePay(this.order);
         if (data > 0) {
@@ -91,8 +89,6 @@ export default {
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     //倒计时

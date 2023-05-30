@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <div class="collapse-container">
-      <el-collapse v-model="activeName" accordion style="border-top: none" @change="getRole" v-loading="loading">
+      <el-collapse v-model="activeName" accordion style="border-top: none" @change="getRole">
         <el-collapse-item name="1">
           <template #title>
             <div class="collapse-title">
@@ -58,7 +58,7 @@
                   </div>
                 </div>
                 <div class="bottom" style="margin-top: 60px">
-                  <el-button type="primary" :disabled="isAdd" @click="firstStep" :loading="firstStepBtn">下一步</el-button>
+                  <el-button type="primary" :disabled="isAdd" @click="firstStep">下一步</el-button>
                   <el-button @click="close">取 消</el-button>
                 </div>
               </div>
@@ -144,7 +144,6 @@ export default {
       validMobile(value) ? callback() : callback(new Error('请输入正确的手机号'));
     };
     return {
-      loading: false,
       activeName: '',
       active: 0,
       //第一步
@@ -204,13 +203,10 @@ export default {
      */
     async getRole() {
       try {
-        this.loading = true;
         const { data } = await getRole();
         this.roleList = data;
       } catch (error) {
         console.log(error);
-      } finally {
-        this.loading = false;
       }
     },
     /**
@@ -229,7 +225,6 @@ export default {
      * 通过转换为Base64进行回显
      */
     onFileChange(e, direction) {
-      this.loading = true;
       const files = e.target.files;
       if (files.length === 0) {
         return; // 说明文件选择的窗口打开了，但是它一个文件都没选择就点击了确定关闭了选择弹框
@@ -267,8 +262,6 @@ export default {
               this.$message.success(`校验通过`);
             } catch (error) {
               console.log(error);
-            } finally {
-              this.loading = false;
             }
           };
         }
@@ -356,7 +349,6 @@ export default {
     //三步
     async generateContract() {
       try {
-        this.loading = true;
         let param = {
           price: this.userSalary[0].price,
           priceElse: this.userSalary[1].price,
@@ -367,7 +359,6 @@ export default {
         this.pdfSrc = `${targetUrl}/view/Contract/${data}`;
         this.localSrc = data;
         // console.log(data);
-        this.loading = false;
       } catch (error) {
         console.log(error);
       }

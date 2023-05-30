@@ -42,7 +42,7 @@
         <template v-else>
           <div class="fr-floor">
             <el-page-header @back="getAll" :content="title"> </el-page-header>
-            <div class="floor-container" v-loading="loading">
+            <div class="floor-container">
               <div class="navbar">
                 <el-row justify="space-around">
                   <el-col :span="12">
@@ -119,7 +119,6 @@ export default {
   data() {
     return {
       houseNum: [],
-      loading: true,
       isCurrent: 1,
       tableData: [],
       drawer: false,
@@ -285,11 +284,9 @@ export default {
     },
     //获取房屋详细信息
     async getHouseDetail() {
-      this.loading = true;
       try {
         const { data } = await getHouseDetail(this.isCurrent);
         this.tableData = data;
-        this.loading = false;
         // console.log(data);
       } catch (error) {
         console.log(error);
