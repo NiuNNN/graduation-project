@@ -100,4 +100,9 @@ public class HouseController {
     public CommonResult judgeHouseState(String houseName) {
         return houseService.judgeHouseState(houseName);
     }
+
+    @GetMapping("getHouseNum")
+    public CommonResult getHouseNum() {
+        return houseService.getHouseNum();
+    }
 }

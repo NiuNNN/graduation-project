@@ -93,4 +93,11 @@
         from house
         where state !="删除"
     </select>
+    <select id="getFloorNum" resultType="int">
+        select count(*)
+        from house
+        where floor_id = #{floorId}
+        <if test="state!='' and state !=null">and state = "已租"</if>
+        <if test="state =='' or state == null">and state != "删除"</if>
+    </select>
 </mapper>

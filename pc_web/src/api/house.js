@@ -53,3 +53,11 @@ export function deleteHouse(param) {
 export function judgeHouseState(param) {
   return get(`judgeHouseState`, param);
 }
+
+/**
+ * 获取楼层信息
+ * @returns
+ */
+export function getHouseNum() {
+  return get(`getHouseNum`, {});
+}

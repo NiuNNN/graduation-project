@@ -26,7 +26,17 @@
             <div class="fr-header">
               <h1>房 屋 总 览</h1>
             </div>
-            <div class="card"></div>
+            <div class="card">
+              <el-row>
+                <el-col :span="6" v-for="(item, index) in houseNum" :key="index">
+                  <div class="statistic">
+                    <el-statistic :title="`${item.floorId}层`">
+                      <template slot="formatter"> {{ item.allNum }}/{{ item.peaceNum }} </template>
+                    </el-statistic>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
           </div>
         </template>
         <template v-else>
@@ -101,13 +111,14 @@
 
 <script>
 import { getArea } from '@/api/floor';
-import { getHouseDetail, getHouseNumber, insertHouse, deleteHouse } from '@/api/house';
+import { getHouseDetail, getHouseNumber, insertHouse, deleteHouse, getHouseNum } from '@/api/house';
 import { getStyleArea, getStyleBalcony, getStyleName, leftStyle } from '@/api/house_type';
 import { validEmpty } from '@/utils/validate';
 import * as permission from '@/utils/permission';
 export default {
   data() {
     return {
+      houseNum: [],
       loading: true,
       isCurrent: 1,
       tableData: [],
@@ -135,7 +146,19 @@ export default {
       }
     };
   },
+  created() {
+    this.getHouseNum();
+  },
   methods: {
+    //获取楼层信息
+    async getHouseNum() {
+      try {
+        const { data } = await getHouseNum();
+        this.houseNum = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     //点击取消
     reset() {
       this.houseForm = {
@@ -158,7 +181,8 @@ export default {
       }
     },
     //返回主页
-    getAll() {
+    async getAll() {
+      await this.getHouseNum();
       this.isCurrent = 1;
     },
     //切换楼层
@@ -402,6 +426,20 @@ export default {
           line-height: 40px;
           color: #3a3f63;
           font-weight: 400;
+        }
+      }
+      ::v-deep .card {
+        padding: 25px;
+        .el-col-6 {
+          border-bottom: 1px solid #ebeef5;
+        }
+        .statistic {
+          margin-top: 30px;
+          margin-bottom: 30px;
+          border-right: 1px solid #ebeef5;
+          .el-statistic .head {
+            font-size: 16px;
+          }
         }
       }
     }

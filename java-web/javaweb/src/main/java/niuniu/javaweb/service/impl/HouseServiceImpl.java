@@ -12,11 +12,15 @@ import niuniu.javaweb.utils.StringUtils;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.utils.tools.HouseTools;
 import niuniu.javaweb.vo.HouseVO;
+import niuniu.javaweb.vo.NumVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author NiuNiu666
@@ -170,5 +174,23 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
     @Override
     public CommonResult judgeHouseState(String houseName) {
         return CommonResult.success(houseMapper.judgeHouseState(houseName));
+    }
+
+    /**
+     * 获取每层房间数
+     *
+     * @return
+     */
+    @Override
+    public CommonResult getHouseNum() {
+        List<NumVO> numVOList = new ArrayList<>();
+        for (int i = 2; i <= 13; i++) {
+            NumVO numVO = new NumVO();
+            numVO.setFloorId(i);
+            numVO.setAllNum(houseMapper.getFloorNum(i, null));
+            numVO.setPeaceNum(houseMapper.getFloorNum(i, "已租"));
+            numVOList.add(numVO);
+        }
+        return CommonResult.success(numVOList);
     }
 }

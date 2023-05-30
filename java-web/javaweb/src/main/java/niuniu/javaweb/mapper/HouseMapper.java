@@ -96,5 +96,14 @@ public interface HouseMapper extends BaseMapper<House> {
      * @return
      */
     int getNum();
+
+    /**
+     * 获取楼层信息
+     *
+     * @param floorId
+     * @param state
+     * @return
+     */
+    int getFloorNum(int floorId, String state);
 }
 

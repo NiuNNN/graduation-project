@@ -76,4 +76,11 @@ public interface HouseService {
      * @return
      */
     CommonResult judgeHouseState(String houseName);
+
+    /**
+     * 获取每层房间数
+     *
+     * @return
+     */
+    CommonResult getHouseNum();
 }
