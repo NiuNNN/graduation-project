@@ -45,7 +45,7 @@ VueRouter.prototype.push = function push(location) {
 const createRouter = () =>
   new VueRouter({
     mode: 'history', // require service support
-    base: '/PRHMS/',
+    base: '/PRHMS-pc',
     scrollBehavior: () => ({ y: 0 }),
     routes: [...constantRoutes] // 动态路由和静态路由的临时合并
   });

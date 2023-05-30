@@ -15,7 +15,7 @@
           <el-statistic group-separator="," :value="num.repairNum" title="维修数量"></el-statistic>
         </div>
         <div class="box">
-          <el-statistic group-separator="," :value="num.repairNum" title="今天访问量"></el-statistic>
+          <el-statistic group-separator="," :value="num.ipNum" title="今天访问量"></el-statistic>
         </div>
       </div>
       <div class="calendar">
@@ -59,7 +59,8 @@ export default {
         userNum: 0,
         outNum: 0,
         repairNum: 0,
-        noneNum: 0
+        noneNum: 0,
+        ipNum: 0
       },
       tableData: []
     };
@@ -77,6 +78,7 @@ export default {
         this.num.outNum = data.outNum;
         this.num.repairNum = data.repairNum;
         this.num.noneNum = this.num.houseNum - this.num.userNum - this.num.outNum;
+        this.num.ipNum = data.ipNum;
       } catch (error) {
         console.log(error);
       }
