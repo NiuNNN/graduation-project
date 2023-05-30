@@ -1,4 +1,4 @@
-import Vue from 'vue';
+// import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -9,7 +9,7 @@ import '@/styles/index.scss'; // global css
 
 import * as directives from '@/directives';
 import '@/permission';
-import * as echarts from 'echarts'; //引入echart
+// import * as echarts from 'echarts'; //引入echart
 
 Vue.prototype.$echarts = echarts;
 Vue.config.productionTip = false;
@@ -24,9 +24,13 @@ Object.keys(directives).forEach(key => {
 /**
  * 禁止Promise reject抛出异常
  */
-// window.addEventListener('unhandledrejection',function browserRejectionHandler(event){
-//   event && event.preventDefault()
-// })
+window.addEventListener('unhandledrejection', function browserRejectionHandler(event) {
+  event && event.preventDefault();
+});
+/**
+ * 禁止控制台输出
+ */
+console.log = () => {};
 
 new Vue({
   router,
