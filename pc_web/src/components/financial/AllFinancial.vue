@@ -347,6 +347,7 @@ export default {
       })
         .then(async () => {
           try {
+            console.log(this.financial);
             await generateFinancial({ userId: this.$store.getters.userId, date: this.financial.date, ...this.form });
             this.$message.success(`${this.title} 财务信息生成成功...`);
           } catch (error) {

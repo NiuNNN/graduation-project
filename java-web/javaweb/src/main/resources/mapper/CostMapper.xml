@@ -163,6 +163,6 @@
     <select id="getSumCost" resultType="niuniu.javaweb.pojo.Cost">
         select sum(num_water) as num_water, sum(num_electric) as num_electric
         from cost
-        where DATE_FORMAT(date, '%Y-%m') = "2023-05"
+        where DATE_FORMAT(date, '%Y-%m') = #{date}
     </select>
 </mapper>
