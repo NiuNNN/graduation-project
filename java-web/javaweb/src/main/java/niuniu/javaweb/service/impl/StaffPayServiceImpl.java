@@ -113,11 +113,16 @@ public class StaffPayServiceImpl extends ServiceImpl<StaffPayMapper, StaffPay> i
                 /**
                  * 添加其他薪水
                  */
+                int i = 0;
                 for (Salary salary : userSalary) {
                     if (salary.getState() == 3) {
-                        Float actualPrice = getActualPrice(salary) * month;
-                        elsePrice += actualPrice;
+                        if (i != 0) {
+                            remark += "_";
+                        }
+                        Float actualPrice = getActualPrice(salary);
+                        elsePrice += actualPrice * month;
                         remark += salary.getSalaryId() + "_" + actualPrice;
+                        i++;
                     }
                 }
             }
