@@ -10,8 +10,8 @@
     </parent>
     <groupId>niuniu</groupId>
     <artifactId>javaweb</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>javaweb</name>
+    <packaging>war</packaging>
     <description>javaweb</description>
 
     <properties>
@@ -34,6 +34,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--添加servlet-api依赖-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--redis依赖-->

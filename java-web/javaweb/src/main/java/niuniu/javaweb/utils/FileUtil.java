@@ -3,7 +3,7 @@ package niuniu.javaweb.utils;
 import niuniu.javaweb.common.ApplicationContextHolder;
 import niuniu.javaweb.config.FileConfig;
 import niuniu.javaweb.utils.result.CommonResult;
-import org.apache.tomcat.util.http.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -161,7 +161,7 @@ public class FileUtil {
 
     // 上传文件
     public static void doUploadFile(MultipartFile file, String path) throws IOException {
-        Streams.copy(file.getInputStream(), new FileOutputStream(path), true);
+        IOUtils.copy(file.getInputStream(), new FileOutputStream(path));
     }
 
     //设置下载请求头
