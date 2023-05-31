@@ -3,11 +3,14 @@ package niuniu.javaweb;
 import niuniu.javaweb.mapper.ContractMapper;
 import niuniu.javaweb.mapper.HouseMapper;
 import niuniu.javaweb.mapper.MenuMapper;
+import niuniu.javaweb.mapper.UserMapper;
+import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.service.ContractService;
 import niuniu.javaweb.service.HouseService;
 import niuniu.javaweb.utils.*;
 import niuniu.javaweb.utils.itext.PdfTempPrintUtil;
 import niuniu.javaweb.utils.tools.HouseTools;
+import niuniu.javaweb.utils.tools.SeqTools;
 import niuniu.javaweb.vo.TransferVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,9 @@ public class testUtil {
 
     @Autowired
     ContractService contractService;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Test
     void testGetChineseMoneyStringForBigDecimal() {
@@ -137,5 +143,32 @@ public class testUtil {
         System.out.println(cityInfo1);
         String address1 = IpUtil.getIpPossession(ip1);
         System.out.println(address1);
+    }
+
+    @Test
+    void createUser() {
+        for (int i = 0; i <= 94; i++) {
+            String number = null;
+            try {
+                number = SeqTools.getNumber(String.valueOf(1));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            User user = new User();
+            user.setUsername(number);
+            user.setRoleId(1);
+            user.setPassword("$2a$10$qtlT8SO6M8UoRXDMbsGcWedNKUQrjrsTb7Z4jhYssYi1nAw1Ci.5C");
+            user.setName("小");
+            user.setPhone("13923654789");
+            user.setSex("男");
+            user.setNation("汉");
+            user.setBirthday("2000-01-01");
+            user.setAddress("广东省湛江市麻章区广东海洋大学");
+            user.setIdcard("440680000000000000");
+            user.setSign("2000-01-01");
+            user.setLose("2023-05-31");
+            user.setAuthority("佛山市公安局南海分局");
+            userMapper.createUser(user);
+        }
     }
 }

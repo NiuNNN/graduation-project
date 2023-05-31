@@ -565,19 +565,13 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
                 costVos.add(costVo);
             }
         }
-        TaskCenterUtil taskCenterUtil1 = TaskCenterUtil.getTaskCenterUtil();
-        taskCenterUtil1.submitTask(() -> {
-            System.out.println("开启1线程池");
-            for (CostVo costVo : costVos) {
-                if (costVo.getState() == 0) {
-                    System.out.println(costVo);
-                    generateCost(costVo);
-                }
-
+        for (CostVo costVo : costVos) {
+            if (costVo.getState() == 0) {
+                System.out.println(costVo);
+                generateCost(costVo);
             }
-            System.out.println("结束");
-            return null;
-        });
+
+        }
         /**
          * 计算总和
          */
@@ -625,25 +619,20 @@ public class CostServiceImpl extends ServiceImpl<CostMapper, Cost> implements Co
         last.setNumElectric(String.valueOf(numElectric));
 
         costVos.add(last);
-        TaskCenterUtil taskCenterUtil2 = TaskCenterUtil.getTaskCenterUtil();
-        taskCenterUtil2.submitTask(() -> {
-            System.out.println("开启2线程池");
-            /**
-             * 先判断是否可以插入 插入financial表
-             */
-            if (financialMapper.judgeFinancialByDate(last.getDate(), "0") == 0) {
-                FinancialVO financial = new FinancialVO();
-                financial.setDate(last.getDate());
-                financial.setInWater(last.getCostWater());
-                financial.setInElectric(last.getCostElectric());
-                financial.setInMis(last.getMis());
-                financial.setInRent(last.getHousePrice());
-                financial.setAdvanceTotal(last.getTotal());
-                System.out.println(financial);
-                financialService.updateHouseFinancial(financial);
-            }
-            return null;
-        });
+        /**
+         * 先判断是否可以插入 插入financial表
+         */
+        if (financialMapper.judgeFinancialByDate(last.getDate(), "0") == 0) {
+            FinancialVO financial = new FinancialVO();
+            financial.setDate(last.getDate());
+            financial.setInWater(last.getCostWater());
+            financial.setInElectric(last.getCostElectric());
+            financial.setInMis(last.getMis());
+            financial.setInRent(last.getHousePrice());
+            financial.setAdvanceTotal(last.getTotal());
+            System.out.println(financial);
+            financialService.updateHouseFinancial(financial);
+        }
 
         /**
          * 导出excel

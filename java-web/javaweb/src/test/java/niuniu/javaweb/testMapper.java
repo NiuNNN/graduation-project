@@ -3,10 +3,12 @@ package niuniu.javaweb;
 import niuniu.javaweb.mapper.*;
 import niuniu.javaweb.pojo.Contract;
 import niuniu.javaweb.pojo.Report;
+import niuniu.javaweb.pojo.User;
 import niuniu.javaweb.service.UserService;
 import niuniu.javaweb.utils.ArrayUtil;
 import niuniu.javaweb.utils.MenuUtils;
 import niuniu.javaweb.utils.StringUtils;
+import niuniu.javaweb.utils.tools.SeqTools;
 import niuniu.javaweb.vo.FinancialVO;
 import niuniu.javaweb.vo.TransferVO;
 import org.junit.Test;
@@ -54,6 +56,31 @@ public class testMapper {
     @Test
     void getUserId() {
         System.out.println(userMapper.getUserId("202302100001"));
+    }
+
+    @Test
+    void createUser() {
+        String number = null;
+        try {
+            number = SeqTools.getNumber(String.valueOf(1));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        User user = new User();
+        user.setUsername(number);
+        user.setRoleId(1);
+        user.setPassword("$2a$10$qtlT8SO6M8UoRXDMbsGcWedNKUQrjrsTb7Z4jhYssYi1nAw1Ci.5C");
+        user.setName("小");
+        user.setPhone("13923654789");
+        user.setSex("男");
+        user.setNation("汉");
+        user.setBirthday("2000-01-01");
+        user.setAddress("广东省湛江市麻章区广东海洋大学");
+        user.setIdcard("440680000000000000");
+        user.setSign("2000-01-01");
+        user.setLose("2023-05-31");
+        user.setAuthority("佛山市公安局南海分局");
+        userMapper.createUser(user);
     }
 
     @Test
