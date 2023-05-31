@@ -68,6 +68,7 @@
         <if test="houseName != null and houseName!=''">
             and a.house_name = #{houseName}
         </if>
+        order by c.date DESC
         ${ew.customSqlSegment}
     </select>
     <update id="updateElectricByCostId">

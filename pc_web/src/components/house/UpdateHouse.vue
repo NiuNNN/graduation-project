@@ -35,11 +35,11 @@
             <el-radio class="radio" v-model="templateSelection" :label="scope.row.houseId">&nbsp;</el-radio>
           </template>
         </el-table-column>
-        <el-table-column prop="houseName" label="房号"> </el-table-column>
+        <el-table-column prop="houseName" label="房号" width="80"> </el-table-column>
         <el-table-column prop="styleName" label="房型"> </el-table-column>
-        <el-table-column prop="balcony" label="阳台"> </el-table-column>
-        <el-table-column prop="area" label="面积(㎡)"> </el-table-column>
-        <el-table-column prop="price" label="房屋租金(月/元)"></el-table-column>
+        <el-table-column prop="balcony" label="阳台" width="80"> </el-table-column>
+        <el-table-column prop="area" label="面积(㎡)" width="80"> </el-table-column>
+        <el-table-column prop="price" label="房屋租金(月/元)" width="120"></el-table-column>
         <template #empty>
           <el-empty :image-size="80"></el-empty>
         </template>
