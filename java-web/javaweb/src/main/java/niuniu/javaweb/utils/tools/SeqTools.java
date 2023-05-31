@@ -17,65 +17,66 @@ import java.time.LocalDate;
  * @date 2022/12/29 16:48
  */
 @Component
-public class SeqTools
-{
+public class SeqTools {
     private static JdbcTemplate jdbcTemplate = null;
+
+    private static String baseStaffCode = "00";
 
     private static String baseCode = "0000";
 
     @Autowired
-    public void SetDataSource(DataSource dataSource)
-    {
+    public void SetDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public static String getNumber(String seqName) throws Exception
-    {
+    public static String getNumber(String seqName) throws Exception {
         String sql1 = """
-				select x.sval
-				  from sequence x
-				 where x.sdate=CURRENT_DATE
-				   and x.sname=?
-				""";
-        int curr_sval=jdbcTemplate.query(sql1, new ResultSetExtractor<Integer>()
-                {
+                select x.sval
+                  from sequence x
+                 where x.sdate=CURRENT_DATE
+                   and x.sname=?
+                """;
+        int curr_sval = jdbcTemplate.query(sql1, new ResultSetExtractor<Integer>() {
                     @Override
-                    public Integer extractData(ResultSet rs) throws SQLException, DataAccessException
-                    {
+                    public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
                         int result = 0;
-                        if(rs.next())
-                        {
-                            result=rs.getInt(1);
+                        if (rs.next()) {
+                            result = rs.getInt(1);
                         }
                         return result;
                     }
                 }
                 , seqName);
-        String sql2 =null;
-        if(curr_sval==0)
-        {
+        String sql2 = null;
+        if (curr_sval == 0) {
             sql2 = """
-					insert into sequence(sval,sname,sdate)
-                                  values(?,?,current_date)
-					""";
-        }
-        else {
+                    insert into sequence(sval,sname,sdate)
+                                                 values(?,?,current_date)
+                    """;
+        } else {
             sql2 = """
-					update sequence
-					   set sval=?
-					 where sname=?
-					   and sdate= current_date
-					""";
+                    update sequence
+                       set sval=?
+                     where sname=?
+                       and sdate= current_date
+                    """;
         }
 
-        Object params[]= {++curr_sval,seqName};
+        Object params[] = {++curr_sval, seqName};
 
         jdbcTemplate.update(sql2, params);
 
         int with = String.valueOf(curr_sval).length();
 
-        String Number = LocalDate.now().toString().replace("-","") + baseCode.substring(with) + curr_sval;
+        String Number = "";
 
+        if (seqName.equals("1")) {
+            Number = LocalDate.now().toString().replace("-", "") + baseCode.substring(with) + curr_sval;
+
+        } else {
+            Number = LocalDate.now().toString().replace("-", "") + seqName + baseStaffCode.substring(with) + curr_sval;
+
+        }
         return Number;
     }
 
