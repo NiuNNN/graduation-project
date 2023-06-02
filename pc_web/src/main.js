@@ -31,7 +31,7 @@ window.addEventListener('unhandledrejection', function browserRejectionHandler(e
 /**
  * 禁止控制台输出
  */
-// console.log = () => {};
+console.log = () => {};
 
 new Vue({
   router,

@@ -233,7 +233,7 @@ export default {
         .catch(() => {});
     },
     handleCheckOut(val) {
-      this.$prompt('请输入密码', '上传电费', {
+      this.$prompt('请输入密码', '退房处理', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputType: 'password',

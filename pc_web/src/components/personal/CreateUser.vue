@@ -5,7 +5,7 @@
         <el-collapse-item name="1">
           <template #title>
             <div class="collapse-title">
-              <span>添 加 新 住 户</span>
+              <span>添 加 新 员 工</span>
             </div>
           </template>
           <div class="bg-container">
