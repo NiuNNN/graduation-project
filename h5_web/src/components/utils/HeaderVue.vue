@@ -1,10 +1,6 @@
 <template>
   <div class="container">
-    <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="goBack()">
-      <template #right>
-        <slot></slot>
-      </template>
-    </van-nav-bar>
+    <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="goBack()"> </van-nav-bar>
   </div>
 </template>
 
@@ -14,11 +10,19 @@ export default {
     title: {
       type: String,
       default: '标题'
+    },
+    path: {
+      type: String,
+      default: '-1'
     }
   },
   methods: {
     goBack() {
-      this.$router.go(-1);
+      if (this.path == '/') {
+        this.$router.push('/');
+      } else {
+        this.$router.go(this.path);
+      }
     }
   }
 };

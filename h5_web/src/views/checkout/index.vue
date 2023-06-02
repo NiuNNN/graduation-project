@@ -83,7 +83,7 @@ export default {
     };
   },
   async created() {
-    this.reset();
+    await this.reset();
   },
   methods: {
     async reset() {
@@ -134,7 +134,8 @@ export default {
         const { data } = await getCheckOutState({
           userId: this.$store.getters.userId
         });
-        if (!valueAllEmpty(data)) {
+        // console.log(data);
+        if (data != null) {
           this.checkoutData = data;
           this.state = this.checkoutData.state;
         }

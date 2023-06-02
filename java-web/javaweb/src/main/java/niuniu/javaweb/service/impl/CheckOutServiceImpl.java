@@ -63,7 +63,7 @@ public class CheckOutServiceImpl extends ServiceImpl<CheckOutMapper, CheckOut> i
         CheckOut checkOut = new CheckOut();
         checkOut.setRentId(rent.getRentId());
         checkOut.setMessage(message);
-        if (checkOutMapper.insertCheckOut(checkOut) <= 0) return CommonResult.success();
+        if (checkOutMapper.insertCheckOut(checkOut) > 0) return CommonResult.success();
 //        System.out.println(rent);
         return CommonResult.failed();
     }

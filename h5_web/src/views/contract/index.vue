@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <Header title="合同信息"></Header>
+      <Header title="合同信息" path="/"></Header>
     </div>
     <div class="main">
       <iframe frameborder="0" style="width: 100%; height: 607px" :src="pdfSrc"></iframe>
