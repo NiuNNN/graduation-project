@@ -6,44 +6,56 @@
     </div>
     <div class="table-container">
       <div class="navbar">
-        <span :class="{ current: isCurrent == `news` }" @click="changeCurrent(`news`)">最 新<i class="iconfont new">&#xe680;</i></span>
         <span :class="{ current: isCurrent == `all` }" @click="changeCurrent(`all`)">全 部</span>
         <span :class="{ current: isCurrent == `draft` }" @click="changeCurrent(`draft`)">草 稿 箱</span>
         <span :class="{ current: isCurrent == `del` }" @click="changeCurrent(`del`)">回 收 站</span>
       </div>
       <div>
         <div class="table">
-          <el-table :data="tables[0].slice((pagination.currentPage - 1) * pagination.pageSize, pagination.currentPage * pagination.pageSize)" style="width: 100%">
-            <el-table-column label="编 号" prop="reportId" width="80"> </el-table-column>
-            <el-table-column label="标 题" prop="stem"> </el-table-column>
-            <el-table-column label="发 布 者" prop="name"> </el-table-column>
-            <el-table-column label="浏 览 量" prop="views"> </el-table-column>
-            <el-table-column label="时 间" prop="time"> </el-table-column>
-            <el-table-column align="right" width="240">
-              <template slot="header" slot-scope="scope">
-                <el-input v-model="inputContent" class="searchinput" placeholder="请输入发布者或时间" prefix-icon="el-icon-search" size="mini">
-                  <el-button slot="append" class="searchbtn" @click="searchput">搜索</el-button>
-                </el-input>
-              </template>
-              <template #default="{ row }">
-                <el-button size="mini" @click="openDrawer('preview', row)" :disabled="isGet">查 看</el-button>
-                <el-button size="mini" type="primary" @click="openDrawer('edit', row)" :disabled="isEdit">编 辑</el-button>
-                <template v-if="isCurrent != `del`">
-                  <el-button size="mini" type="danger" @click="handleDelete(row)" :disabled="isDel">删 除</el-button>
+          <div class="top">
+            <el-form :inline="true" :model="searchForm" class="demo-form-inline" label-width="50px">
+              <el-form-item label="时间">
+                <el-date-picker v-model="searchForm.time" type="date" placeholder="请选择时间" :picker-options="pickerBeginOption" value-format="yyyy-MM-dd"> </el-date-picker>
+              </el-form-item>
+              <el-form-item label="姓名">
+                <el-input v-model="searchForm.name" placeholder="请输入姓名"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" :disabled="isGet" @click="search" style="height: 35px">查询</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div class="bottom">
+            <el-table :data="tableData" style="width: 100%">
+              <el-table-column prop="name" label="头像" width="100">
+                <template slot-scope="scope">
+                  <el-avatar v-imageerror="defaultImg" :src="`${targetUrl}/view/Avatar/${scope.row.avatar}`"></el-avatar>
                 </template>
+              </el-table-column>
+              <el-table-column label="发 布 者" prop="name"> </el-table-column>
+              <el-table-column label="标 题" prop="stem"> </el-table-column>
+              <el-table-column label="浏 览 量" prop="views"> </el-table-column>
+              <el-table-column label="时 间" prop="time"> </el-table-column>
+              <el-table-column label="操作" width="240">
+                <template #default="{ row }">
+                  <el-button size="mini" @click="openDrawer('preview', row)" :disabled="isGet">查 看</el-button>
+                  <el-button size="mini" type="primary" @click="openDrawer('edit', row)" :disabled="isEdit">编 辑</el-button>
+                  <template v-if="isCurrent != `del`">
+                    <el-button size="mini" type="danger" @click="handleDelete(row)" :disabled="isDel">删 除</el-button>
+                  </template>
+                </template>
+              </el-table-column>
+              <template #empty>
+                <el-empty :image-size="200"></el-empty>
               </template>
-            </el-table-column>
-            <template #empty>
-              <el-empty :image-size="200"></el-empty>
-            </template>
-          </el-table>
+            </el-table>
+          </div>
         </div>
         <!-- 分页器 -->
         <div class="pagination">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
+          <el-pagination @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-size="pagination.pageSize" background layout="prev, pager, next" :total="pagination.total"> </el-pagination>
         </div>
       </div>
-
       <div class="drawer">
         <el-drawer :title="drawerTitle" size="50%" :visible.sync="isShowDrawer" :direction="direction" :before-close="handleClose">
           <div v-if="drawerType === 'preview'" class="article-preview">
@@ -76,18 +88,28 @@ import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 import { quillEditor } from 'vue-quill-editor';
-import { changeReport, getAllReport, getDelReport, getNewAllReport, getSaveReport, postInsertReport, updatePreview, updateReport } from '@/api/report.js';
+import { targetUrl } from '@/targetUrl';
+import { changeReport, getReportPage, postInsertReport, updatePreview, updateReport } from '@/api/report.js';
 import * as permission from '@/utils/permission';
 export default {
   components: {
     quillEditor
   },
-  inject: ['reload'],
   data() {
     return {
-      isCurrent: 'news',
+      pickerBeginOption: {
+        disabledDate: time => {
+          return time.getTime() > Date.now();
+        }
+      },
+      targetUrl,
+      defaultImg: require('@/assets/image/avatar_default.png'),
+      searchForm: {
+        time: '',
+        name: ''
+      },
+      isCurrent: 'all',
       tableData: [],
-      search: '',
       pagination: {
         currentPage: 1, //当前页码
         pageSize: 8, //每页显示的记录数
@@ -95,14 +117,13 @@ export default {
       },
       isShowDrawer: false,
       direction: 'rtl',
-
-      searchContent: '',
       inputContent: '',
       drawerType: 'add',
       report: {
         stem: '',
         content: ''
       },
+      obj: {},
       rules: {
         stem: [{ required: true, message: '请输入公告标题', trigger: 'blur' }],
         content: [{ required: true, message: '请输入公告内容', trigger: 'blur' }]
@@ -110,76 +131,51 @@ export default {
     };
   },
   created() {
-    this.getNewAllReport();
+    this.getAll();
   },
   methods: {
-    //改变navbar选择
-    async changeCurrent(name) {
-      this.isCurrent = name;
-      if (name === 'news') {
-        await this.getNewAllReport();
-      }
-      if (name === 'all') {
-        await this.getAllReport();
-      }
-      if (name === 'draft') {
-        await this.getSaveReport();
-      }
-      if (name === 'del') {
-        await this.getDelReport();
+    //重置表以及页数
+    reset() {
+      this.pagination = {
+        currentPage: 1, //当前页码
+        pageSize: 8, //每页显示的记录数
+        total: 0
+      };
+      this.searchForm = {
+        name: '',
+        time: ''
+      };
+      this.report = {
+        stem: '',
+        content: ''
+      };
+    },
+    //按需获取公告信息
+    async getAll() {
+      try {
+        const param = `${this.pagination.currentPage}/${this.pagination.pageSize}`;
+        const { data } = await getReportPage(param, {
+          ...this.searchForm,
+          ...this.obj
+        });
+        console.log(data);
+        this.tableData = data.records;
+        this.pagination.currentPage = data.current;
+        this.pagination.total = data.total;
+        this.pagination.pageSize = data.size;
+      } catch (error) {
+        console.log(error);
       }
     },
-    //分页器改变页面大小
-    handleSizeChange(val) {
-      this.pagination.pageSize = val;
+    //改变navbar选择
+    changeCurrent(name) {
+      this.isCurrent = name;
+      this.reset();
     },
     //分页器换页
-    handleCurrentChange(val) {
-      this.pagination.currentPage = val;
-    },
-    //获得全部公告信息
-    async getAllReport() {
-      try {
-        const { data } = await getAllReport();
-        // console.log(data);
-        this.tableData = data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getNewAllReport() {
-      try {
-        const { data } = await getNewAllReport();
-        this.tableData = data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getSaveReport() {
-      try {
-        const { data } = await getSaveReport();
-        this.tableData = data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getDelReport() {
-      try {
-        const { data } = await getDelReport();
-        this.tableData = data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    searchput() {
-      this.searchContent = this.inputContent;
-      // console.log(this.searchContent);
-    },
-    reset() {
-      this.$refs.reportForm.resetFields();
-      this.report.content = '';
-      this.report.stem = '';
-      this.reload();
+    handleCurrentChange(currentPage) {
+      this.pagination.currentPage = currentPage;
+      this.getAll();
     },
     handleClose(done) {
       if (this.report.stem == '' && this.report.content == '') {
@@ -202,7 +198,7 @@ export default {
       }
     },
     //打开文本
-    openDrawer(type, row) {
+    async openDrawer(type, row) {
       this.drawerType = type;
       this.isShowDrawer = true;
       // console.log(row);
@@ -210,7 +206,9 @@ export default {
         this.report = { ...row };
       }
       if (type == 'preview') {
-        updatePreview({ reportId: row.reportId });
+        // console.log(132);
+        await updatePreview({ reportId: row.reportId });
+        await this.getAll();
       }
     },
     handleBlur() {
@@ -246,56 +244,42 @@ export default {
       } finally {
         this.$message.success('发送成功');
         this.isShowDrawer = false;
+        this.getAll();
         this.reset();
-        await this.changeCurrent('news');
       }
     },
     //保存信息
     async save() {
       try {
         await this.$refs.reportForm.validate();
-
         if (this.drawerType === 'add') {
-          try {
-            await postInsertReport({
-              username: this.$store.getters.username,
-              ...this.report,
-              state: 2
-            });
-            this.$message.success('保存成功');
-          } catch (error) {
-            console.log(error);
-          }
-          await this.changeCurrent('news');
+          await postInsertReport({
+            username: this.$store.getters.username,
+            ...this.report,
+            state: 2
+          });
+          this.$message.success('保存成功');
         } else if (this.isCurrent !== 'del') {
-          try {
-            await updateReport({
-              username: this.$store.getters.username,
-              ...this.report,
-              state: 2
-            });
-            this.$message.success('保存成功');
-          } catch (error) {
-            console.log(error);
-          }
-          this.isShowDrawer = false;
-          this.reset();
-        } else {
-          try {
-            await updateReport({
-              username: this.$store.getters.username,
-              ...this.report,
-              state: 0
-            });
-          } catch (error) {
-            console.log(error);
-          }
+          await updateReport({
+            username: this.$store.getters.username,
+            ...this.report,
+            state: 2
+          });
           this.$message.success('保存成功');
           this.isShowDrawer = false;
-          this.reset();
+        } else {
+          await updateReport({
+            username: this.$store.getters.username,
+            ...this.report,
+            state: 0
+          });
+          this.$message.success('保存成功');
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        this.getAll();
+        this.isShowDrawer = false;
       }
     },
     //删除操作
@@ -305,35 +289,36 @@ export default {
         this.$message.success('删除成功');
       } catch (error) {
         console.log(error);
+      } finally {
+        this.getAll();
       }
-      await this.changeCurrent(this.isCurrent);
+    },
+    //查询信息
+    async search() {
+      await this.getAll();
+      this.reset();
+    }
+  },
+  watch: {
+    isCurrent: {
+      async handler(newVal, oldVal) {
+        if (newVal == `all`) {
+          this.obj = { state: 1 };
+          await this.getAll();
+        }
+        if (newVal == `draft`) {
+          this.obj = { state: 2 };
+          await this.getAll();
+        }
+        if (newVal == `del`) {
+          this.obj = { state: 0 };
+          await this.getAll();
+        }
+      },
+      immediate: true
     }
   },
   computed: {
-    tables() {
-      const search = this.searchContent;
-      //当将input框清空时，使列表自动展示搜索前的完整数据，并返回至首页，防止叠加搜索
-      if (this.inputContent == '') {
-        this.searchContent = '';
-        this.currentPage = 1;
-        return [this.tableData, (this.pagination.total = this.tableData.length)];
-      }
-      if (search !== '') {
-        return [
-          this.tableData.filter(dataNews => {
-            return Object.keys(dataNews).some(key => {
-              return String(dataNews[key]).toLowerCase().indexOf(search) > -1;
-            });
-          }),
-          (this.pagination.total = this.tableData.filter(dataNews => {
-            return Object.keys(dataNews).some(key => {
-              return String(dataNews[key]).toLowerCase().indexOf(search) > -1;
-            });
-          }).length)
-        ];
-      }
-      return [this.tableData, (this.pagination.total = this.tableData.length)];
-    },
     drawerTitle() {
       let title = '默认大标题';
       if (this.drawerType === 'add') title = '添 加 公 告';
@@ -387,7 +372,6 @@ export default {
       font-size: 16px;
     }
   }
-
   .table-container {
     height: 100%;
     width: 100%;
@@ -421,20 +405,41 @@ export default {
         border-radius: 2px;
         border-bottom: 3px solid #4458fe !important;
       }
-
-      .new {
-        font-size: 20px !important;
-        margin-left: 5px;
-        color: #ff2855;
-        line-height: 5px;
-      }
     }
 
     .table {
       padding: 25px;
+      .top {
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e6e9f4;
+        ::v-deep .el-form {
+          .el-form-item__label {
+            font-size: 14px !important;
+            padding: 0 15px 0 0 !important;
+            color: #6a74a5;
+            font-weight: 700;
+          }
 
-      .el-table {
-        height: 472px;
+          .el-input__inner {
+            width: 180px;
+            height: 35px;
+            border: 1px solid #ccc;
+            color: #606266;
+            text-align: left;
+
+            &:hover {
+              border: 1px solid #ccc;
+            }
+          }
+        }
+      }
+      .bottom {
+        .el-table {
+          height: 467px;
+        }
+        .pagination {
+          margin-top: 15px;
+        }
       }
     }
 

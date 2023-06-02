@@ -1,38 +1,5 @@
 import { post, get } from '@/utils/request';
 /**
- * 获取全部公告信息
- * @param {*} params
- * @returns
- */
-export function getAllReport() {
-  return get('getAllReport/1', {});
-}
-
-/**
- *
- * @returns 获取最新公告信息
- */
-export function getNewAllReport() {
-  return get('getNewAllReport', {});
-}
-
-/**
- *
- * @returns 获取草稿箱信息
- */
-export function getSaveReport() {
-  return get('getAllReport/2', {});
-}
-
-/**
- * 获取删除列表
- * @returns 
- */
-export function getDelReport() {
-  return get('getAllReport/0', {});
-}
-
-/**
  * 发送公告
  * @param {*} params
  * @returns
@@ -62,9 +29,19 @@ export function updateReport(params) {
 
 /**
  * 浏览量+1
- * @param {*} param 
- * @returns 
+ * @param {*} param
+ * @returns
  */
-export function updatePreview(param){
-  return get('updatePreview',param)
+export function updatePreview(param) {
+  return get('updatePreview', param);
+}
+
+/**
+ * 按需获取公告信息
+ * @param {*} param
+ * @param {*} obj
+ * @returns
+ */
+export function getReportPage(param, obj) {
+  return get(`getReportPage/${param}`, obj);
 }

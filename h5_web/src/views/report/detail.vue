@@ -22,20 +22,20 @@
 </template>
 
 <script>
-import Header from "@/components/utils/HeaderVue.vue";
-import { getReportPage, updatePreview } from "@/api/report";
-import { targetUrl } from "@/targetUrl";
+import Header from '@/components/utils/HeaderVue.vue';
+import { getReportPage, updatePreview } from '@/api/report';
+import { targetUrl } from '@/targetUrl';
 export default {
   components: {
-    Header,
+    Header
   },
   data() {
     return {
       article: {
-        avatar: "",
+        avatar: ''
       },
       currentPage: 1, //当前页码
-      pageSize: 5, //每页显示的记录数
+      pageSize: 5 //每页显示的记录数
     };
   },
   async created() {
@@ -49,6 +49,7 @@ export default {
         const param = `${this.currentPage}/${this.pageSize}`;
         const { data } = await getReportPage(param, {
           reportId: this.$route.params.id,
+          state: 1
         });
         // console.log(data);
         this.article = data.records[0];
@@ -56,8 +57,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

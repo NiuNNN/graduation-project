@@ -10,8 +10,6 @@ import niuniu.javaweb.vo.ReportVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /**
  * @author NiuNiu666
  * @package niuniu.javaweb.mapper
@@ -28,19 +26,6 @@ public interface ReportMapper extends BaseMapper<Report> {
      */
     int insertReport(Report report);
 
-    /**
-     * 获取全部公告信息
-     *
-     * @return
-     */
-    List<Report> getAllReport(int state);
-
-    /**
-     * 获取最新的公告信息
-     *
-     * @return
-     */
-    List<Report> getNewAllReport();
 
     /**
      * 改变公告信息状态
@@ -69,10 +54,13 @@ public interface ReportMapper extends BaseMapper<Report> {
     /**
      * 获取公告信息
      *
+     * @param time
+     * @param name
+     * @param state
      * @param reportId
      * @param page
      * @param wrapper
      * @return
      */
-    IPage<ReportVo> getReportPage(@Param("reportId") Integer reportId, @Param("page") Page<Report> page, @Param(Constants.WRAPPER) Wrapper<ReportVo> wrapper);
+    IPage<ReportVo> getReportPage(@Param("time") String time, @Param("name") String name, @Param("state") Integer state, @Param("reportId") Integer reportId, @Param("page") Page<Report> page, @Param(Constants.WRAPPER) Wrapper<ReportVo> wrapper);
 }

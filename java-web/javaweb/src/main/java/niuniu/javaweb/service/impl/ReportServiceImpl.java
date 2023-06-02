@@ -11,11 +11,7 @@ import niuniu.javaweb.service.ReportService;
 import niuniu.javaweb.utils.result.CommonResult;
 import niuniu.javaweb.vo.ReportVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author NiuNiu666
@@ -39,34 +35,12 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = {"allReport", "newAllReport"}, allEntries = true)
     public CommonResult insertReport(Report report, String username) {
         Integer userId = userMapper.getUserId(username);
         report.setUserId(userId);
         return reportMapper.insertReport(report) > 0 ? CommonResult.success() : CommonResult.failed();
     }
 
-    /**
-     * 获取全部公告信息
-     *
-     * @return
-     */
-    @Override
-    @Cacheable(cacheNames = "allReport", key = "#state")
-    public List<Report> getAllReport(int state) {
-        return reportMapper.getAllReport(state);
-    }
-
-    /**
-     * 获取最新公告信息
-     *
-     * @return
-     */
-    @Override
-    @Cacheable(cacheNames = "newAllReport")
-    public List<Report> getNewAllReport() {
-        return reportMapper.getNewAllReport();
-    }
 
     /**
      * 修改公告信息
@@ -75,7 +49,6 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = {"allReport", "newAllReport"}, allEntries = true)
     public CommonResult changeReport(int reportId, int state) {
         return reportMapper.changeReport(reportId, state) > 0 ? CommonResult.success() : CommonResult.failed();
     }
@@ -87,7 +60,6 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = {"allReport", "newAllReport"}, allEntries = true)
     public CommonResult updateReport(Report report, String username) {
         Integer userId = userMapper.getUserId(username);
         report.setUserId(userId);
@@ -101,7 +73,6 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = {"allReport", "newAllReport"}, allEntries = true)
     public CommonResult updatePreview(int reportId) {
         return reportMapper.updatePreview(reportId) > 0 ? CommonResult.success() : CommonResult.failed();
     }
@@ -111,13 +82,16 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
      *
      * @param currentPage
      * @param pageSize
+     * @param time
+     * @param name
+     * @param state
      * @param reportId
      * @return
      */
     @Override
-    public IPage<ReportVo> getReportPage(int currentPage, int pageSize, Integer reportId) {
+    public IPage<ReportVo> getReportPage(int currentPage, int pageSize, String time, String name, Integer state, Integer reportId) {
         Page page = new Page(currentPage, pageSize);
         QueryWrapper<ReportVo> queryWrapper = new QueryWrapper<>();
-        return reportMapper.getReportPage(reportId, page, queryWrapper);
+        return reportMapper.getReportPage(time, name, state, reportId, page, queryWrapper);
     }
 }

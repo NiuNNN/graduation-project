@@ -23,26 +23,6 @@ public class ReportController {
     ReportService reportService;
 
     /**
-     * 获取全部公告信息
-     *
-     * @return
-     */
-    @GetMapping("/getAllReport/{state}")
-    public CommonResult getAllReport(@PathVariable int state) {
-        return CommonResult.success(reportService.getAllReport(state));
-    }
-
-    /**
-     * 获取最新公告信息
-     *
-     * @return
-     */
-    @GetMapping("getNewAllReport")
-    public CommonResult getNewAllReport() {
-        return CommonResult.success(reportService.getNewAllReport());
-    }
-
-    /**
      * 存入公告
      *
      * @param report
@@ -94,15 +74,18 @@ public class ReportController {
      *
      * @param currentPage
      * @param pageSize
+     * @param time
+     * @param name
+     * @param state
      * @param reportId
      * @return
      */
     @GetMapping("/getReportPage/{currentPage}/{pageSize}")
-    public CommonResult getReportPage(@PathVariable int currentPage, @PathVariable int pageSize, Integer reportId) {
-        IPage<ReportVo> page = reportService.getReportPage(currentPage, pageSize, reportId);
+    public CommonResult getReportPage(@PathVariable int currentPage, @PathVariable int pageSize, String time, String name, Integer state, Integer reportId) {
+        IPage<ReportVo> page = reportService.getReportPage(currentPage, pageSize, time, name, state, reportId);
         //如果当前页码大于了总页码值，那么重新执行查询操作，使用最大页码值作为当前页码值
         if (currentPage > page.getPages()) {
-            page = reportService.getReportPage((int) page.getPages(), pageSize, reportId);
+            page = reportService.getReportPage((int) page.getPages(), pageSize, time, name, state, reportId);
         }
         return CommonResult.success(page);
     }

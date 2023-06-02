@@ -4,30 +4,21 @@
       <Header title="公 告 信 息"></Header>
     </div>
     <div class="main">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <article-item
-          v-for="item in list"
-          :key="item.id"
-          :item="item"
-        ></article-item>
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <article-item v-for="item in list" :key="item.id" :item="item"></article-item>
       </van-list>
     </div>
   </div>
 </template>
 
 <script>
-import articleItem from "@/components/report/article-item.vue";
-import Header from "@/components/utils/HeaderVue.vue";
-import { getReportPage } from "@/api/report";
+import articleItem from '@/components/report/article-item.vue';
+import Header from '@/components/utils/HeaderVue.vue';
+import { getReportPage } from '@/api/report';
 export default {
   components: {
     Header,
-    articleItem,
+    articleItem
   },
   data() {
     return {
@@ -35,7 +26,7 @@ export default {
       pageSize: 5, //每页显示的记录数
       list: [],
       loading: false, // 默认非加载状态
-      finished: false, // 默认数据未加载完
+      finished: false // 默认数据未加载完
     };
   },
   methods: {
@@ -46,7 +37,7 @@ export default {
       //   console.log("需要加载更多了, 应该要发送请求了...");
       try {
         const param = `${this.currentPage}/${this.pageSize}`;
-        const { data } = await getReportPage(param, {});
+        const { data } = await getReportPage(param, { state: 1 });
         //   console.log(data);
         // 需要累加数据
         this.list.push(...data.records);
@@ -62,8 +53,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -5,21 +5,6 @@
         insert into report(user_id, stem, content, time, views, state)
         values (#{userId}, #{stem}, #{content}, current_timestamp, 0, #{state})
     </insert>
-    <select id="getAllReport" resultType="niuniu.javaweb.vo.ReportVo">
-        select report.report_id, report.stem, report.content, report.time, report.views, user.name
-        from report,
-             user
-        where report.user_id = user.user_id
-          and report.state = #{state}
-    </select>
-    <select id="getNewAllReport" resultType="niuniu.javaweb.vo.ReportVo">
-        select report.report_id, report.stem, report.content, report.time, report.views, user.name
-        from report,
-             user
-        where report.user_id = user.user_id
-          and report.state = 1
-        order by report.time desc limit 8
-    </select>
     <update id="changeReport">
         update report
         set state = #{state}
@@ -44,8 +29,14 @@
         from report as a,
         user as b
         where a.user_id = b.user_id
-        and a.state = 1
-        <if test="reportId!=null and reportId!= ''">
+        and a.state = #{state}
+        <if test="time!=null and time!= ''">
+            and a.report_id = #{reportId}
+        </if>
+        <if test="name!=null and name!= ''">
+            and b.name = #{name}
+        </if>
+        <if test="reportId!=null and reportId!=''">
             and a.report_id = #{reportId}
         </if>
         order by time DESC ${ew.customSqlSegment}
